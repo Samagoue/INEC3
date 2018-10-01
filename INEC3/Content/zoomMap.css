@@ -1,0 +1,80 @@
+﻿
+.background {
+    fill: none;
+    pointer-events: all;
+}
+
+.feature {
+    fill: #ccc;
+    cursor: pointer;
+}
+
+    .feature.active {
+        fill: orange;
+    }
+
+.mesh {
+    fill: none;
+    stroke: #fff;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.tooltip {
+    background: rgba(0, 0, 0, 0.85);
+    color: #f9f9f9;
+    padding: 10px;
+}
+
+.tooltip h3 {
+    margin: 0px 0px 8px;
+}
+
+.tooltip h2 {
+    margin: 0px 0px 8px;
+}
+
+div.tooltip {
+    text-align: center;
+    width: auto;
+    height: auto;
+    padding: 7px;
+    font: 12px sans-serif;
+    background: #FF6EA7;
+    color: #324D5C;
+    pointer-events: none;
+}
+
+#chart {
+    position: fixed;
+    top: 18px !important;
+    left: 1300px !important;
+    z-index: 2;
+    /* background: rgba(0,127,255,0.7);*/
+    background: rgba(0,153,76,0.7);
+    width: 250px;
+    height: 240px;
+    color: white;
+    font-size: 35px;
+    padding: 5px;
+    top: -150px;
+    left: -150px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+    #chart svg {
+        border-top: 0;
+        margin-left: -5px;
+        margin-top: 7px;
+        background: rgba(0,127,255,0.7);
+    }
+
+.county-boundary {
+    fill: #aaa;
+    stroke: #fff;
+    stroke-width: .2px;
+}
+
+    .county-boundary:hover, .state:hover {
+        fill: orange;
+    }
