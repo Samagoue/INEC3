@@ -1,12 +1,12 @@
-﻿var width = 960,
-    height = 600,
+﻿var width = 1000,
+    height = 800,
     active = d3.select(null);
 
 var color = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf"];
 
 var projection = d3.geoMercator()
     .scale(1700)
-    .translate([width / 35, height / 3]);
+    .translate([width / 35, height / 4]);
 
 var tooltip = d3.select("body")
     .append("div")
@@ -19,17 +19,17 @@ var hover = function (d) {
 
     tooltip.html("");
     tooltip.style("visibility", "visible")
-           .style("border", "4px solid ")
-           .style("fill", "red");
+        .style("border", "4px solid ")
+        .style("fill", "red");
 
     tooltip.append("h2")
-           .text("Province: " + d.properties.NAME_1);
+        .text("Province: " + d.properties.NAME_1);
     tooltip.append("h3")
-           .text("Enroles: " + d.NombreEnrole);
+        .text("Enroles: " + d.NombreEnrole);
     tooltip.append("div")
-           .text("Code: " + d.properties.GID_1);
+        .text("Code: " + d.properties.GID_1);
     tooltip.append("div")
-           .text("Type: " + d.properties.ENGTYPE_1);
+        .text("Type: " + d.properties.ENGTYPE_1);
 
     //   d3.selectAll("path")
     //     .style("opacity", 0.7)
@@ -60,7 +60,7 @@ var zoom = d3.zoom()
 var path = d3.geoPath()
     .projection(projection);
 
-var svg = d3.select("#map").append("svg")
+var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height)
     .on("click", stopped, true);
@@ -109,7 +109,6 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .attr("fill", function (d) {
             return color;
         })
-       
         .on("mouseover", hover)
         // .on("mouseout", out)
         .on("click", clicked);
@@ -120,6 +119,7 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .attr("d", path);
 
 
+    console.log(cod);
 });
 
 
@@ -156,7 +156,8 @@ function zoomed() {
     g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
     g.attr("transform", d3.event.transform);
 }
-
+// If the drag behavior prevents the default click,
+// also stop propagation so we don’t click-to-zoom.
 function stopped() {
     if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }

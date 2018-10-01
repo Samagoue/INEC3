@@ -1,12 +1,26 @@
-﻿<h2>Carte</h2>
+﻿@Styles.Render("~/Content/zoomMap.css")
 
-@*<div id="map"></div>
-    <div id="tooltip"></div>*@
+<h2>Carte</h2>
+<h3>Cette carte montre le resultat global des elections</h3>
 
-@Styles.Render("~/Content/zoomMap.css")
+@*<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Instructions</h3>
+    </div>
+    <div class="panel-body">
+        <ul>
+            <li>Leave this page open</li>
+            <li>Open the <a target="_blank" href="RealTimeMapAdmin">Real Time Map Admin</a> page in a seperate browser window/tab</li>
+            <li>Enter some details in the Admin page and hit the Broadcast button</li>
+            <li>You should see the Real Time Map update automatically</li>
+            <li>Maybe you'll get lucky and someone else will be doing this at the same time as you and you and then you will see their changes too!</li>
+        </ul>
+    </div>
+</div>*@
+
+<div id="map"></div>
 
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3"></script>
-
 
 <script src="~/Scripts/mainMap.js"></script>

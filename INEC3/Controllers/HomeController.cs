@@ -36,7 +36,7 @@ namespace INEC3.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Artech Consulting";
 
             return View();
         }
