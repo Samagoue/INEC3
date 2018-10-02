@@ -1,0 +1,57 @@
+﻿@model IEnumerable<INEC3.Models.tbl_BureauVote>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Commune.Nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Addresse)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Code_SV)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Commune.Nom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Addresse)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Enroles)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Code_SV)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Bureauvote }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID_Bureauvote }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Bureauvote })
+        </td>
+    </tr>
+}
+
+</table>

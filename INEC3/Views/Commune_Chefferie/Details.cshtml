@@ -1,0 +1,58 @@
+﻿@model INEC3.Models.tbl_Commune_Chefferie
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_Commune_Chefferie</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Province.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Territoire.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Territoire.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enroles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Sieges)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sieges)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Commune }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

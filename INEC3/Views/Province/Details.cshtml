@@ -1,0 +1,50 @@
+﻿@model INEC3.Models.tbl_Province
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_Province</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Pays.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pays.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enroles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GID_1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GID_1)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Province }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

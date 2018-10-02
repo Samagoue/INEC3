@@ -1,6 +1,7 @@
 ﻿
 .background {
     fill: none;
+    /*background: #333;*/
     pointer-events: all;
 }
 
@@ -8,10 +9,9 @@
     fill: #ccc;
     cursor: pointer;
 }
-
-    .feature.active {
-        fill: orange;
-    }
+.feature.active {
+    fill: orange;
+}
 
 .mesh {
     fill: none;
@@ -62,12 +62,12 @@ div.tooltip {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-    #chart svg {
-        border-top: 0;
-        margin-left: -5px;
-        margin-top: 7px;
-        background: rgba(0,127,255,0.7);
-    }
+#chart svg {
+    border-top: 0;
+    margin-left: -5px;
+    margin-top: 7px;
+    background: rgba(0,127,255,0.7);
+}
 
 .county-boundary {
     fill: #aaa;
@@ -75,6 +75,6 @@ div.tooltip {
     stroke-width: .2px;
 }
 
-    .county-boundary:hover, .state:hover {
-        fill: orange;
-    }
+.county-boundary:hover, .state:hover {
+    fill: orange;
+}

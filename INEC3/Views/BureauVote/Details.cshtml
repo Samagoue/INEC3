@@ -1,0 +1,58 @@
+﻿@model INEC3.Models.tbl_BureauVote
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_BureauVote</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Commune.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Commune.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Addresse)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Addresse)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enroles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Code_SV)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Code_SV)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Bureauvote }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
