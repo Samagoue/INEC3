@@ -1,0 +1,51 @@
+﻿@model IEnumerable<INEC3.Models.tbl_Party>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Sigle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nom)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Addresse)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Dirigeant)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sigle)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nom)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Addresse)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Dirigeant)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Party }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID_Party }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Party })
+        </td>
+    </tr>
+}
+
+</table>

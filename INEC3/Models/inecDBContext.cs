@@ -6,16 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 
+
 namespace INEC3.Models
 {
 
     public class inecDBContext : DbContext
     {
+        internal object bureauVoteResults;
 
         public inecDBContext() : base("inecConn")
         {
 
-
+            Database.SetInitializer<inecDBContext>(null);
 
         }
 
@@ -28,6 +30,10 @@ namespace INEC3.Models
         public DbSet<tbl_Commune_Chefferie> Communes { get; set; }
 
         public DbSet<tbl_BureauVote> BureauVotes { get; set; }
+
+        public DbSet<tbl_Party> Parties { get; set; }    
+
+        public DbSet<tbl_Candidat> Candidats { get; set; }
 
     }
 

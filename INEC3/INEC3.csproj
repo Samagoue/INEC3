@@ -154,22 +154,34 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BureauVoteController.cs" />
+    <Compile Include="Controllers\CandidatController.cs" />
     <Compile Include="Controllers\Commune_ChefferieController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\PaysController.cs" />
+    <Compile Include="Controllers\PartyController.cs" />
     <Compile Include="Controllers\ProvinceController.cs" />
     <Compile Include="Controllers\TerritoireController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810020155374_InitialCreate.cs" />
-    <Compile Include="Migrations\201810020155374_InitialCreate.Designer.cs">
-      <DependentUpon>201810020155374_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\201810030140544_initialcreate.cs" />
+    <Compile Include="Migrations\201810030140544_initialcreate.Designer.cs">
+      <DependentUpon>201810030140544_initialcreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810030203304_tht.cs" />
+    <Compile Include="Migrations\201810030203304_tht.Designer.cs">
+      <DependentUpon>201810030203304_tht.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810030214037_test.cs" />
+    <Compile Include="Migrations\201810030214037_test.Designer.cs">
+      <DependentUpon>201810030214037_test.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
+    <Compile Include="Models\tbl_BureauVoteResult.cs" />
+    <Compile Include="Models\tbl_Candidat.cs" />
     <Compile Include="Models\tbl_Commune_Chefferie.cs" />
+    <Compile Include="Models\tbl_Party.cs" />
     <Compile Include="Models\tbl_Pays.cs" />
     <Compile Include="Models\tbl_Province.cs" />
     <Compile Include="Models\tbl_Territoire.cs" />
@@ -250,6 +262,16 @@
     <Content Include="Views\Territoire\Details.cshtml" />
     <Content Include="Views\Territoire\Edit.cshtml" />
     <Content Include="Views\Territoire\Index.cshtml" />
+    <Content Include="Views\Candidat\Create.cshtml" />
+    <Content Include="Views\Candidat\Delete.cshtml" />
+    <Content Include="Views\Candidat\Details.cshtml" />
+    <Content Include="Views\Candidat\Edit.cshtml" />
+    <Content Include="Views\Candidat\Index.cshtml" />
+    <Content Include="Views\Party\Create.cshtml" />
+    <Content Include="Views\Party\Delete.cshtml" />
+    <Content Include="Views\Party\Details.cshtml" />
+    <Content Include="Views\Party\Edit.cshtml" />
+    <Content Include="Views\Party\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -268,8 +290,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201810020155374_InitialCreate.resx">
-      <DependentUpon>201810020155374_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201810030140544_initialcreate.resx">
+      <DependentUpon>201810030140544_initialcreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810030203304_tht.resx">
+      <DependentUpon>201810030203304_tht.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810030214037_test.resx">
+      <DependentUpon>201810030214037_test.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

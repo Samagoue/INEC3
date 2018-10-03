@@ -1,0 +1,50 @@
+﻿@model INEC3.Models.tbl_Party
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_Party</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Sigle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Sigle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Addresse)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Addresse)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Dirigeant)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Dirigeant)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Party }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
