@@ -31,6 +31,8 @@ namespace INEC3.Models
         public int Abstentions { get; set; }
         public int Votants { get; set; }
         public int bulletinsAnnules { get; set; }
+
+
         public int votesExprimes { get; set; }
 
 

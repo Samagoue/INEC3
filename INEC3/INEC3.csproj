@@ -159,6 +159,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PartyController.cs" />
     <Compile Include="Controllers\ProvinceController.cs" />
+    <Compile Include="Controllers\ResultsController.cs" />
     <Compile Include="Controllers\TerritoireController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -216,6 +217,10 @@
     <Compile Include="Migrations\201810040307188_removed.Designer.cs">
       <DependentUpon>201810040307188_removed.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810040331076_resultat tble.cs" />
+    <Compile Include="Migrations\201810040331076_resultat tble.Designer.cs">
+      <DependentUpon>201810040331076_resultat tble.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
@@ -225,6 +230,7 @@
     <Compile Include="Models\tbl_Party.cs" />
     <Compile Include="Models\tbl_Pays.cs" />
     <Compile Include="Models\tbl_Province.cs" />
+    <Compile Include="Models\tbl_Results.cs" />
     <Compile Include="Models\tbl_Territoire.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -313,6 +319,11 @@
     <Content Include="Views\Candidat\Details.cshtml" />
     <Content Include="Views\Candidat\Edit.cshtml" />
     <Content Include="Views\Candidat\Index.cshtml" />
+    <Content Include="Views\Results\Create.cshtml" />
+    <Content Include="Views\Results\Delete.cshtml" />
+    <Content Include="Views\Results\Details.cshtml" />
+    <Content Include="Views\Results\Edit.cshtml" />
+    <Content Include="Views\Results\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -372,6 +383,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810040307188_removed.resx">
       <DependentUpon>201810040307188_removed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040331076_resultat tble.resx">
+      <DependentUpon>201810040331076_resultat tble.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

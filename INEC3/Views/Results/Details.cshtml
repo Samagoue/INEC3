@@ -1,0 +1,90 @@
+﻿@model INEC3.Models.tbl_Results
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_Results</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BureauVote.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BureauVote.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Candidat.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Candidat.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Party.Sigle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Party.Sigle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Voix)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Voix)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pourcentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pourcentage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Votants)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Votants)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Abstentions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Abstentions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nuls)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nuls)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Exprimes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Exprimes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Result }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
