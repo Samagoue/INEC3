@@ -15,6 +15,7 @@ namespace INEC3.Models
         [Key]
         public int ID_Bureauvote { get; set; }
 
+        [Display(Name = "Bureau de Vote")]
         public string Nom { get; set; }
 
         public string Addresse { get; set; }
