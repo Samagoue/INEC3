@@ -1,25 +1,229 @@
 ﻿@Styles.Render("~/Content/zoomMap.css")
 
-<h2>Carte</h2>
-<h3>Cette carte montre le resultat global des elections</h3>
+<h2>Election Result</h2>
+<h3>Democratic Republic of the Congo</h3>
 
 @*<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">Instructions</h3>
-    </div>
-    <div class="panel-body">
-        <ul>
-            <li>Leave this page open</li>
-            <li>Open the <a target="_blank" href="RealTimeMapAdmin">Real Time Map Admin</a> page in a seperate browser window/tab</li>
-            <li>Enter some details in the Admin page and hit the Broadcast button</li>
-            <li>You should see the Real Time Map update automatically</li>
-            <li>Maybe you'll get lucky and someone else will be doing this at the same time as you and you and then you will see their changes too!</li>
-        </ul>
-    </div>
-</div>*@
+        <div class="panel-heading">
+            <h3 class="panel-title">Instructions</h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li>Leave this page open</li>
+                <li>Open the <a target="_blank" href="RealTimeMapAdmin">Real Time Map Admin</a> page in a seperate browser window/tab</li>
+                <li>Enter some details in the Admin page and hit the Broadcast button</li>
+                <li>You should see the Real Time Map update automatically</li>
+                <li>Maybe you'll get lucky and someone else will be doing this at the same time as you and you and then you will see their changes too!</li>
+            </ul>
+        </div>
+    </div>*@
+<style>
+    .feature {
+        /*fill: #;*/
+        fill: #8dd3c7;
+    }
+    .feature .active{
+        fill:black;
+    }
+    .datamaps-subunit:hover {
+        stroke-width: 2px;
+    }
 
-<div id="map"></div>
+    .state {
+        stroke: rgb(128, 128, 128);
+        stroke-linejoin: round;
+    }
 
+    .eln-popup {
+        text-align: left;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1000001;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+    }
+
+        .eln-popup .eln-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .eln-popup .eln-default-subtitle {
+            color: #999;
+            font: 400 11px/1 nyt-franklin, arial, helvetica, sans-serif;
+        }
+
+        .eln-popup .eln-popup-content {
+            padding: 6px 8px;
+            font: 13px/1.3 nyt-franklin, arial, helvetica, sans-serif;
+            white-space: nowrap;
+        }
+
+        .eln-popup .eln-has-electoral-votes .eln-subtitle {
+            position: absolute;
+        }
+
+        .eln-popup .eln-subtitle {
+            color: #666;
+            font: 400 12px/1 nyt-franklin, arial, helvetica, sans-serif;
+            margin: 0 0 8px;
+        }
+
+        .eln-popup .eln-results-container {
+            padding-bottom: 0 !important;
+        }
+
+    .eln-results-container {
+        position: relative;
+        padding-bottom: 20px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+        .eln-results-container .eln-results-table {
+            font-size: 17px;
+            width: 100%;
+            font: 400 13px/1.25 nyt-franklin, arial, helvetica, sans-serif;
+            margin-bottom: 8px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+    .eln-popup .eln-has-electoral-votes .eln-results-row-president .eln-header {
+        padding-top: 3px;
+    }
+
+    .eln-popup .eln-results-container .eln-name {
+        padding-top: 0;
+        padding-left: 0 !important;
+        padding-right: 0;
+    }
+
+    .eln-popup .eln-results-container .eln-header {
+        font-size: 11px;
+        padding-bottom: 4px;
+    }
+
+    .eln-results-container .eln-name {
+        text-align: left;
+    }
+
+    .eln-results-container .eln-header {
+        font: 400 11px/1 nyt-franklin, arial, helvetica, sans-serif;
+        text-transform: uppercase;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #e2e2e2;
+        vertical-align: bottom;
+        color: #999;
+    }
+
+    .eln-results-container .eln-row {
+        border-bottom: 1px solid #e2e2e2;
+    }
+
+    user agent stylesheet
+    tr {
+        display: table-row;
+        vertical-align: inherit;
+        border-color: inherit;
+    }
+
+    .eln-results-container .eln-results-table {
+        width: 100%;
+        font: 400 13px/1.25 nyt-franklin, arial, helvetica, sans-serif;
+        margin-bottom: 8px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    table {
+        width: 96%;
+        border-collapse: collapse;
+    }
+
+    .user agent stylesheet
+    table {
+        display: table;
+        border-collapse: separate;
+        border-spacing: 2px;
+        border-color: grey;
+    }
+
+    .eln-results-container {
+        position: relative;
+        padding-bottom: 20px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .eln-popup .eln-popup-content {
+        padding: 6px 8px;
+        font: 13px/1.3 nyt-franklin, arial, helvetica, sans-serif;
+        white-space: nowrap;
+    }
+
+    .map-container {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .eln-map-zoom-buttons {
+        cursor: pointer;
+        z-index: 200;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />
+<div id="map" class="map-container">
+    <button id="btncancel" onclick="activearea()" class="btn btn-primary" disabled style="position:absolute;">Cancel</button>
+</div>
+
+
+<div id="nvtable" class="eln-popup">
+    <div class="eln-title eln-results-container eln-results-row-president ln-has-images eln-race-report eln-result-winner" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span class="eln-default-subtitle" style="color:#6f6d6d !important;"> 100% Reporting </span></div>
+    <table class="eln-table eln-results-table">
+        <thead>
+            <tr>
+                @*<th colspan="2" class="x-value">Alabama <strong style="color:#6f6d6d !important;"> 100% Reporting </strong></th>*@
+
+                <th class="eln-header eln-name" colspan="3">Candidate</th>
+                <th style="color:#6f6d6d !important;">Party</th>
+                <th style="color:#6f6d6d !important;">Votes</th>
+                <th style="color:#6f6d6d !important;">Pct.</th>
+                <th style="color:#6f6d6d !important;">E.V.</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="legend-color-guide"><div style="background-color:#cc3d3d;"></div></td>
+                <td class="key" colspan="2" style="background-color:#cc3d3d;">Donald J. Trump</td>
+                <td class="key">Rep</td>
+                <td class="key">55,333,000</td>
+                <td class="value">62.1 %</td>
+                <td class="value">9</td>
+            </tr>
+            <tr>
+                <td class="legend-color-guide"><div style="background-color:#1a80c4;"></div></td>
+                <td class="key" colspan="2">Hillary Cliton</td>
+                <td class="key">Dem.</td>
+                <td class="key">729,547</td>
+                <td class="value">34.4 %</td>
+                <td class="value">3</td>
+            </tr>
+            <tr>
+                <td class="legend-color-guide"><div style="background-color:#7ead53;"></div></td>
+                <td class="key" colspan="2">Gary Johnson</td>
+                <td class="key">Ind.</td>
+                <td class="key">44,467</td>
+                <td class="value">2.1 %</td>
+                <td class="value">6</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3"></script>
 
