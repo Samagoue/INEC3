@@ -70,11 +70,14 @@ div.tooltip {
 }
 
 .county-boundary {
-    fill: #aaa;
-    stroke: #fff;
+    fill: #8dd3c7;
+    stroke: rgba(0, 0, 0, 0.85);
     stroke-width: .2px;
 }
 
-.county-boundary:hover, .state:hover {
-    fill: orange;
-}
+    .county-boundary:hover .state:hover {
+        stroke: #de1515;
+    }
+/*.feature:hover, .state:hover {
+    stroke: #de1515;
+}*/
