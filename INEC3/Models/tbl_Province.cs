@@ -23,6 +23,8 @@ namespace INEC3.Models
 
         public string GID_1 { get; set; }
 
+        public int Sieges { get; set; }
+
 
         [ForeignKey("Pays")]
         public int ID_Pays { get; set; }

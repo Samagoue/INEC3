@@ -7,13 +7,13 @@ namespace INEC3.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class test : IMigrationMetadata
+    public sealed partial class chang : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(test));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(chang));
         
         string IMigrationMetadata.Id
         {
-            get { return "201810030214037_test"; }
+            get { return "201810040214470_chang"; }
         }
         
         string IMigrationMetadata.Source

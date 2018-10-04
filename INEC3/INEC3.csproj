@@ -171,16 +171,57 @@
     <Compile Include="Migrations\201810030203304_tht.Designer.cs">
       <DependentUpon>201810030203304_tht.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810030214037_test.cs" />
-    <Compile Include="Migrations\201810030214037_test.Designer.cs">
-      <DependentUpon>201810030214037_test.cs</DependentUpon>
+    <Compile Include="Migrations\201810032126141_test1.cs" />
+    <Compile Include="Migrations\201810032126141_test1.Designer.cs">
+      <DependentUpon>201810032126141_test1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810032146159_test2.cs" />
+    <Compile Include="Migrations\201810032146159_test2.Designer.cs">
+      <DependentUpon>201810032146159_test2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810032155009_bvresults.cs" />
+    <Compile Include="Migrations\201810032155009_bvresults.Designer.cs">
+      <DependentUpon>201810032155009_bvresults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810032233493_test3.cs" />
+    <Compile Include="Migrations\201810032233493_test3.Designer.cs">
+      <DependentUpon>201810032233493_test3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810032236126_bvresults1.cs" />
+    <Compile Include="Migrations\201810032236126_bvresults1.Designer.cs">
+      <DependentUpon>201810032236126_bvresults1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040149589_electiontype.cs" />
+    <Compile Include="Migrations\201810040149589_electiontype.Designer.cs">
+      <DependentUpon>201810040149589_electiontype.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040214470_chang.cs" />
+    <Compile Include="Migrations\201810040214470_chang.Designer.cs">
+      <DependentUpon>201810040214470_chang.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040221004_added electiontype to candidat.cs" />
+    <Compile Include="Migrations\201810040228060_change to candidat.cs" />
+    <Compile Include="Migrations\201810040228060_change to candidat.Designer.cs">
+      <DependentUpon>201810040228060_change to candidat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040240207_test.cs" />
+    <Compile Include="Migrations\201810040240207_test.Designer.cs">
+      <DependentUpon>201810040240207_test.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040305158_added president optio.cs" />
+    <Compile Include="Migrations\201810040305158_added president optio.Designer.cs">
+      <DependentUpon>201810040305158_added president optio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201810040307188_removed.cs" />
+    <Compile Include="Migrations\201810040307188_removed.Designer.cs">
+      <DependentUpon>201810040307188_removed.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
-    <Compile Include="Models\tbl_BureauVoteResult.cs" />
     <Compile Include="Models\tbl_Candidat.cs" />
     <Compile Include="Models\tbl_Commune_Chefferie.cs" />
+    <Compile Include="Models\tbl_ElectionType.cs" />
     <Compile Include="Models\tbl_Party.cs" />
     <Compile Include="Models\tbl_Pays.cs" />
     <Compile Include="Models\tbl_Province.cs" />
@@ -262,16 +303,16 @@
     <Content Include="Views\Territoire\Details.cshtml" />
     <Content Include="Views\Territoire\Edit.cshtml" />
     <Content Include="Views\Territoire\Index.cshtml" />
-    <Content Include="Views\Candidat\Create.cshtml" />
-    <Content Include="Views\Candidat\Delete.cshtml" />
-    <Content Include="Views\Candidat\Details.cshtml" />
-    <Content Include="Views\Candidat\Edit.cshtml" />
-    <Content Include="Views\Candidat\Index.cshtml" />
     <Content Include="Views\Party\Create.cshtml" />
     <Content Include="Views\Party\Delete.cshtml" />
     <Content Include="Views\Party\Details.cshtml" />
     <Content Include="Views\Party\Edit.cshtml" />
     <Content Include="Views\Party\Index.cshtml" />
+    <Content Include="Views\Candidat\Create.cshtml" />
+    <Content Include="Views\Candidat\Delete.cshtml" />
+    <Content Include="Views\Candidat\Details.cshtml" />
+    <Content Include="Views\Candidat\Edit.cshtml" />
+    <Content Include="Views\Candidat\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -296,8 +337,41 @@
     <EmbeddedResource Include="Migrations\201810030203304_tht.resx">
       <DependentUpon>201810030203304_tht.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810030214037_test.resx">
-      <DependentUpon>201810030214037_test.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201810032126141_test1.resx">
+      <DependentUpon>201810032126141_test1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810032146159_test2.resx">
+      <DependentUpon>201810032146159_test2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810032155009_bvresults.resx">
+      <DependentUpon>201810032155009_bvresults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810032233493_test3.resx">
+      <DependentUpon>201810032233493_test3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810032236126_bvresults1.resx">
+      <DependentUpon>201810032236126_bvresults1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040149589_electiontype.resx">
+      <DependentUpon>201810040149589_electiontype.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040214470_chang.resx">
+      <DependentUpon>201810040214470_chang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040221004_added electiontype to candidat.resx">
+      <DependentUpon>201810040221004_added electiontype to candidat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040228060_change to candidat.resx">
+      <DependentUpon>201810040228060_change to candidat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040240207_test.resx">
+      <DependentUpon>201810040240207_test.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040305158_added president optio.resx">
+      <DependentUpon>201810040305158_added president optio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810040307188_removed.resx">
+      <DependentUpon>201810040307188_removed.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

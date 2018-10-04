@@ -24,7 +24,9 @@ namespace INEC3.Models
 
         public string GID_1 { get; set; }
 
-        public int Sieges { get; set; }
+        public int SiegesProv { get; set; }
+
+        public int SiegesNat { get; set; }
 
         [ForeignKey("Province")]
         public int ID_Province { get; set; }

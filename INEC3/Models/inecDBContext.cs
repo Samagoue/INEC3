@@ -12,7 +12,7 @@ namespace INEC3.Models
 
     public class inecDBContext : DbContext
     {
-        internal object bureauVoteResults;
+        
 
         public inecDBContext() : base("inecConn")
         {
@@ -35,6 +35,7 @@ namespace INEC3.Models
 
         public DbSet<tbl_Candidat> Candidats { get; set; }
 
+        public DbSet<tbl_ElectionType> ElectionTypes { get; set; }
     }
 
 }

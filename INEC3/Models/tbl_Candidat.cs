@@ -17,6 +17,14 @@ namespace INEC3.Models
         [ForeignKey("Party")]
         public int ID_Party { get; set; }
         public virtual tbl_Party Party { get; set; }
+
+        [ForeignKey("ID_ElectionType")]
+        public virtual tbl_ElectionType ElectionType { get; set; }
+
+        [Display(Name = "Scrutin")]
+        public int? ID_ElectionType { get; set; }
+
+       
     }
 
 

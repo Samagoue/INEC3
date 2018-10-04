@@ -17,7 +17,7 @@ namespace INEC3.Controllers
         // GET: Candidat
         public ActionResult Index()
         {
-            var candidats = db.Candidats.Include(t => t.Party);
+            var candidats = db.Candidats.Include(t => t.ElectionType).Include(t => t.Party);
             return View(candidats.ToList());
         }
 
@@ -39,6 +39,7 @@ namespace INEC3.Controllers
         // GET: Candidat/Create
         public ActionResult Create()
         {
+            ViewBag.ID_ElectionType = new SelectList(db.ElectionTypes, "ID_ElectionType", "Scrutin");
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
             return View();
         }
@@ -48,7 +49,7 @@ namespace INEC3.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID_Candidat,Nom,ID_Party")] tbl_Candidat tbl_Candidat)
+        public ActionResult Create([Bind(Include = "ID_Candidat,Nom,ID_Party,ID_ElectionType")] tbl_Candidat tbl_Candidat)
         {
             if (ModelState.IsValid)
             {
@@ -57,6 +58,7 @@ namespace INEC3.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.ID_ElectionType = new SelectList(db.ElectionTypes, "ID_ElectionType", "Scrutin", tbl_Candidat.ID_ElectionType);
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle", tbl_Candidat.ID_Party);
             return View(tbl_Candidat);
         }
@@ -73,6 +75,7 @@ namespace INEC3.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ID_ElectionType = new SelectList(db.ElectionTypes, "ID_ElectionType", "Scrutin", tbl_Candidat.ID_ElectionType);
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle", tbl_Candidat.ID_Party);
             return View(tbl_Candidat);
         }
@@ -82,7 +85,7 @@ namespace INEC3.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID_Candidat,Nom,ID_Party")] tbl_Candidat tbl_Candidat)
+        public ActionResult Edit([Bind(Include = "ID_Candidat,Nom,ID_Party,ID_ElectionType")] tbl_Candidat tbl_Candidat)
         {
             if (ModelState.IsValid)
             {
@@ -90,6 +93,7 @@ namespace INEC3.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ID_ElectionType = new SelectList(db.ElectionTypes, "ID_ElectionType", "Scrutin", tbl_Candidat.ID_ElectionType);
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle", tbl_Candidat.ID_Party);
             return View(tbl_Candidat);
         }

@@ -27,7 +27,11 @@
             @Html.DisplayNameFor(model => model.GID_1)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Sieges)
+            @Html.DisplayNameFor(model => model.SiegesProv)
+        </th>
+
+        <th>
+            @Html.DisplayNameFor(model => model.SiegesNat)
         </th>
         <th></th>
     </tr>
@@ -50,12 +54,17 @@
             @Html.DisplayFor(modelItem => item.GID_1)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Sieges)
+            @Html.DisplayFor(modelItem => item.SiegesProv)
         </td>
+
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Territoire }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_Territoire }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Territoire })
+            @Html.DisplayFor(modelItem => item.SiegesNat)
+        </td>
+
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Territoire }) |
+            @Html.ActionLink("Details", "Details", new { id = item.ID_Territoire }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Territoire })
         </td>
     </tr>
 }
