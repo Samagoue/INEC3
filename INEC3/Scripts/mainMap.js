@@ -17,9 +17,7 @@ var tooltip = d3.select("body")
     .style("z-index", "10")
     .style("visibility", "hidden");
 
-var zoom = d3.zoom()
-    .scaleExtent([1, 8])
-    .on("zoom", zoomed);
+var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
 
 var path = d3.geoPath()
     .projection(projection);
@@ -27,6 +25,7 @@ var path = d3.geoPath()
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
+    .call(zoom)
     .on("click", stopped, true);
 
 svg.append("rect")
@@ -38,6 +37,8 @@ svg.append("rect")
 var g = svg.append("g");
 
 svg.call(zoom);
+
+var gui = d3.select("#map");
 
 var tooltip = d3.select("body")
     .append("div")
@@ -60,7 +61,8 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .on("click", clicked);
 
     g.append("path")
-        .datum(topojson.mesh(cod, cod.objects.Provinces, function (a, b) { return a !== b; }))
+        //.datum(topojson.mesh(cod, cod.objects.Provinces, function (a, b) { return a !== b; }))
+        .datum(topojson.mesh(cod, cod.objects.Provinces))
         .attr("class", "mesh")
         .attr("d", path)
         .on("mouseover", console.log("Provinces"))
@@ -75,6 +77,16 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .attr("y", function (d) { return path.centroid(d)[1]; })
         .attr("text-anchor", "middle")
         .attr('font-size', '6pt');
+
+    //gui.append("span")
+    //    .classed("zoom in", true)
+    //    .text("+")
+    //    .on("click", function () { zoom.scaleBy(svg, 2);
+    //    });
+    //gui.append("span")
+    //    .classed("zoom out", true)
+    //    .text("-")
+    //    .on("click", function () { zoom.scaleBy(svg, 0.5); })
 });
 
 var hover = function (d) {
@@ -95,16 +107,15 @@ var hover = function (d) {
         .text("Type: " + d.properties.ENGTYPE_1);
 };
 
+
 function clicked(d) {
     iszoom = true;
     iscancel = false;
     $("#btncancel").prop('disabled', false);
 
-
-
     var stateElem = $("[stateFipsCode = " + d.properties.GID_1.slice(4) + "]");
     // stateElem.attr("fill", "#1a80c4");
-    debugger
+
     if (active.node() === this) {
         stateElem.removeClass("active");
         return reset();
@@ -116,12 +127,13 @@ function clicked(d) {
     }
     active = d3.select(this).classed("active", true);
 
+    debugger
     var bounds = path.bounds(d),
         dx = bounds[1][0] - bounds[0][0],
         dy = bounds[1][1] - bounds[0][1],
         x = (bounds[0][0] + bounds[1][0]) / 2,
         y = (bounds[0][1] + bounds[1][1]) / 2,
-        scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+        scale = Math.max(1, Math.min(3.5, 0.6 / Math.max(dx / width, dy / height))),
         translate = [width / 2 - scale * x, height / 2 - scale * y];
 
     svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
@@ -132,6 +144,7 @@ function reset() {
     active = d3.select(null);
     $('.feature').removeClass('active');
     iscancel = false;
+    debugger
     svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
 }
 
@@ -140,20 +153,23 @@ function zoomed() {
     g.attr("transform", d3.event.transform);
 }
 
+
 function stopped() {
     if (d3.event.defaultPrevented) d3.event.stopPropagation();
 }
 
 function generatetable(res) {
-    if (iszoom) {
+    var tltipdiv = document.getElementById('tooltip');
+    var table = document.getElementById('nvtable');
+    table.removeAttribute('hidden');
+    //debugger;
+    if (iszoom && !iscancel) {
         $('#header').text(res.properties.NAME_2);
     }
     else {
         $('#header').text(res.properties.NAME_1);
     }
-    var tltipdiv = document.getElementById('tooltip');
-    var table = document.getElementById('nvtable');
-    
+
     tltipdiv.appendChild(table);
     return true;
 }
@@ -170,3 +186,8 @@ function activearea() {
         reset();
     }
 }
+
+$(function () {
+    $('#btnzoomin').click(function () { zoom.scaleBy(svg, 2); });
+    $('#btnzoomout').click(function () { zoom.scaleBy(svg, 0.5); });
+});
