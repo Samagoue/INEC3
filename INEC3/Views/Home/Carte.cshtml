@@ -1,7 +1,7 @@
 ﻿@Styles.Render("~/Content/zoomMap.css")
-
-<h2>Election Result</h2>
-<h3>Democratic Republic of the Congo</h3>
+@Scripts.Render("~/bundles/jquery")
+<h2 style="color:white;">Election Result</h2>
+<h3 style="color:white;">Democratic Republic of the Congo</h3>
 
 @*<div class="panel panel-primary">
         <div class="panel-heading">
@@ -18,13 +18,19 @@
         </div>
     </div>*@
 <style>
+    .body-content {
+        background: #5d5959;
+    }
+
     .feature {
         /*fill: #;*/
-        fill: #8dd3c7;
+        fill: white;
     }
-    .feature .active{
-        fill:black;
-    }
+
+        .feature .active {
+            fill: black;
+        }
+
     .datamaps-subunit:hover {
         stroke-width: 2px;
     }
@@ -121,7 +127,7 @@
         border-bottom: 1px solid #e2e2e2;
     }
 
-    user agent stylesheet
+
     tr {
         display: table-row;
         vertical-align: inherit;
@@ -166,22 +172,51 @@
         position: relative;
     }
 
-    .eln-map-zoom-buttons {
+
+
+    .eln-shell {
+        width: 100%;
+        max-width: 1600px;
+        min-height: 100vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .eln-map-buttons {
         cursor: pointer;
         z-index: 200;
-        position: absolute;
+        /*position: absolute;*/
         top: 5px;
-        left: 5px;
+        left: 10px;
+        display: block;
+        border-radius: 50%;
+        margin-bottom: 6px;
+        background-color: #989696;
     }
+    /*.glyphicon{
+        font-size:15px;
+    }*/
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />
-<div id="map" class="map-container">
-    <button id="btncancel" onclick="activearea()" class="btn btn-primary" disabled style="position:absolute;">Cancel</button>
+
+
+<div id="shell" class="row">
+    <div class="col-md-12 col-sm-12">
+        <div id="map" class="map-container">
+            @*<div style="-webkit-tap-highlight-color: rgba(0, 0, 0, 0); overflow: hidden; position: relative;"></div>*@
+
+        </div>
+        <div style="cursor: pointer;z-index:200;position:absolute;top:5px;left:10px;">
+            <button id="btnzoomin"  class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
+            <button id="btnzoomout" onclick="activearea()" class="btn eln-map-buttons" ><span class="glyphicon glyphicon-zoom-out"></span></button>
+            <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>
+        </div>
+    </div>
+
 </div>
 
-
-<div id="nvtable" class="eln-popup">
+<div id="nvtable" class="eln-popup" hidden>
     <div class="eln-title eln-results-container eln-results-row-president ln-has-images eln-race-report eln-result-winner" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span class="eln-default-subtitle" style="color:#6f6d6d !important;"> 100% Reporting </span></div>
     <table class="eln-table eln-results-table">
         <thead>
