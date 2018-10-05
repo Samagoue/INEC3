@@ -9,13 +9,14 @@
     fill: #ccc;
     cursor: pointer;
 }
-.feature.active {
-    fill: orange;
-}
+    .feature.active {
+        /*fill: orange;*/
+        fill: white;
+    }
 
 .mesh {
     fill: none;
-    stroke: #fff;
+    stroke: #5d5959;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
