@@ -8,7 +8,14 @@
 .feature {
     fill: #ccc;
     cursor: pointer;
+    stroke: rgba(0, 0, 0, 0.85);
+    stroke-width: 1;
 }
+
+    /*.feature:hover {
+        stroke-width: 3;
+    }*/
+
     .feature.active {
         /*fill: orange;*/
         fill: white;
@@ -16,10 +23,25 @@
 
 .mesh {
     fill: none;
-    stroke: #5d5959;
+    /*stroke: #5d5959;*/
+    stroke: #de1515;
+    stroke-width: 1;
+    opacity: inherit;
     stroke-linecap: round;
     stroke-linejoin: round;
 }
+/*.mesh:hover {
+        stroke-width: 3;
+    }*/
+
+path {
+    stroke: #333;
+    stroke-width: 1;
+}
+
+    path:hover {
+        stroke-width: 3;
+    }
 
 .tooltip {
     background: rgba(0, 0, 0, 0.85);
@@ -27,13 +49,13 @@
     padding: 10px;
 }
 
-.tooltip h3 {
-    margin: 0px 0px 8px;
-}
+    .tooltip h3 {
+        margin: 0px 0px 8px;
+    }
 
-.tooltip h2 {
-    margin: 0px 0px 8px;
-}
+    .tooltip h2 {
+        margin: 0px 0px 8px;
+    }
 
 div.tooltip {
     text-align: center;
@@ -63,12 +85,12 @@ div.tooltip {
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
-#chart svg {
-    border-top: 0;
-    margin-left: -5px;
-    margin-top: 7px;
-    background: rgba(0,127,255,0.7);
-}
+    #chart svg {
+        border-top: 0;
+        margin-left: -5px;
+        margin-top: 7px;
+        background: rgba(0,127,255,0.7);
+    }
 
 .county-boundary {
     fill: #8dd3c7;

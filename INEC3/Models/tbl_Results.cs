@@ -18,6 +18,7 @@ namespace INEC3.Models
         public virtual tbl_Candidat Candidat { get; set; }
 
         [ForeignKey("Party")]
+        [Display(Name ="Party")]
         public int ID_Party { get; set; }
         public virtual tbl_Party Party { get; set; }
 
@@ -26,7 +27,7 @@ namespace INEC3.Models
         public virtual tbl_BureauVote BureauVote { get; set; }
 
         public int Voix { get; set; }
-        public float Pourcentage { get; set; }
+        public double? Pourcentage { get; set; }
         public int Votants { get; set; }
         public int Abstentions { get; set; }
         public int Nuls { get; set; }

@@ -1,36 +1,17 @@
 ﻿@Styles.Render("~/Content/zoomMap.css")
 @Scripts.Render("~/bundles/jquery")
-<h2 style="color:white;">Election Result</h2>
-<h3 style="color:white;">Democratic Republic of the Congo</h3>
 
-@*<div class="panel panel-primary">
-        <div class="panel-heading">
-            <h3 class="panel-title">Instructions</h3>
-        </div>
-        <div class="panel-body">
-            <ul>
-                <li>Leave this page open</li>
-                <li>Open the <a target="_blank" href="RealTimeMapAdmin">Real Time Map Admin</a> page in a seperate browser window/tab</li>
-                <li>Enter some details in the Admin page and hit the Broadcast button</li>
-                <li>You should see the Real Time Map update automatically</li>
-                <li>Maybe you'll get lucky and someone else will be doing this at the same time as you and you and then you will see their changes too!</li>
-            </ul>
-        </div>
-    </div>*@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+<h2>Election Result</h2>
+<h3>Democratic Republic of the Congo</h3>
+
 <style>
     .body-content {
-        background: #5d5959;
+        /*background: #5d5959;*/
     }
-
-    .feature {
-        /*fill: #;*/
-        fill: white;
+    .deactive {
+        fill: #444 !important;
     }
-
-        .feature .active {
-            fill: black;
-        }
-
     .datamaps-subunit:hover {
         stroke-width: 2px;
     }
@@ -208,8 +189,8 @@
 
         </div>
         <div style="cursor: pointer;z-index:200;position:absolute;top:5px;left:10px;">
-            <button id="btnzoomin"  class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
-            <button id="btnzoomout" onclick="activearea()" class="btn eln-map-buttons" ><span class="glyphicon glyphicon-zoom-out"></span></button>
+            <button id="btnzoomin" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
+            <button id="btnzoomout" onclick="activearea()" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
             <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>
         </div>
     </div>
@@ -227,39 +208,32 @@
                 <th style="color:#6f6d6d !important;">Party</th>
                 <th style="color:#6f6d6d !important;">Votes</th>
                 <th style="color:#6f6d6d !important;">Pct.</th>
-                <th style="color:#6f6d6d !important;">E.V.</th>
-
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td class="legend-color-guide"><div style="background-color:#cc3d3d;"></div></td>
-                <td class="key" colspan="2" style="background-color:#cc3d3d;">Donald J. Trump</td>
-                <td class="key">Rep</td>
-                <td class="key">55,333,000</td>
-                <td class="value">62.1 %</td>
-                <td class="value">9</td>
-            </tr>
-            <tr>
-                <td class="legend-color-guide"><div style="background-color:#1a80c4;"></div></td>
-                <td class="key" colspan="2">Hillary Cliton</td>
-                <td class="key">Dem.</td>
-                <td class="key">729,547</td>
-                <td class="value">34.4 %</td>
-                <td class="value">3</td>
-            </tr>
-            <tr>
-                <td class="legend-color-guide"><div style="background-color:#7ead53;"></div></td>
-                <td class="key" colspan="2">Gary Johnson</td>
-                <td class="key">Ind.</td>
-                <td class="key">44,467</td>
-                <td class="value">2.1 %</td>
-                <td class="value">6</td>
-            </tr>
+            @*<tr>
+                    <td class="legend-color-guide"><div style="background-color:#cc3d3d;"></div></td>
+                    <td class="key" colspan="2" style="background-color:#cc3d3d;">Donald J. Trump</td>
+                    <td class="key">Rep</td>
+                    <td class="key">55,333,000</td>
+                    <td class="value">62.1 %</td>
+                    <td class="value">9</td>
+                </tr>*@
+
         </tbody>
     </table>
 </div>
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://unpkg.com/topojson-client@3"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/mainMap.js"></script>
+    <script>
+        var rs =@Html.Raw(ViewBag.Province);
+        var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1;
 
-<script src="~/Scripts/mainMap.js"></script>
+    </script>
+}

@@ -20,11 +20,11 @@ namespace INEC3.Models
 
         public string Addresse { get; set; }
 
-        public int Enroles { get; set; }
+        public int? Enroles { get; set; }
 
 
         [ForeignKey("Commune")]
-        public int ID_Commune { get; set; }
+        public int? ID_Commune { get; set; }
         public virtual tbl_Commune_Chefferie Commune { get; set; }
 
         public int Code_SV { get; set; }

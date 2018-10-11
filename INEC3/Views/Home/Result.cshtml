@@ -1,0 +1,191 @@
+﻿@model INEC3.Models.tbl_Results
+@{
+    ViewBag.Title = "About";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+<h2>Upload Election Result</h2>
+<style>
+    input, select, textarea {
+        max-width: 480px;
+    }
+</style>
+@using (Html.BeginForm("CreateResult", "Home", FormMethod.Post, new { id = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @*if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">@Html.ValidationSummary()</div>
+        }*@
+
+
+    <div class="row">
+        <div class="col-md-12">
+            @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.ID_Candidat, "Candidat")
+                @Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()", @required = true })
+                @Html.ValidationMessageFor(model => model.ID_Candidat, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.ID_Party, "Party")
+                @Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })
+                @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
+
+                @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()" })
+                @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Votants)
+                @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Voix, "Votes")
+                @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Voix, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Abstentions)
+                @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Nuls)
+                @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Pourcentage)
+                @Html.EditorFor(model => model.Pourcentage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Pourcentage, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Exprimes)
+                @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-6">
+                @*<div class="col-md-7"></div>*@
+                <div class="col-md-6">
+                    <input type="button" id="btnsave" value="Update" class="btn btn-primary form-control" style="margin-top:10%;" />
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
+        </div>
+
+
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "ResultList")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#ID_Party").prop("disabled", true);
+            $("#Votants").prop("disabled", true);
+            if ($('#ID_Result').val() == "") {
+                $('#Votants').val(0);
+                $('#ID_Candidat').append($('<option selected></option>').val('').html("Select Candidate"));
+                $('#ID_Party').append($('<option selected></option>').val('').html("Select Party"));
+                $('#ID_Bureauvote').append($('<option selected></option>').val('').html("Select Pooling Station"));
+                $('#btnsave').val('Save');
+            }
+            else {
+                SelectParty();
+                findVoters();
+            }
+            $('#btnsave').click(function () {
+                if ($('form').valid()) {
+                    var tbl_Results = new Object();
+                    tbl_Results.ID_Result = $('#ID_Result').val();
+                    tbl_Results.ID_Candidat = $('#ID_Candidat').val();
+                    tbl_Results.ID_Candidat = $('#ID_Candidat').val();
+                    tbl_Results.ID_Party = $('#ID_Party').val();
+                    tbl_Results.ID_Bureauvote = $('#ID_Bureauvote').val();
+                    tbl_Results.Voix = $('#Voix').val();
+                    tbl_Results.Pourcentage = $('#Pourcentage').val();
+                    tbl_Results.Votants = $('#Votants').val();
+                    tbl_Results.Abstentions = $('#Abstentions').val();
+                    tbl_Results.Nuls = $('#Nuls').val();
+                    tbl_Results.Exprimes = $('#Exprimes').val();
+
+                    console.log(tbl_Results);
+                    $.ajax({
+                        url: '/Home/SaveRecord',
+                        type: "GET",
+                        data: tbl_Results,
+                        success: function (resp) {
+                            if (resp=="success") {
+                                toastr.success("Record save successfully", "Success");
+                               var url = '@Url.Action("ResultList","Home")';
+                                window.location.href = url;
+                            }
+                            else {
+                                toastr.error(resp, "Error");
+                            }
+                        }
+                    });
+                }
+                else {
+
+                }
+            });
+        });
+        function SelectParty() {
+            if ($('#ID_Candidat').val() > 0) {
+                $.ajax({
+                    url: '/Home/GetParty',
+                    type: "GET",
+                    data: { candidateid: $('#ID_Candidat').val() },
+                    success: function (resp) {
+                        if (resp) {
+                            $("#ID_Party").val(resp.ID_Party);
+                            if (resp.Color != null)
+                                $("#ID_Party").css("background", resp.Color);
+                            else $("#ID_Party").css("background", '#e2e2e2');
+                        }
+                        else {
+                            console.log("SelectParty(): Something Wrong")
+                        }
+                    }
+
+                });
+            }
+        }
+        function findVoters() {
+            console.log('get here');
+            $.ajax({
+                url: '/Home/GetVoters',
+                type: "GET",
+                data: { polingstationid: $('#ID_Bureauvote').val() },
+                success: function (resp) {
+                    if (resp) {
+                        $('#Votants').val(resp);
+                    }
+                    else {
+                        $('#Votants').val(0);
+                        console.log("findVoters(): Something Wrong")
+                    }
+                }
+            });
+        }
+    </script>
+}
