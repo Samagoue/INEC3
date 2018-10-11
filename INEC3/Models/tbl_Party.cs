@@ -15,6 +15,6 @@ namespace INEC3.Models
         public string Nom { get; set; }
         public string Addresse { get; set; }
         public string Dirigeant { get; set; }
-        
+        public string Color { get; set; }
     }
 }
