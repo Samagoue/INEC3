@@ -61,7 +61,7 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .data(topojson.feature(cod, cod.objects.Provinces).features)
         .enter()
         .append("svg:text")
-        .text(function (d) { return d.properties.NAME_1.slice(0, 4); })
+        .text(function (d) { return d.properties.NAME_1.slice(0, 8); })
         .attr("x", function (d) { return path.centroid(d)[0]; })
         .attr("y", function (d) { return path.centroid(d)[1]; })
         .attr("text-anchor", "middle")
