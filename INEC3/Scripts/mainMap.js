@@ -137,6 +137,7 @@ function GenerateTooltip(res) {
     var tltipdiv = document.getElementById('tooltip');
     var table = document.getElementById('nvtable');
     table.removeAttribute('hidden');
+    tltipdiv.appendChild(table);
     $("#nvtable tbody tr").remove();
     if (iszoom && !iscancel) {
         $('#header').text(res.properties.NAME_2);
@@ -144,9 +145,9 @@ function GenerateTooltip(res) {
         if (tltip.length > 0) {
             $.each(tltip, function (i, v) {
                 if (i === 0)
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party.slice(5) + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
                 else
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party.slice(5) + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
             });
             tltipdiv.appendChild(table);
             return true;
@@ -168,9 +169,9 @@ function GenerateTooltip(res) {
 
 
                 if (i === 0)
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party.slice(5) + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
                 else
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party.slice(5) + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
             });
             tltipdiv.appendChild(table);
             return true;

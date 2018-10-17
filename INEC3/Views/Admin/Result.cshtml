@@ -1,7 +1,7 @@
 ﻿@model INEC3.Models.tbl_Results
 @{
-    ViewBag.Title = "About";
-    //var aj= ViewBag.Province
+    ViewBag.Title = "Result";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
@@ -15,26 +15,10 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @*if (!ViewData.ModelState.IsValid)
-        {
-            <div class="alert alert-danger">@Html.ValidationSummary()</div>
-        }*@
-
 
     <div class="row">
         <div class="col-md-12">
             @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.ID_Candidat, "Candidat")
-                @Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()", @required = true })
-                @*@Html.ValidationMessageFor(model => model.ID_Candidat, "", new { @class = "text-danger" })*@
-            </div>
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.ID_Party, "Party")
-                @Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })
-                @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
-            </div>
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.ID_Candidat, "Province")
@@ -58,7 +42,6 @@
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
-
                 @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()" })
                 @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
             </div>
@@ -67,47 +50,60 @@
                 @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
             </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.Voix, "Votes")
-                @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()" } })
-                @Html.ValidationMessageFor(model => model.Voix, "", new { @class = "text-danger" })
-            </div>
-
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Abstentions)
-                @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()" } })
+                @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
                 @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.Nuls)
-                @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()" } })
+                @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
                 @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
             </div>
-
             <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.Pourcentage)
-                @Html.EditorFor(model => model.Pourcentage, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Pourcentage, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-6">
-                @Html.LabelFor(model => model.Exprimes) <label>= (Votes - Abstentions) + (Nuls)</label>
-                @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.LabelFor(model => model.Exprimes)
+                @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
                 @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
             </div>
-            @*<div class="form-group col-md-6">
-                </div>*@
+            <div class="form-group col-md-6">
+                @Html.Label("Total Votes")
+                @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+
+        <div class="col-md-12">
+            <table class="table" id="tbllist">
+                <thead class="table-bordered">
+                    <tr>
+                        <th>@Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()" })</th>
+                        <th>@Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })</th>
+                        <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })</th>
+                        <th colspan="2"><button type="button" onclick="addToList()" class="btn btn-primary pull-right">Add</button></th>
+                    </tr>
+                    <tr>
+                        <th>Candidate</th>
+                        <th>Party</th>
+                        <th>Votes</th>
+                        <th>Percentage</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
         <div class="form-group col-md-12">
-            @*<div class="col-md-7"></div>*@
             <input type="button" id="btnsave" value="Update" class="btn btn-primary pull-right col-md-3" style="margin-right: 7%;" />
         </div>
 
         <div class="clearfix"></div>
 
-
+        @*<div class="form-group col-md-6">
+                @Html.LabelFor(model => model.Pourcentage)
+                @Html.EditorFor(model => model.Pourcentage, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Pourcentage, "", new { @class = "text-danger" })
+            </div>*@
 
 
     </div>
@@ -123,6 +119,8 @@
         $(document).ready(function () {
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
+            $("#Total_Votes").prop("disabled", true);
+            
             if ($('#ID_Result').val() == "") {
                 $('#Votants').val(0);
                 $('#ID_Candidat').append($('<option selected></option>').val('').html("Select Candidate"));
@@ -137,29 +135,39 @@
                 findVoters();
             }
             $('#btnsave').click(function () {
-                if ($('form').valid()) {
-                    var tbl_Results = new Object();
-                    tbl_Results.ID_Result = $('#ID_Result').val();
-                    tbl_Results.ID_Candidat = $('#ID_Candidat').val();
-                    tbl_Results.ID_Candidat = $('#ID_Candidat').val();
-                    tbl_Results.ID_Party = $('#ID_Party').val();
-                    tbl_Results.ID_Bureauvote = $('#ID_Bureauvote').val();
-                    tbl_Results.Voix = $('#Voix').val();
-                    tbl_Results.Pourcentage = $('#Pourcentage').val();
-                    tbl_Results.Votants = $('#Votants').val();
-                    tbl_Results.Abstentions = $('#Abstentions').val();
-                    tbl_Results.Nuls = $('#Nuls').val();
-                    tbl_Results.Exprimes = $('#Exprimes').val();
 
-                    console.log(tbl_Results);
+                if ($('form').valid()) {
+                    var tbl_Results = {
+                        ID_Result: $('#ID_Result').val(),
+                        ID_Bureauvote: $('#ID_Bureauvote').val(),
+                        Votants: $('#Votants').val(),
+                        Total_Votes: $('#Total_Votes').val(),
+                        Abstentions: $('#Abstentions').val(),
+                        Nuls: $('#Nuls').val(),
+                        Exprimes: $('#Exprimes').val(),
+                        ResultList: []
+                    };
+                    //tbl_Results.ResultList = ({ ID_Candidat: '1', ID_Party: '2', Pourcentage: '3', Voix: '1' });
+
+                    $('#tbllist >tbody tr').each(function () {
+                        tbl_Results.ResultList.push({
+                            ID_Candidat: $(this).find('.CandidateId').val(),
+                            ID_Party: $(this).find('.PartyId').val(),
+                            Pourcentage: $(this).find('.percen').html(),
+                            Voix: $(this).find('.votes').html()
+                        });
+                    });
+
                     $.ajax({
-                        url: '/Home/SaveRecord',
-                        type: "GET",
-                        data: tbl_Results,
+                        url: '/Admin/SaveRecord',
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(tbl_Results),
                         success: function (resp) {
-                            if (resp=="success") {
+                            if (resp == "success") {
                                 toastr.success("Record save successfully", "Success");
-                               var url = '@Url.Action("ResultList","Home")';
+                                var url = '@Url.Action("Index","Admin")';
                                 window.location.href = url;
                             }
                             else {
@@ -169,16 +177,18 @@
                     });
                 }
                 else {
-
+                    if ($('#ID_Province').val() == '') {
+                        toastr.warning("Select Province");
+                    }
                 }
+
             });
 
-            
         });
         function SelectParty() {
             if ($('#ID_Candidat').val() > 0) {
                 $.ajax({
-                    url: '/Home/GetParty',
+                    url: '/Admin/GetParty',
                     type: "GET",
                     data: { candidateid: $('#ID_Candidat').val() },
                     success: function (resp) {
@@ -199,7 +209,7 @@
         function findVoters() {
             console.log('get here');
             $.ajax({
-                url: '/Home/GetVoters',
+                url: '/Admin/GetVoters',
                 type: "GET",
                 data: { polingstationid: $('#ID_Bureauvote').val() },
                 success: function (resp) {
@@ -216,9 +226,9 @@
         function GetTerritoireList() {
             if ($('#ID_Province').val() > 0) {
                 $('#ID_Territoire').html('');
-                $('#ID_Territoire').append($('<option></option>').val(0).html('Select Province'));
+                $('#ID_Territoire').append($('<option></option>').val('').html('Select Province'));
                 $.ajax({
-                    url: '/Home/GetTerritoireList',
+                    url: '/Admin/GetTerritoireList',
                     type: 'GET',
                     data: { ProvinceId: $('#ID_Province').val() },
                     success: function (res) {
@@ -232,14 +242,12 @@
             }
         }
 
-
-
         function GetCommune() {
             if ($('#ID_Territoire').val() > 0) {
                 $('#ID_Commune').html('');
-                $('#ID_Commune').append($('<option></option>').val(0).html('Select Pooling Station'));
+                $('#ID_Commune').append($('<option></option>').val('').html('Select Pooling Station'));
                 $.ajax({
-                    url: '/Home/GetCommune',
+                    url: '/Admin/GetCommune',
                     type: 'GET',
                     data: { ProvinceId: $('#ID_Province').val(), TerritoireId: $('#ID_Territoire').val() },
                     success: function (res) {
@@ -255,17 +263,15 @@
             }
 
         }
-
         function GetPoolingStation() {
             if ($('#ID_Commune').val() > 0) {
                 $('#ID_Bureauvote').html('');
-                $('#ID_Bureauvote').append($('<option></option>').val(0).html('Select Pooling Station'));
+                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Pooling Station'));
                 $.ajax({
-                    url: '/Home/GetPoolingStationList',
+                    url: '/Admin/GetPoolingStationList',
                     type: 'GET',
                     data: { CommuneId: $('#ID_Commune').val() },
                     success: function (res) {
-                        console.log(res);
                         if (res) {
 
                             $.each(res, function (i, v) {
@@ -277,12 +283,60 @@
             }
         }
         function CountExprimes() {
-            var Votes = $('#Voix').val() == "" ? 0 : $('#Voix').val()
+           // var Votes = $('#Voix').val() == "" ? 0 : $('#Voix').val()
             var Abstentions = $('#Abstentions').val() == "" ? 0 : $('#Abstentions').val()
             var Nuls = $('#Nuls').val() == "" ? 0 : $('#Nuls').val()
 
-            $('#Exprimes').val((parseInt(Votes) - parseInt(Abstentions)) + parseInt(Nuls))
+            var Votes=0
+
+            $('#tbllist >tbody tr').each(function () {
+                Votes +=parseInt($(this).find('.votes').html())
+            });
+
+            $('#tbllist >tbody tr').each(function () {
+                $(this).find('.percen').html((parseInt($(this).find('.votes').html()) * 100 / parseInt(Votes)).toFixed(2))
+            });
+            $('#Exprimes').val(parseInt(Votes) + parseInt(Abstentions) + parseInt(Nuls))
+            $('#Total_Votes').val(parseInt(Votes))
+
         }
+
+        function addToList() {
+            if ($('#ID_Candidat').val() != '' && $('#Voix').val()>0) {
+                var table = $('#tbllist tbody');
+            var Candidate = $('#ID_Candidat option:selected').text();
+            var Party = $('#ID_Party option:selected').text();
+            var votes = $('#Voix').val();
+            //Percentage
+            var TVotes = $('#Total_Votes').val() == "" ? $('#Voix').val() : $('#Total_Votes').val()
+            var perc = (parseInt(votes) * 100 / parseInt(TVotes)).toFixed(2)
+
+            table.append('<tr><td><input type="hidden" class="CandidateId" value="' + $('#ID_Candidat').val() + '" />' + Candidate + '</td><td><input type="hidden" class="PartyId" value="' + $('#ID_Party').val() + '" />' + Party + '</td><td class="votes">' + votes + '</td><td class="percen">' + perc + '</td><td><button type="button" onclick="remove($(this))" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove" "></i></button></td></tr>')
+            CountExprimes()
+            resetList()
+        }
+        else {
+                if ($('#Voix').val() == 0){
+                    toastr.warning("Enter value more than zero");
+                }
+            if ($('#ID_Candidat').val() == '') {
+                toastr.warning("Select Candidate");
+                }
+        }
+        }
+        function remove(button) {
+            button.closest("tr").remove()
+            CountExprimes()
+        }
+        function resetList() {
+            $('#ID_Candidat').val('');
+            $('#ID_Party').val('');
+            $('#Voix').val(0);
+
+        }
+
 
     </script>
 }
+
+
