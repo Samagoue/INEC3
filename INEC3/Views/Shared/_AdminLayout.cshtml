@@ -48,7 +48,6 @@
             }
     </style>
 </head>
-
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -63,24 +62,27 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                @*@Html.ActionLink("Admin INEC", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse" style="margin-left: 10%;">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Carte", "Carte", "Home")</li>
 
-                    <li>@Html.ActionLink("Chart", "Chart", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Dropdown Menu<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Page 1</a></li>
-                            <li><a href="#">Page 2</a></li>
-                            <li><a href="#">Page 3</a></li>
-                        </ul>
-                    </li>
-                </ul>
+
+                @if (Session["UserID"] != null)
+                {<ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("List", "Index", "Admin")</li>
+                        <li>@Html.ActionLink("Add Result", "Result", "Admin")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@Url.Action("Index", "Admin")"><span class="glyphicon glyphicon-user"></span> @Session["UserID"]</a></li>
+                        <li><a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-user"></span> Logout </a></li>
+                    </ul>
+                }
+                else
+                {
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@Url.Action("Login", "Account")"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                    </ul>
+                }
             </div>
         </div>
         <div class="flag-border">

@@ -1,59 +1,24 @@
 ﻿using System;
+using INEC3.DbConn;
+using INEC3.Models;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
-using INEC3.Models;
+using System.Web.Security;
 using Microsoft.AspNet.SignalR;
-using INEC3.DbConn;
 using System.Data;
 using Newtonsoft.Json;
 
 namespace INEC3.Controllers
 {
-    public class HomeController : Controller
+    public class AdminController : Controller
     {
         private inecDBContext db = new inecDBContext();
         private Sqldbconn _db = new Sqldbconn();
+
         public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult About()
-        {
-
-
-            return View();
-        }
-
-        public ActionResult Chart()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Carte()
-        {
-            DataSet dt = new DataSet();
-            dt = _db.GetDatatable("proc_GetProvinceResult", "");
-            ViewBag.Province = JsonConvert.SerializeObject(dt);
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Artech Consulting";
-
-            return View();
-        }
-
-
-        public ActionResult ResultList()
         {
             var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
             return View(results.ToList());
@@ -96,22 +61,40 @@ namespace INEC3.Controllers
             return Json(voters, JsonRequestBehavior.AllowGet);
         }
 
-        public JsonResult SaveRecord(tbl_Results tbl_Results)
+        public JsonResult SaveRecord(Results tbl_Results)
         {
             try
             {
 
+                foreach (var it in tbl_Results.ResultList)
+                {
+                    tbl_Results re = new tbl_Results();
 
-                if (tbl_Results.ID_Result == 0)
-                {
-                    db.Results.Add(tbl_Results);
-                    db.SaveChanges();
+                    re.ID_Result = tbl_Results.ID_Result;
+                    re.ID_Bureauvote = tbl_Results.ID_Bureauvote;
+                    re.Votants = tbl_Results.Votants;
+                    re.Abstentions = tbl_Results.Abstentions;
+                    re.Nuls = tbl_Results.Nuls;
+                    re.Exprimes = tbl_Results.Exprimes;
+
+                    re.ID_Candidat = it.ID_Candidat;
+                    re.ID_Party = it.ID_Party;
+                    re.Pourcentage = it.Pourcentage;
+                    re.Voix = it.Voix;
+                    re.Total_Votes = tbl_Results.Total_Votes;
+
+                    if (tbl_Results.ID_Result == 0)
+                    {
+                        db.Results.Add(re);
+                        db.SaveChanges();
+                    }
+                    //else
+                    //{
+                    //    db.Entry(re).State = EntityState.Modified;
+                    //    db.SaveChanges();
+                    //}
                 }
-                else
-                {
-                    db.Entry(tbl_Results).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
+               
 
                 DataSet dt = new DataSet();
                 dt = _db.GetDatatable("proc_GetProvinceResult", "");
@@ -137,7 +120,7 @@ namespace INEC3.Controllers
 
         public JsonResult GetPoolingStationList(int CommuneId)
         {
-            var res = db.BureauVotes.Where(w => w.ID_Commune==CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
+            var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
