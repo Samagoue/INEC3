@@ -8,7 +8,7 @@ var city;
 
 var color = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf"];
 
-var projection = d3.geoMercator().scale(1500).translate([(width / 40) - padding, height / 3]);
+var projection = d3.geoMercator().scale(1200).translate([(width / 40) - padding, height / 3]);
 
 var path = d3.geoPath().projection(projection);
 
@@ -207,7 +207,7 @@ function usZoom() {
     $("#btncancel").prop('disabled', true);
     iszoom = false;
     var t = d3.transition().duration(800)
-    projection.scale(1500).translate([(width / 40) - padding, height / 3])
+    projection.scale(1200).translate([(width / 40) - padding, height / 3])
     debugger
     statePaths.transition(t).attr('d', path).attr('class', '');
     //statePaths.transition(t).attr('d', path).style('fill', "white")

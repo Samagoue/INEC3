@@ -40,7 +40,7 @@ path {
 }
 
     path:hover {
-        stroke-width: 3;
+        stroke-width: 1;
     }
 
 .tooltip {
