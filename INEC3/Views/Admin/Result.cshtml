@@ -28,7 +28,7 @@
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.ID_Party, "Territoire")
                 @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
-                }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()" })
+                }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
                 @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
             </div>
 
@@ -36,13 +36,13 @@
                 @Html.LabelFor(model => model.ID_Bureauvote, "Commune")
 
                 @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
-                }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()" })
+                }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
                 @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
             </div>
 
             <div class="form-group col-md-6">
                 @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
-                @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()" })
+                @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()", @required = true })
                 @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
             </div>
             <div class="form-group col-md-6">
@@ -120,7 +120,7 @@
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
-            
+
             if ($('#ID_Result').val() == "") {
                 $('#Votants').val(0);
                 $('#ID_Candidat').append($('<option selected></option>').val('').html("Select Candidate"));
@@ -134,6 +134,8 @@
                 SelectParty();
                 findVoters();
             }
+
+            $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
             $('#btnsave').click(function () {
 
                 if ($('form').valid()) {
@@ -226,7 +228,7 @@
         function GetTerritoireList() {
             if ($('#ID_Province').val() > 0) {
                 $('#ID_Territoire').html('');
-                $('#ID_Territoire').append($('<option></option>').val('').html('Select Province'));
+                $('#ID_Territoire').append($('<option></option>').val('').html('Select Territoire'));
                 $.ajax({
                     url: '/Admin/GetTerritoireList',
                     type: 'GET',
@@ -234,7 +236,7 @@
                     success: function (res) {
                         if (res) {
                         $.each(res, function (i, v) {
-                            $('#ID_Territoire').append($('<option></option>').val(v.ID_Province).html(v.Nom));
+                            $('#ID_Territoire').append($('<option></option>').val(v.ID_Territoire).html(v.Nom));
                         });
                     }
                 }
@@ -245,7 +247,7 @@
         function GetCommune() {
             if ($('#ID_Territoire').val() > 0) {
                 $('#ID_Commune').html('');
-                $('#ID_Commune').append($('<option></option>').val('').html('Select Pooling Station'));
+                $('#ID_Commune').append($('<option></option>').val('').html('Select Commune'));
                 $.ajax({
                     url: '/Admin/GetCommune',
                     type: 'GET',
@@ -261,7 +263,7 @@
                     }
                 });
             }
-
+            resettable()
         }
         function GetPoolingStation() {
             if ($('#ID_Commune').val() > 0) {
@@ -333,6 +335,9 @@
             $('#ID_Party').val('');
             $('#Voix').val(0);
 
+        }
+        function resettable() {
+            $('#tbllist tbody>tr').remove();
         }
 
 
