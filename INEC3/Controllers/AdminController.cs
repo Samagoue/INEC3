@@ -114,7 +114,7 @@ namespace INEC3.Controllers
 
         public JsonResult GetTerritoireList(int ProvinceId)
         {
-            var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Province, s.Nom }).ToList();
+            var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
             return Json(Ter, JsonRequestBehavior.AllowGet);
         }
 
