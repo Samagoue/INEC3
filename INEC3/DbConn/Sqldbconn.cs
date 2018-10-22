@@ -28,7 +28,7 @@ namespace INEC3.DbConn
             cmd.CommandText = spname + " " + parameter;
             cmd.CommandType = CommandType.Text;
             cmd.Connection = con;
-            con.Open();
+             con.Open();
             SqlDataAdapter adp = new SqlDataAdapter(cmd);
             //DataTable dt = new DataTable();
             DataSet ds = new DataSet();

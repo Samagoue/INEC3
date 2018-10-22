@@ -13,6 +13,7 @@ var iscancel = false;
 var iszoom = false;
 var activeProvince = 0;
 
+
 if (owidth <= 425) {
     var projection = d3.geoMercator().scale(oheight * 2).translate([-150, height / 3]);//For Mobile
     console.log('Mobile View');
@@ -21,6 +22,8 @@ else {
     var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
     console.log('Pc Or Descktop View');
 }
+
+
 
 var path = d3.geoPath().projection(projection);
 
@@ -71,7 +74,7 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .data(topojson.feature(cod, cod.objects.Provinces).features)
         .enter()
         .append("svg:text")
-        .text(function (d) { return d.properties.NAME_1.slice(0, 4); })
+        .text(function (d) { return d.properties.NAME_1.slice(0, 8); })
         .attr("x", function (d) { return path.centroid(d)[0]; })
         .attr("y", function (d) { return path.centroid(d)[1]; })
         .attr("text-anchor", "middle")
@@ -219,6 +222,7 @@ function usZoom() {
     $("#btncancel").prop('disabled', true);
     iszoom = false;
     var t = d3.transition().duration(800)
+
     //projection.scale(1500).translate([(width / 40) - padding, height / 3])
     if (owidth <= 425) {
         projection.scale(oheight * 2).translate([-150, height / 3]);
@@ -230,6 +234,8 @@ function usZoom() {
         //var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
         console.log('Pc Or Descktop View');
     }
+
+
     debugger
     statePaths.transition(t).attr('d', path).attr('class', '');
     //statePaths.transition(t).attr('d', path).style('fill', "white")
