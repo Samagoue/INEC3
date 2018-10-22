@@ -65,8 +65,6 @@
                 @*@Html.ActionLink("Admin INEC", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse" style="margin-left: 10%;">
-
-
                 @if (Session["UserID"] != null)
                 {<ul class="nav navbar-nav">
                         <li>@Html.ActionLink("List", "Index", "Admin")</li>

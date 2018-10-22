@@ -1,20 +1,33 @@
-﻿var width = 960,
-    height = 600,
+﻿var owidth = $(window).width(), oheight = $(window).height(), opadding = $(window).width() / 10;
+
+//var width = 960,
+//    height = 600,
+//    padding = 100
+
+var width = owidth - opadding,
+    //height = oheight - opadding,
+    height = 500,
     padding = 100
 
 var iscancel = false;
 var iszoom = false;
-var city;
+var activeProvince = 0;
 
-var color = ["#8dd3c7", "#ffffb3", "#bebada", "#fb8072", "#80b1d3", "#fdb462", "#b3de69", "#fccde5", "#fbb4ae", "#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc", "#e5d8bd", "#fddaec", "#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33", "#a65628", "#f781bf"];
 
-var projection = d3.geoMercator().scale(1200).translate([(width / 40) - padding, height / 3]);
+if (owidth <= 425) {
+    var projection = d3.geoMercator().scale(oheight * 2).translate([-150, height / 3]);//For Mobile
+    console.log('Mobile View');
+}
+else {
+    var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
+    console.log('Pc Or Descktop View');
+}
+
+
 
 var path = d3.geoPath().projection(projection);
 
 var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
-
-var color = d3.scaleThreshold().domain([0.028, 0.038, 0.048, 0.058, 0.068, 0.078]).range(['#4d9221', '#a1d76a', '#e6f5d0', '#f7f7f7', '#fde0ef', '#e9a3c9', '#c51b7d']);
 
 //d3.select("svg").remove();
 var svg = d3.select("#map").append("svg")
@@ -70,7 +83,8 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
 });
 
 function clicked(d) {
-    var state = states.find(function (e) { return e.properties.GID_1.slice(4) === d.properties.GID_1.slice(4) })
+    activeProvince = d.properties.GID_1.slice(4);
+    //var state = states.find(function (e) { return e.properties.GID_1.slice(4) === d.properties.GID_1.slice(4) })
     var stateCounties = counties.filter(function (e) {
         return e.properties.GID_1.slice(4) === d.properties.GID_1.slice(4)
     })
@@ -84,6 +98,7 @@ function clicked(d) {
         .attr('class', 'county')
         .attr('d', path)
         .style('fill', function (d) { return GetTerritoiresColor(d) })
+        .attr("territoiryCode", function (d) { return d.properties.GID_2.slice(4).split('.')[1]; })
         //.style('fill', function (d) { var c = TerritoiresResult.find(function (e) { return e.GUI_2 === d.properties.GID_2.slice(4) });  return c.Color; })
         //.style('fill', "white")
         .style('opacity', 0)
@@ -122,6 +137,7 @@ function clicked(d) {
         translate = [width / 2 - scale * x, height / 2 - scale * y];
 
     svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+
 }
 
 function zoomed() {
@@ -165,7 +181,6 @@ function GenerateTooltip(res) {
             console.log(tvote);
 
             $.each(tltip, function (i, v) {
-                debugger
 
 
                 if (i === 0)
@@ -207,7 +222,20 @@ function usZoom() {
     $("#btncancel").prop('disabled', true);
     iszoom = false;
     var t = d3.transition().duration(800)
-    projection.scale(1200).translate([(width / 40) - padding, height / 3])
+
+    //projection.scale(1500).translate([(width / 40) - padding, height / 3])
+    if (owidth <= 425) {
+        projection.scale(oheight * 2).translate([-150, height / 3]);
+        //var projection = d3.geoMercator().scale(oheight * 2).translate([-150, height / 3]);//For Mobile
+        console.log('Mobile View');
+    }
+    else {
+        projection.scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
+        //var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
+        console.log('Pc Or Descktop View');
+    }
+
+
     debugger
     statePaths.transition(t).attr('d', path).attr('class', '');
     //statePaths.transition(t).attr('d', path).style('fill', "white")
@@ -219,6 +247,7 @@ function usZoom() {
         .style('opacity', 0)
         .remove()
     svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+
 }
 
 $(document).ready(function () {
@@ -233,9 +262,22 @@ $(document).ready(function () {
         ProvinceResult = updated.Table
         TerritoiresResult = updated.Table1
         FillProvinceColor()
+        if (iszoom) {
+            FillTerritoiresColor();
+        }
         toastr.success("Record Updated");
     };
     $.connection.hub.start().done(function () { console.log("hub done"); });
+
+    $(window).resize(function () {
+        location.reload(true);
+        //if ($(window).width() < 960) {
+        //    alert('Less than 960');
+        //}
+        //else {
+        //    alert('More than 960');
+        //}
+    });
 });
 
 function FillProvinceColor() {
@@ -245,6 +287,21 @@ function FillProvinceColor() {
             if (last !== ProvinceResult[i].GUI_1) {
                 last = ProvinceResult[i].GUI_1
                 $("[stateCode=" + ProvinceResult[i].GUI_1 + "]").css("fill", ProvinceResult[i].Color);
+            }
+        });
+    }
+}
+function FillTerritoiresColor() {
+    debugger
+    if (TerritoiresResult) {
+        var last;
+        $.each(TerritoiresResult, function (i, v) {
+
+            if (activeProvince === TerritoiresResult[i].GUI_1) {
+                if (last !== TerritoiresResult[i].GUI_2.split('.')[1]) {
+                    last = TerritoiresResult[i].GUI_2.split('.')[1];
+                    $("[territoiryCode=" + TerritoiresResult[i].GUI_2.split('.')[1] + "]").css("fill", TerritoiresResult[i].Color);
+                }
             }
         });
     }
