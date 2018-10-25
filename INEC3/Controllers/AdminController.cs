@@ -57,8 +57,18 @@ namespace INEC3.Controllers
 
         public JsonResult GetVoters(int polingstationid)
         {
-            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => s.Commune.Enroles).FirstOrDefault();
-            return Json(voters, JsonRequestBehavior.AllowGet);
+            var res = new Dictionary<string, string>();
+            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();
+            var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
+            var res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
+            res.Add("voters", JsonConvert.SerializeObject(voters));
+            res.Add("list", JsonConvert.SerializeObject(res1));
+            if (exprims != null)
+            {
+                res.Add("exprims", JsonConvert.SerializeObject(exprims));
+            }
+            //return Json(voters, JsonRequestBehavior.AllowGet);
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult SaveRecord(Results tbl_Results)
@@ -94,7 +104,7 @@ namespace INEC3.Controllers
                     //    db.SaveChanges();
                     //}
                 }
-               
+
 
                 DataSet dt = new DataSet();
                 dt = _db.GetDatatable("proc_GetProvinceResult", "");
@@ -110,6 +120,85 @@ namespace INEC3.Controllers
 
                 return Json("error " + ex.Message.ToString(), JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public JsonResult SaveListRecord(tbl_Results obj)
+        {
+            if (obj.ID_Result == 0)
+            {
+                List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
+                if (isExist.Count == 0)
+                {
+                    obj.Pourcentage = 100;
+                    db.Results.Add(obj);
+                    db.SaveChanges();
+                }
+                else
+                {
+
+                    tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
+                    if (isdublicate != null)
+                    {
+                        db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
+                        db.SaveChanges();
+                        //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                    }
+                    int Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                    double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
+                    obj.Pourcentage = Perc;
+                    obj.Total_Votes = Total_Votes + obj.Voix;
+                    db.Results.Add(obj);
+                    db.SaveChanges();
+                    Total_Votes = Total_Votes + obj.Voix;
+
+                    foreach (var it in isExist)
+                    {
+                        tbl_Results re = new tbl_Results();
+                        re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
+                        double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
+                        re.Pourcentage = Percc;
+                        re.Total_Votes = Total_Votes;
+
+                        db.SaveChanges();
+                    }
+                    //foreach()
+                }
+
+
+            }
+            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
+            DataSet dt = new DataSet();
+            dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+            hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+            return Json(res, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
+        {
+            db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == ResultId).ToList());
+            db.SaveChanges();
+            List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).ToList();
+
+            int Total_Votes = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
+            if (isExist.Count > 0)
+            {
+                foreach (var it in isExist)
+                {
+                    tbl_Results re = new tbl_Results();
+                    re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
+                    double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
+                    re.Pourcentage = Percc;
+                    re.Total_Votes = Total_Votes;
+                    re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls + re.Exprimes);
+                    db.SaveChanges();
+                }
+            }
+            var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
+            DataSet dt = new DataSet();
+            dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+            hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult GetTerritoireList(int ProvinceId)
