@@ -158,6 +158,7 @@ namespace INEC3.Controllers
                         double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
                         re.Pourcentage = Percc;
                         re.Total_Votes = Total_Votes;
+                        re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
 
                         db.SaveChanges();
                     }
@@ -179,9 +180,10 @@ namespace INEC3.Controllers
             db.SaveChanges();
             List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).ToList();
 
-            int Total_Votes = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
+            
             if (isExist.Count > 0)
             {
+                int Total_Votes = isExist.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
                 foreach (var it in isExist)
                 {
                     tbl_Results re = new tbl_Results();
@@ -189,7 +191,7 @@ namespace INEC3.Controllers
                     double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
                     re.Pourcentage = Percc;
                     re.Total_Votes = Total_Votes;
-                    re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls + re.Exprimes);
+                    re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls );
                     db.SaveChanges();
                 }
             }
