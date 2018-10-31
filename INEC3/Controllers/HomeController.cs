@@ -18,6 +18,9 @@ namespace INEC3.Controllers
         private Sqldbconn _db = new Sqldbconn();
         public ActionResult Index()
         {
+            DataSet dt = new DataSet();
+            dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            ViewBag.Province = JsonConvert.SerializeObject(dt);
             return View();
         }
 
