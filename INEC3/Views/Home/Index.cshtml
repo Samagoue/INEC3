@@ -1,31 +1,330 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+@Styles.Render("~/Content/zoomMap.css")
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
-<div class="jumbotron">
-    <h1>Application INEC</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<style>
+
+
+    .deactive {
+        fill: #444 !important;
+    }
+
+    .datamaps-subunit:hover {
+        stroke-width: 2px;
+    }
+
+    .state {
+        stroke: rgb(128, 128, 128);
+        stroke-linejoin: round;
+    }
+
+    .eln-popup {
+        text-align: left;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #ccc;
+        z-index: 1000001;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+        pointer-events: none;
+    }
+
+        .eln-popup .eln-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .eln-popup .eln-default-subtitle {
+            color: #999;
+            font: 400 11px/1 nyt-franklin, arial, helvetica, sans-serif;
+        }
+
+        .eln-popup .eln-popup-content {
+            padding: 6px 8px;
+            font: 13px/1.3 nyt-franklin, arial, helvetica, sans-serif;
+            white-space: nowrap;
+        }
+
+        .eln-popup .eln-has-electoral-votes .eln-subtitle {
+            position: absolute;
+        }
+
+        .eln-popup .eln-subtitle {
+            color: #666;
+            font: 400 12px/1 nyt-franklin, arial, helvetica, sans-serif;
+            margin: 0 0 8px;
+        }
+
+        .eln-popup .eln-results-container {
+            padding-bottom: 0 !important;
+        }
+
+    .eln-results-container {
+        position: relative;
+        padding-bottom: 20px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+        .eln-results-container .eln-results-table {
+            font-size: 17px;
+            width: 100%;
+            font: 400 13px/1.25 nyt-franklin, arial, helvetica, sans-serif;
+            margin-bottom: 8px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+    .eln-popup .eln-has-electoral-votes .eln-results-row-president .eln-header {
+        padding-top: 3px;
+    }
+
+    .eln-popup .eln-results-container .eln-name {
+        padding-top: 0;
+        padding-left: 0 !important;
+        padding-right: 0;
+    }
+
+    .eln-popup .eln-results-container .eln-header {
+        font-size: 11px;
+        padding-bottom: 4px;
+    }
+
+    .eln-results-container .eln-name {
+        text-align: left;
+    }
+
+    .eln-results-container .eln-header {
+        font: 400 11px/1 nyt-franklin, arial, helvetica, sans-serif;
+        text-transform: uppercase;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #e2e2e2;
+        vertical-align: bottom;
+        color: #999;
+    }
+
+    .eln-results-container .eln-row {
+        border-bottom: 1px solid #e2e2e2;
+    }
+
+
+    tr {
+        display: table-row;
+        vertical-align: inherit;
+        border-color: inherit;
+    }
+
+    .eln-results-container .eln-results-table {
+        width: 100%;
+        font: 400 13px/1.25 nyt-franklin, arial, helvetica, sans-serif;
+        margin-bottom: 8px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    table {
+        width: 96%;
+        border-collapse: collapse;
+    }
+
+    .user agent stylesheet
+    table {
+        display: table;
+        border-collapse: separate;
+        border-spacing: 2px;
+        border-color: grey;
+    }
+
+    .eln-results-container {
+        position: relative;
+        padding-bottom: 20px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    }
+
+    .eln-popup .eln-popup-content {
+        padding: 6px 8px;
+        font: 13px/1.3 nyt-franklin, arial, helvetica, sans-serif;
+        white-space: nowrap;
+    }
+
+    .map-container {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        overflow: hidden;
+        position: relative;
+    }
+
+
+
+    .eln-shell {
+        width: 100%;
+        max-width: 1600px;
+        min-height: 100vh;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    .eln-map-buttons {
+        cursor: pointer;
+        z-index: 200;
+        /*position: absolute;*/
+        top: 5px;
+        left: 10px;
+        display: block;
+        border-radius: 50%;
+        margin-bottom: 6px;
+        /*background-color: #989696;*/
+    }
+    /*.glyphicon{
+        font-size:15px;
+    }*/
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />
+<!-- ============================================================== -->
+<!-- D3 Js Custom -->
+<!-- ============================================================== -->
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Dashboard</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index","Home")">Home</a></li>
+                <li class="active">Index</li>
+            </ol>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- Other sales widgets -->
+    <!-- ============================================================== -->
+    <!-- .row -->
+    <div class="row">
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                @*<h5 class="box-title">1st <label id="lblfirst">Candidate 1</label></h5>*@
+                <ul class="list-inline two-part">
+                    <li><img src="~/Content/plugins/images/users/varun.jpg" class="img-circle"></li>
+                    <li class="text-right"><span id="lblcandidate0" class="counter">23</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                @*<h3 class="box-title">2nd <label id="lblsecond">Candidate 2</label></h3>*@
+                <ul class="list-inline two-part">
+                    <li><img src="~/Content/plugins/images/users/genu.jpg" class="img-circle"></li>
+                    <li class="text-right"><span id="lblcandidate1" class="counter">0</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title">Reported Pooling Station</h3>
+                <ul class="list-inline two-part">
+                    <li class="text-left"><span id="ReportPolstation" class="counter">0</span>Reported</li>
+                    <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <!-- ============================================================== -->
+    <!-- Extra-component -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <div class="col-lg-8 col-md-12">
+            <div id="mapcontainer" class="white-box">
+                <h3 class="box-title">Country visit</h3>
+                @*<div id="usa" style="height: 365px"></div>*@
+                @*<div id="map" style="height: 365px"></div>*@
+                <div id="map" style="height: 365px"></div>
+                <div style="cursor: pointer;z-index:200;position:absolute;top:51px;left:41px;">
+                    <button id="btnzoomin" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
+                    <button id="btnzoomout" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
+                    <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="white-box">
+                <h3 class="box-title"><small class="pull-right m-t-10 text-success"><i class="fa fa-sort-asc"></i> 18% High then last month</small> Monthly Site Traffic</h3>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <h6>Overall Growth</h6> <b>80.40%</b>
+                    </div>
+                    <div class="stat-item">
+                        <h6>Montly</h6> <b>15.40%</b>
+                    </div>
+                    <div class="stat-item">
+                        <h6>Day</h6> <b>5.50%</b>
+                    </div>
+                </div>
+                <div id="sparkline8"></div>
+            </div>
+            <div class="white-box">
+                <h3 class="box-title"><small class="pull-right m-t-10 text-danger"><i class="fa fa-sort-desc"></i> 18% High then last month</small>Weekly Site Traffic</h3>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <h6>Overall Growth</h6> <b>80.40%</b>
+                    </div>
+                    <div class="stat-item">
+                        <h6>Montly</h6> <b>15.40%</b>
+                    </div>
+                    <div class="stat-item">
+                        <h6>Day</h6> <b>5.50%</b>
+                    </div>
+                </div>
+                <div id="sparkline9"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+
+
+
+<div id="nvtable" class="eln-popup" hidden>
+    <div class="eln-title eln-results-container eln-results-row-president ln-has-images eln-race-report eln-result-winner" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span class="eln-default-subtitle" style="color:#6f6d6d !important;"> 100% Reporting </span></div>
+    <table class="eln-table eln-results-table">
+        <thead>
+            <tr>
+                @*<th colspan="2" class="x-value">Alabama <strong style="color:#6f6d6d !important;"> 100% Reporting </strong></th>*@
+
+                <th class="eln-header eln-name" colspan="3">Candidate</th>
+                <th style="color:#6f6d6d !important;">Party</th>
+                <th style="color:#6f6d6d !important;">Votes</th>
+                <th style="color:#6f6d6d !important;">Pct.</th>
+            </tr>
+        </thead>
+        <tbody>
+            @*<tr>
+                    <td class="legend-color-guide"><div style="background-color:#cc3d3d;"></div></td>
+                    <td class="key" colspan="2" style="background-color:#cc3d3d;">Donald J. Trump</td>
+                    <td class="key">Rep</td>
+                    <td class="key">55,333,000</td>
+                    <td class="value">62.1 %</td>
+                    <td class="value">9</td>
+                </tr>*@
+
+        </tbody>
+    </table>
 </div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/mainMap.js"></script>
+    <script>
+        var rs =@Html.Raw(ViewBag.Province);
+        var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3;
+       
+
+    </script>
+}

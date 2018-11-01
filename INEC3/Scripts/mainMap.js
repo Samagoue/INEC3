@@ -5,8 +5,8 @@
 //    padding = 100
 
 var width = owidth - opadding,
-    //height = oheight - opadding,
-    height = 500,
+    height = oheight - opadding,
+    //height = 500,
     padding = 100
 
 var iscancel = false;
