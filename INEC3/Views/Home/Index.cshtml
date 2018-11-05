@@ -174,9 +174,12 @@
         margin-bottom: 6px;
         /*background-color: #989696;*/
     }
-    /*.glyphicon{
-        font-size:15px;
-    }*/
+    .two-part li span {
+        font-size: 30px !important;
+    }
+    .list-inline li span {
+        font-size: 30px !important;
+    }
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />
@@ -201,30 +204,39 @@
     <!-- ============================================================== -->
     <!-- .row -->
     <div class="row">
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 @*<h5 class="box-title">1st <label id="lblfirst">Candidate 1</label></h5>*@
                 <ul class="list-inline two-part">
-                    <li><img src="~/Content/plugins/images/users/varun.jpg" class="img-circle"></li>
+                    <li><img src="~/Content/plugins/images/users/varun.jpg" class="img-circle" style="width: 78%;"></li>
                     <li class="text-right"><span id="lblcandidate0" class="counter">23</span></li>
                 </ul>
             </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 @*<h3 class="box-title">2nd <label id="lblsecond">Candidate 2</label></h3>*@
                 <ul class="list-inline two-part">
-                    <li><img src="~/Content/plugins/images/users/genu.jpg" class="img-circle"></li>
+                    <li><img src="~/Content/plugins/images/users/genu.jpg" class="img-circle" style="width: 78%;"></li>
                     <li class="text-right"><span id="lblcandidate1" class="counter">0</span></li>
                 </ul>
             </div>
         </div>
-        <div class="col-lg-4 col-sm-6 col-xs-12">
+        <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 <h3 class="box-title">Reported Pooling Station</h3>
                 <ul class="list-inline two-part">
                     <li class="text-left"><span id="ReportPolstation" class="counter">0</span>Reported</li>
                     <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <h3 class="box-title"><label id="lbllstpolingstation"></label></h3>
+                <ul class="list-inline">
+                    
+                    <li class="text-center"><span id="lbllastupdatedvotes" class=""></span></li>
                 </ul>
             </div>
         </div>
@@ -236,11 +248,11 @@
     <div class="row">
         <div class="col-lg-8 col-md-12">
             <div id="mapcontainer" class="white-box">
-                <h3 class="box-title">Country visit</h3>
+                @*<h3 class="box-title">Country visit</h3>*@
                 @*<div id="usa" style="height: 365px"></div>*@
                 @*<div id="map" style="height: 365px"></div>*@
-                <div id="map" style="height: 365px"></div>
-                <div style="cursor: pointer;z-index:200;position:absolute;top:51px;left:41px;">
+                <div id="map" style="height: 410px"></div>
+                <div style="cursor: pointer;z-index:200;position:absolute;top:25px;left:41px;">
                     <button id="btnzoomin" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
                     <button id="btnzoomout" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
                     <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>
@@ -323,7 +335,7 @@
     <script src="~/Scripts/mainMap.js"></script>
     <script>
         var rs =@Html.Raw(ViewBag.Province);
-        var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3;
+        var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3,LastUpdatedPoolstn=rs.Table4;
        
 
     </script>

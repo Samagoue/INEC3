@@ -1,39 +1,45 @@
-﻿var owidth = $(window).width(), oheight = $(window).height(), opadding = $(window).width() / 10;
+﻿var swidth = 0, sheight = 0, scale = 0;
 
-//var width = 960,
-//    height = 600,
-//    padding = 100
-
-var width = owidth - opadding,
-    height = oheight - opadding,
-    //height = 500,
-    padding = 100
-
+var width = $('#mapcontainer').width(),
+    //height = $('#mapcontainer').height() - 30
+    height = $('#mapcontainer').height() 
 var iscancel = false;
 var iszoom = false;
 var activeProvince = 0;
-
-
-if (owidth <= 425) {
-    var projection = d3.geoMercator().scale(oheight * 2).translate([-150, height / 3]);//For Mobile
-    console.log('Mobile View');
+sheight = height / 3;
+scale = height * 3;
+if ($(window).width() > 1440) {
+    swidth = width / 4
+    var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);//For Tablet
+    console.log('4k Display');
+}
+else if (1440 >= $(window).width() && $(window).width() > 768) {
+    swidth = -70
+    var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);
+    console.log('Leptop-L ro Desckot');
+    //console.log(width / 11);
+}
+else if (768 >= $(window).width() && $(window).width() > 425) {
+    swidth = -150;
+    scale = width * 2;
+    var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);//For Tablet
+    console.log('Teblet View');
 }
 else {
-    var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
-    console.log('Pc Or Descktop View');
+    swidth = -180
+    var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);
+    console.log('Mobile View');
 }
-
 
 
 var path = d3.geoPath().projection(projection);
 
 var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
 
-//d3.select("svg").remove();
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
-    .style("background", "#5d5959")
+    //.style("background", "#5d5959")
     .call(zoom)
     .on("click", stopped, true);
 
@@ -74,7 +80,7 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .data(topojson.feature(cod, cod.objects.Provinces).features)
         .enter()
         .append("svg:text")
-        .text(function (d) { return d.properties.NAME_1.slice(0, 8); })
+        .text(function (d) { return d.properties.NAME_1.slice(0, 6); })
         .attr("x", function (d) { return path.centroid(d)[0]; })
         .attr("y", function (d) { return path.centroid(d)[1]; })
         .attr("text-anchor", "middle")
@@ -157,7 +163,8 @@ function GenerateTooltip(res) {
     $("#nvtable tbody tr").remove();
     if (iszoom && !iscancel) {
         $('#header').text(res.properties.NAME_2);
-        var tltip = TerritoiresResult.filter(function (e) { return e.GUI_2 === res.properties.GID_2.slice(4) });
+        //debugger
+        var tltip = TerritoiresResult.filter(function (e) { if (res.properties.GID_2) { return e.GUI_2 === res.properties.GID_2.slice(4) } });
         if (tltip.length > 0) {
             $.each(tltip, function (i, v) {
                 if (i === 0)
@@ -178,7 +185,7 @@ function GenerateTooltip(res) {
             $.each(tltip, function (i, v) {
                 tvote += parseInt(v.Votants);
             });
-            console.log(tvote);
+
 
             $.each(tltip, function (i, v) {
 
@@ -213,6 +220,7 @@ function activearea() {
 $(function () {
     $('#btnzoomin').click(function () { zoom.scaleBy(svg, 2); });
     $('#btnzoomout').click(function () { zoom.scaleBy(svg, 0.5); });
+    FillTopCandidate();
 });
 function reset() {
     usZoom();
@@ -223,20 +231,16 @@ function usZoom() {
     iszoom = false;
     var t = d3.transition().duration(800)
 
-    //projection.scale(1500).translate([(width / 40) - padding, height / 3])
-    if (owidth <= 425) {
-        projection.scale(oheight * 2).translate([-150, height / 3]);
-        //var projection = d3.geoMercator().scale(oheight * 2).translate([-150, height / 3]);//For Mobile
-        console.log('Mobile View');
-    }
-    else {
-        projection.scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
-        //var projection = d3.geoMercator().scale(oheight * 2).translate([(width / 10) - padding, height / 3]);
-        console.log('Pc Or Descktop View');
-    }
+    projection.scale(scale).translate([swidth, sheight])
+    //if (width <= 425) {
+    //    projection.scale(height * 2).translate([-150, height / 3]);
+    //}
+    //else {
+    //    projection.scale(height * 3).translate([(width / 11), height / 3]);
+    //}
 
 
-    debugger
+
     statePaths.transition(t).attr('d', path).attr('class', '');
     //statePaths.transition(t).attr('d', path).style('fill', "white")
 
@@ -255,13 +259,15 @@ $(document).ready(function () {
     var realTimeMapHub = $.connection.realTimeMapHub;
     // Create a function that the hub can call to broadcast messages.
     realTimeMapHub.client.mapUpdate = function (updatedresult) {
-        console.log(updatedresult)
         //$("[stateCode=1_1]").css("fill", "#e2e2e2");
-        //$("[stateCode=1_1]").css("fill", color[1]);
         var updated = JSON.parse(updatedresult);
         ProvinceResult = updated.Table
         TerritoiresResult = updated.Table1
+        TopCandidate = updated.Table2
+        ReportPolStation = updated.Table3
+        LastUpdatedPoolstn = updated.Table4
         FillProvinceColor()
+        FillTopCandidate()
         if (iszoom) {
             FillTerritoiresColor();
         }
@@ -271,6 +277,7 @@ $(document).ready(function () {
 
     $(window).resize(function () {
         location.reload(true);
+
         //if ($(window).width() < 960) {
         //    alert('Less than 960');
         //}
@@ -292,7 +299,7 @@ function FillProvinceColor() {
     }
 }
 function FillTerritoiresColor() {
-    debugger
+
     if (TerritoiresResult) {
         var last;
         $.each(TerritoiresResult, function (i, v) {
@@ -313,5 +320,20 @@ function GetTerritoiresColor(tid) {
     }
     else {
         return "white";
+    }
+}
+function FillTopCandidate() {
+    if (TopCandidate) {
+        $.each(TopCandidate, function (i, v) {
+            $("#lblcandidate" + i).html(v.Votants);
+        });
+    }
+    if (ReportPolStation) {
+        $('#ReportPolstation').html(ReportPolStation[0].Reportstation);
+        $('#PersPolstation').html(ReportPolStation[0].PersPolstation + ' %');
+    }
+    if (LastUpdatedPoolstn) {
+        $('#lbllstpolingstation').html(LastUpdatedPoolstn[0].Polingstation);
+        $('#lbllastupdatedvotes').html(LastUpdatedPoolstn[0].Votants + '(' + LastUpdatedPoolstn[0].Party+')');
     }
 }
