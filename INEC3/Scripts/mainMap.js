@@ -2,19 +2,21 @@
 
 var width = $('#mapcontainer').width(),
     //height = $('#mapcontainer').height() - 30
-    height = $('#mapcontainer').height() 
+    height = $('#mapcontainer').height()
 var iscancel = false;
 var iszoom = false;
 var activeProvince = 0;
 sheight = height / 3;
-scale = height * 3;
+scale = (height * 3);
 if ($(window).width() > 1440) {
     swidth = width / 4
+    scale = scale - 80
     var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);//For Tablet
     console.log('4k Display');
 }
 else if (1440 >= $(window).width() && $(window).width() > 768) {
     swidth = -70
+    scale = scale - 80
     var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);
     console.log('Leptop-L ro Desckot');
     //console.log(width / 11);
@@ -27,6 +29,7 @@ else if (768 >= $(window).width() && $(window).width() > 425) {
 }
 else {
     swidth = -180
+    scale = height * 2;
     var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);
     console.log('Mobile View');
 }
@@ -325,7 +328,7 @@ function GetTerritoiresColor(tid) {
 function FillTopCandidate() {
     if (TopCandidate) {
         $.each(TopCandidate, function (i, v) {
-            $("#lblcandidate" + i).html(v.Votants);
+            $("#lblcandidate" + i).html(v.Votants + ' %');
         });
     }
     if (ReportPolStation) {
@@ -333,7 +336,11 @@ function FillTopCandidate() {
         $('#PersPolstation').html(ReportPolStation[0].PersPolstation + ' %');
     }
     if (LastUpdatedPoolstn) {
-        $('#lbllstpolingstation').html(LastUpdatedPoolstn[0].Polingstation);
-        $('#lbllastupdatedvotes').html(LastUpdatedPoolstn[0].Votants + '(' + LastUpdatedPoolstn[0].Party+')');
+        //$('#lbllstpolingstation').html(LastUpdatedPoolstn[0].Polingstation);
+        //$('#lbllastupdatedvotes').html(LastUpdatedPoolstn[0].Votants + '(' + LastUpdatedPoolstn[0].Party+')');
+        $('#lbllastupdatedProvinceName').html(LastUpdatedPoolstn[0].ProvinceName);
+        $('#lbllastupdatedProvince').html(LastUpdatedPoolstn[0].Province);
+        $('#lbllastupdatedVotants').html(LastUpdatedPoolstn[0].Votants);
+        $('#lbllastupdatedVotantsName').html(LastUpdatedPoolstn[0].Polingstation);
     }
 }
