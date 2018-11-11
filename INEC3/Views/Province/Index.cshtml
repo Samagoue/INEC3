@@ -1,51 +1,76 @@
 ﻿@model IEnumerable<INEC3.Models.tbl_Province>
 
 @{
-    ViewBag.Title = "Index";
+ViewBag.Title = "Index";
 }
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
-<h2>Index</h2>
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+            <h4 class="page-title"> Provinces</h4>
+        </div>
+    </div>
+   
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Pays.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enroles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GID_1)
-        </th>
-        <th></th>
-    </tr>
+    <div class="col-md-12">
+        <div class="white-box printableArea">
+            <p>
+                @Html.ActionLink("Create New Province", "Create")
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Pays.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Enroles)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.GID_1)
+                    </th>
+                    <th></th>
+                </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Pays.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Enroles)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GID_1)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Province }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_Province }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Province })
-        </td>
-    </tr>
-}
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Pays.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Enroles)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.GID_1)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Province }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ID_Province }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Province })
+                        </td>
+                        @*<td>
+                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-key"></i></button>
+                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
+                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
+                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-20"><i class="ti-upload"></i></button>
+                            </td>*@
+                    </tr>
+                }
 
-</table>
+            </table>
+
+        </div>
+
+    </div>
+    <footer class="footer text-center">
+        Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
+    </footer>
+</div>
