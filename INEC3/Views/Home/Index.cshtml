@@ -78,6 +78,7 @@
 
     .eln-popup .eln-has-electoral-votes .eln-results-row-president .eln-header {
         padding-top: 3px;
+        
     }
 
     .eln-popup .eln-results-container .eln-name {
@@ -89,6 +90,7 @@
     .eln-popup .eln-results-container .eln-header {
         font-size: 11px;
         padding-bottom: 4px;
+        
     }
 
     .eln-results-container .eln-name {
@@ -101,7 +103,8 @@
         padding-bottom: 5px;
         border-bottom: 1px solid #e2e2e2;
         vertical-align: bottom;
-        color: #999;
+        /*color: #999;*/
+       
     }
 
     .eln-results-container .eln-row {
@@ -172,15 +175,20 @@
         display: block;
         border-radius: 50%;
         margin-bottom: 6px;
-        /*background-color: #989696;*/
+        font-size: 30px;
     }
-
-    .two-part li span {
-        font-size: 30px !important;
-    }
+        .eln-map-buttons:disabled {
+            font-size: 20px !important;
+        }
+        .two-part li span {
+            font-size: 30px !important;
+        }
 
     .list-inline li span {
         font-size: 30px !important;
+    }
+    .key {
+        color: #242425;
     }
 </style>
 
@@ -210,22 +218,39 @@
     <div class="row">
         <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
-                @*<h5 class="box-title">1st <label id="lblfirst">Candidate 1</label></h5>*@
-                <ul class="list-inline two-part">
-                    <li><img src="~/Content/image/Felix_Tshisekedi1.png" class="img-circle" style="width: 78%;"></li>
-                    @*<li><img src="~/Content/plugins/images/users/varun.jpg" class="img-circle" style="width: 78%;"></li>*@
-                    <li class="text-right"><span id="lblcandidate0" class="counter">0 %</span></li>
-                </ul>
+                @*<ul class="list-inline two-part">
+            <li><img src="~/Content/image/Felix_Tshisekedi1.png" class="img-circle" style="width: 78%;"></li>
+            <li class="text-right"><span id="lblcandidate0" class="counter">0 %</span></li>
+        </ul>*@
+                <h3 class="box-title text-center"><span id="lblcandidate0" class="counter">Johnathan Doe</span></h3>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 text-center">
+                        <img src="~/Content/image/Felix_Tshisekedi1.png" alt="user" class="img-circle img-responsive">
+                    </div>
+                    <div class="col-md-8 col-sm-6">
+                       <small><span id="lblcandidatePer0" class="counter">0 %</span></small>
+                        <h5><span id="lblcandidateVote0" class="counter">0</span></h5>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6 col-xs-12">
             <div class="white-box">
                 @*<h3 class="box-title">2nd <label id="lblsecond">Candidate 2</label></h3>*@
-                <ul class="list-inline two-part">
-                    <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
-                    @*<li><img src="~/Content/plugins/images/users/genu.jpg" class="img-circle" style="width: 78%;"></li>*@
-                    <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
-                </ul>
+                @*<ul class="list-inline two-part">
+            <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
+            <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
+        </ul>*@
+                <h3 class="box-title text-center"><span id="lblcandidate1" class="counter">Johnathan Doe</span></h3>
+                <div class="row">
+                    <div class="col-md-4 col-sm-6 text-center">
+                        <img src="~/Content/image/Martin_Fayulu.png" alt="user" class="img-circle img-responsive">
+                    </div>
+                    <div class="col-md-8 col-sm-6">
+                        <small><span id="lblcandidatePer1" class="counter">0 %</span></small>
+                        <h5><span id="lblcandidateVote1" class="counter">0</span></h5>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6 col-xs-12">
@@ -270,15 +295,14 @@
     <div class="row">
         <div class="col-lg-8 col-md-12">
             <div id="mapcontainer" class="white-box">
-                @*<h3 class="box-title">Country visit</h3>*@
-                @*<div id="usa" style="height: 365px"></div>*@
-                @*<div id="map" style="height: 365px"></div>*@
                 <div id="map" style="height: 410px"></div>
                 <div style="cursor: pointer;z-index:200;position:absolute;top:25px;left:41px;">
-                   
-                    <button id="btnzoomin" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-in"></span></button>
-                    <button id="btnzoomout" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
-                    <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>
+
+                    <i class="mdi mdi-magnify-minus eln-map-buttons" id="btnzoomin" ></i>
+                    <i class="mdi mdi-magnify-plus eln-map-buttons" id="btnzoomout"></i>
+                    @*<button id="btnzoomout" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
+        <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>*@
+                    <i class="mdi mdi-close-circle eln-map-buttons" id="btncancel" onclick="activearea()" disabled></i>
                 </div>
             </div>
         </div>
@@ -286,8 +310,8 @@
         <div class="col-lg-4 col-md-6">
             <div class="white-box">
                 <h3 class="box-title">Results</h3>
-                <ul class="country-state  p-t-20">
-                    <li>
+                <ul class="country-state  p-t-20" id="TooltipChart">
+                    @*<li>
                         <h2>Felix Tshisekedi</h2> <small>1200768</small>
                         <div class="pull-right">48% <i class="fa fa-level-up text-success"></i></div>
                         <div class="progress">
@@ -314,7 +338,7 @@
                         <div class="progress">
                             <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:20%;"> <span class="sr-only">20% Complete</span></div>
                         </div>
-                    </li>
+                    </li>*@
                 </ul>
             </div>
         </div>
@@ -325,16 +349,16 @@
 
 
 <div id="nvtable" class="eln-popup" hidden>
-    <div class="eln-title eln-results-container eln-results-row-president ln-has-images eln-race-report eln-result-winner" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span class="eln-default-subtitle" style="color:#6f6d6d !important;"> 100% Reporting </span></div>
+    <div class="eln-title eln-results-container eln-results-row-president ln-has-images eln-race-report eln-result-winner" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span class="eln-default-subtitle" style="color:#6f6d6d !important; text-align:right;"> 100% Reporting </span></div>
     <table class="eln-table eln-results-table">
         <thead>
-            <tr>
+            <tr style="border-bottom: 1px solid #181819;">
                 @*<th colspan="2" class="x-value">Alabama <strong style="color:#6f6d6d !important;"> 100% Reporting </strong></th>*@
 
-                <th class="eln-header eln-name" colspan="3">Candidate</th>
-                <th style="color:#383636 !important;">Party</th>
-                <th style="color:#383636 !important;">Votes</th>
-                <th style="color:#383636 !important;">Pct.</th>
+                <th class="eln-header eln-name" colspan="3" style="color:#383636 !important;"><strong>Candidate</strong></th>
+                <th style="color:#383636 !important;"><strong>Party</strong></th>
+                <th style="color:#383636 !important;"><strong>Votes</strong></th>
+                <th style="color:#383636 !important;"><strong>Pct.</strong></th>
             </tr>
         </thead>
         <tbody>

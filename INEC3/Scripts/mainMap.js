@@ -152,6 +152,7 @@ function clicked(d) {
 function zoomed() {
     g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
     g.attr("transform", d3.event.transform);
+    FillToolTipChart();
 }
 function stopped() {
     if (d3.event.defaultPrevented) d3.event.stopPropagation();
@@ -169,11 +170,14 @@ function GenerateTooltip(res) {
         //debugger
         var tltip = TerritoiresResult.filter(function (e) { if (res.properties.GID_2) { return e.GUI_2 === res.properties.GID_2.slice(4) } });
         if (tltip.length > 0) {
+            $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
                 if (i === 0)
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
                 else
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
+                //Set Tooltip Chart
+                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + v.Perce + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + v.Perce + "%;background-color:" + v.Color +";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
             });
             tltipdiv.appendChild(table);
             return true;
@@ -189,14 +193,16 @@ function GenerateTooltip(res) {
                 tvote += parseInt(v.Votants);
             });
 
-
+            $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
 
-
+                var per = (parseInt(v.Votants) * 100 / tvote).toFixed(2);
                 if (i === 0)
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + per + " %</td></tr>");
                 else
-                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + (parseInt(v.Votants) * 100 / tvote).toFixed(2) + " %</td></tr>");
+                    $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + per + " %</td></tr>");
+                //Set Tooltip Chart
+                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + per + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + per + "%;background-color:" + v.Color +";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
             });
             tltipdiv.appendChild(table);
             return true;
@@ -227,6 +233,7 @@ $(function () {
 });
 function reset() {
     usZoom();
+    
 }
 function usZoom() {
     iscancel = false;
@@ -327,9 +334,14 @@ function GetTerritoiresColor(tid) {
 }
 function FillTopCandidate() {
     if (TopCandidate) {
-        $.each(TopCandidate, function (i, v) {
-            $("#lblcandidate" + i).html(v.Votants + ' %');
-        });
+        //$.each(TopCandidate, function (i, v) {
+        for (var i = 0; i < 2; i++) {
+            $("#lblcandidate" + i).html(TopCandidate[i].Candidat);
+            $("#lblcandidatePer" + i).html(TopCandidate[i].Perc + ' %');
+            $("#lblcandidateVote" + i).html(TopCandidate[i].Votants);
+        }
+        //);
+        FillToolTipChart();
     }
     if (ReportPolStation) {
         $('#ReportPolstation').html(ReportPolStation[0].Reportstation);
@@ -343,4 +355,12 @@ function FillTopCandidate() {
         $('#lbllastupdatedVotants').html(LastUpdatedPoolstn[0].Votants);
         $('#lbllastupdatedVotantsName').html(LastUpdatedPoolstn[0].Polingstation);
     }
+
+}
+function FillToolTipChart() {
+    var TltipChart = $('#TooltipChart');
+    TltipChart.find("li").remove();
+    $.each(TopCandidate, function (i, v) {
+        TltipChart.append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + v.Perc + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + v.Perc + "%;background-color:" + v.Color + ";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
+    });
 }
