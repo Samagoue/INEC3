@@ -3,55 +3,72 @@
 @{
     ViewBag.Title = "Index";
 }
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
-<h2>Index</h2>
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+            <h4 class="page-title"> Bureaux de Vote</h4>
+        </div>
+    </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Commune.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Addresse)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enroles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Code_SV)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Commune.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Addresse)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Enroles)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Code_SV)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Bureauvote }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_Bureauvote }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Bureauvote })
-        </td>
-    </tr>
-}
+    <div class="col-md-12">
+        <div class="white-box printableArea">
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Commune.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Addresse)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Enroles)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Code_SV)
+                    </th>
+                    <th></th>
+                </tr>
 
-</table>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Commune.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Addresse)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Enroles)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Code_SV)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Bureauvote }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ID_Bureauvote }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Bureauvote })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+    <footer class="footer text-center">
+        Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
+    </footer>
+</div>

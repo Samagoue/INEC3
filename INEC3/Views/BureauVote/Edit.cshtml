@@ -3,13 +3,14 @@
 @{
     ViewBag.Title = "Edit";
 }
-
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 <h2>Edit</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>tbl_BureauVote</h4>
         <hr />

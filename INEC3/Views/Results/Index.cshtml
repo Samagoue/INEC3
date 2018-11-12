@@ -4,78 +4,99 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.BureauVote.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Candidat.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Party.Sigle)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Voix)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Pourcentage)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Votants)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Abstentions)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nuls)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Exprimes)
-        </th>
-        <th></th>
-    </tr>
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+            <h4 class="page-title"> Resultats</h4>
+        </div>
+    </div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.BureauVote.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Candidat.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Party.Sigle)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Voix)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Pourcentage)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Votants)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Abstentions)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nuls)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Exprimes)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID_Result }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID_Result }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ID_Result })
-        </td>
-    </tr>
-}
 
-</table>
+    <div class="col-md-12">
+        <div class="white-box printableArea">
+
+
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+            <table class="table">
+                <tr>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.BureauVote.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Candidat.Nom)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Party.Sigle)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Voix)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Pourcentage)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Votants)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Abstentions)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nuls)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Exprimes)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BureauVote.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Candidat.Nom)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Party.Sigle)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Voix)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Pourcentage)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Votants)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Abstentions)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Nuls)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Exprimes)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Result }) |
+                            @Html.ActionLink("Details", "Details", new { id = item.ID_Result }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+    <footer class="footer text-center">
+        Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
+    </footer>
+</div>
