@@ -172,6 +172,7 @@ function GenerateTooltip(res) {
         if (tltip.length > 0) {
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
+                $('#lblreporting').text(v.ReportedPerc + '% Reporting');
                 if (i === 0)
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
                 else
@@ -186,6 +187,7 @@ function GenerateTooltip(res) {
     }
     else {
         $('#header').text(res.properties.NAME_1);
+        
         var tltip = ProvinceResult.filter(function (e) { return e.GUI_1 === res.properties.GID_1.slice(4) });
         var tvote = 0;
         if (tltip.length > 0) {
@@ -195,7 +197,7 @@ function GenerateTooltip(res) {
 
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
-
+                $('#lblreporting').text(v.ReportedPerc +'% Reporting');
                 var per = (parseInt(v.Votants) * 100 / tvote).toFixed(2);
                 if (i === 0)
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + per + " %</td></tr>");
