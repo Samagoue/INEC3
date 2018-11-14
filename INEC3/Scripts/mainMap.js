@@ -77,7 +77,7 @@ d3.json("/Resources/COD_TOPO.json", function (error, cod) {
         .attr("stateCode", function (d) { return d.properties.GID_1.slice(4); })
         .on("mouseover", function (d) { if (GenerateTooltip(d)) { return tooltip.style("visibility", "visible"); } })
         .on("mousemove", function () { return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
-        .on("mouseout", function () { return tooltip.style("visibility", "hidden"); })
+        .on("mouseout", function () { FillToolTipChart(); return tooltip.style("visibility", "hidden"); })
         .on("click", function (d) { clicked(d) });
     g.selectAll("text")
         .data(topojson.feature(cod, cod.objects.Provinces).features)
@@ -170,6 +170,7 @@ function GenerateTooltip(res) {
         //debugger
         var tltip = TerritoiresResult.filter(function (e) { if (res.properties.GID_2) { return e.GUI_2 === res.properties.GID_2.slice(4) } });
         if (tltip.length > 0) {
+            $('#LblToltiptitle').text('Results of ' +res.properties.NAME_2);
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
                 $('#lblreporting').text(v.ReportedPerc + '% Reporting');
@@ -194,7 +195,7 @@ function GenerateTooltip(res) {
             $.each(tltip, function (i, v) {
                 tvote += parseInt(v.Votants);
             });
-
+            $('#LblToltiptitle').text('Results of '+res.properties.NAME_1);
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
                 $('#lblreporting').text(v.ReportedPerc +'% Reporting');
@@ -244,17 +245,8 @@ function usZoom() {
     var t = d3.transition().duration(800)
 
     projection.scale(scale).translate([swidth, sheight])
-    //if (width <= 425) {
-    //    projection.scale(height * 2).translate([-150, height / 3]);
-    //}
-    //else {
-    //    projection.scale(height * 3).translate([(width / 11), height / 3]);
-    //}
-
-
-
+    
     statePaths.transition(t).attr('d', path).attr('class', '');
-    //statePaths.transition(t).attr('d', path).style('fill', "white")
 
     g.selectAll('.county')
         .data([])
@@ -341,6 +333,7 @@ function FillTopCandidate() {
             $("#lblcandidate" + i).html(TopCandidate[i].Candidat);
             $("#lblcandidatePer" + i).html(TopCandidate[i].Perc + ' %');
             $("#lblcandidateVote" + i).html(TopCandidate[i].Votants);
+            $("#imgcandidate" + i).attr("src","/Content/image/Candimg_" + TopCandidate[i].Candidatimg+".png");
         }
         //);
         FillToolTipChart();
@@ -360,6 +353,7 @@ function FillTopCandidate() {
 
 }
 function FillToolTipChart() {
+    $('#LblToltiptitle').text('NATIONAL RESULTS');
     var TltipChart = $('#TooltipChart');
     TltipChart.find("li").remove();
     $.each(TopCandidate, function (i, v) {

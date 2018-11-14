@@ -190,6 +190,11 @@
     .key {
         color: #242425;
     }
+
+    .padding-no-lr {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
 </style>
 
 @*Moved In>Content/zoomMap.css <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />*@
@@ -222,14 +227,14 @@
                         <li><img src="~/Content/image/Felix_Tshisekedi1.png" class="img-circle" style="width: 78%;"></li>
                         <li class="text-right"><span id="lblcandidate0" class="counter">0 %</span></li>
                     </ul>*@
-                <h3 class="box-title text-center"><span id="lblcandidate0" class="counter"></span></h3>
+                
                 <div class="row text-center">
-                    <div class="col-md-4 col-sm-4 col-xs-6">
-                        <img src="~/Content/image/Felix_Tshisekedi1.png" alt="user" class="img-circle img-responsive">
+                    <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
+                        <img src="~/Content/image/logo.png" alt="user" id="imgcandidate0" class="img-circle img-responsive">
                     </div>
-                    <div class="col-md-8 col-sm-8 col-xs-6">
-                        <small><span id="lblcandidatePer0" class="counter">0 %</span></small>
-                        <h5><span id="lblcandidateVote0" class="counter">0</span></h5>
+                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr">
+                        <h5 class="text-center"><span id="lblcandidate0" class="counter"></span></h5>
+                        <h4><span id="lblcandidateVote0" class="counter">0</span><small> ( <span id="lblcandidatePer0" class="counter">0 %</span> )</small></h4>
                     </div>
                 </div>
             </div>
@@ -241,40 +246,32 @@
                         <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
                         <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
                     </ul>*@
-                <h3 class="box-title text-center"><span id="lblcandidate1" class="counter"></span></h3>
+                
                 <div class="row text-center">
-                    <div class="col-md-4 col-sm-4 col-xs-6">
-                        <img src="~/Content/image/Martin_Fayulu.png" alt="user" class="img-circle img-responsive">
+                    <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
+                        <img src="~/Content/image/logo.png" alt="user" id="imgcandidate1" class="img-circle img-responsive">
                     </div>
-                    <div class="col-md-8 col-sm-8 col-xs-6">
-                        <small><span id="lblcandidatePer1" class="counter">0 %</span></small>
-                        <h5><span id="lblcandidateVote1" class="counter">0</span></h5>
+                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr">
+                        <h5 class="text-center"><span id="lblcandidate1" class="counter"></span></h5>
+                        <h4><span id="lblcandidateVote1" class="counter">0</span><small> ( <span id="lblcandidatePer1" class="counter">0 %</span> )</small></h4>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6 col-xs-12">
-            <div class="white-box">
-                <h3 class="box-title">Reported Polling Stations</h3>
-                <ul class="list-inline two-part">
+            <div class="white-box" >
+                <h4 class="box-title">Reported Polling Stations</h4>
+                <ul class="list-inline two-part" style="margin-bottom: -8px;">
                     <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
                     <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
                 </ul>
             </div>
         </div>
         <div class="col-lg-3 col-sm-6 col-xs-12">
-            <div class="white-box">
+            <div class="white-box" style="padding-bottom: 10px;">
 
-                @*<div class="row">
-                        <div class="col-md-4 col-sm-4 text-center">
-                            <a href="contact-detail.html"><img src="../plugins/images/users/genu.jpg" alt="user" class="img-circle img-responsive"></a>
-                        </div>
-                        <div class="col-md-8 col-sm-8">
-                            <h3 class="box-title m-b-0">Johnathan Doe</h3> <small>Web Designer</small>
-                        </div>
-                    </div>*@
-
-                <h3 class="box-title">Last Reported Pol. Stat.</h3>
+              
+                <h5 class="box-title">Last Reported Pol. Stat.</h5>
                 @*<h3 class="box-title"><label id="lbllstpolingstation"></label></h3>*@
                 @*<ul class="list-inline two-part">
                         <li class="text-center"><span id="lbllastupdatedProvince" style="font-size: 18px !important;"></span></li>
@@ -309,7 +306,7 @@
 
         <div class="col-lg-4 col-md-6">
             <div class="white-box">
-                <h3 class="box-title">Results</h3>
+                <h3 class="box-title" id="LblToltiptitle">National Results</h3>
                 <ul class="country-state  p-t-20" id="TooltipChart">
                     @*<li>
                             <h2>Felix Tshisekedi</h2> <small>1200768</small>
