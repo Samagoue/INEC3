@@ -3,18 +3,228 @@
 }
 @Scripts.Render("~/bundles/jquery")
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
-<div class="row bg-title">
-    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-        <h4 class="page-title">About</h4>
+@*<h2>@ViewBag.Title.</h2>
+<h3>@ViewBag.Message</h3>*@
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            @*<h4 class="page-title">Candidates Profile</h4>*@
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index","Home")">About</a></li>
+                <li class="active">Index</li>
+            </ol>
+        </div>
     </div>
-    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-        <ol class="breadcrumb">
-            <li><a href="@Url.Action("Index","Home")">About</a></li>
-            <li class="active">Index</li>
-        </ol>
+    <div class="row el-element-overlay m-b-40">
+        <!-- /.candidate card-->
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img src="~/Content/image/Felix_Tshisekedi1.png" />
+                    </div>
+                    <div class="el-card-content">
+                        <h3 class="box-title">Felix Tshisekedi Tshilombo</h3>
+                        <small>UDPS/Tshisekedi</small>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.candidate card-->
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img src="~/Content/image/Kazadi_lukonda.png" />
+                    </div>
+                    <div class="el-card-content">
+                        <h3 class="box-title">Kazadi Lukonda</h3>
+                        <small>Front Populaire pour la Justice</small>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.candidate card-->
+        <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+            <div class="white-box">
+                <div class="el-card-item">
+                    <div class="el-card-avatar el-overlay-1">
+                        <img src="~/Content/image/kin_kiey_mulumba.png" />
+                    </div>
+                    <div class="el-card-content">
+                        <h3 class="box-title">Kin-Kiey Mulumba</h3>
+                        <small>Independant</small>
+                        <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/mabaya_gizi.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Jean-Philbert Mabaya Gizi</h3>
+                            <small>Arc-en-Ciel du Congo</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/Martin_Fayulu.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Martin Fayulu</h3>
+                            <small>Dynamique de l'Opposition Politique Congolaise</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/MJ_Ifoku.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Marie-Josee Ifoku</h3>
+                            <small>Alliance des Elites pour un Nouveau Congo </small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/seth_Kikuni.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Seth Kikuni</h3>
+                            <small>Independant</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/shadary_emmanuel.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Emmanuel Ramazani Shadary</h3>
+                            <small>Independant</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/shekomba_daniel.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Alain Daniel Shekomba</h3>
+                            <small>Independant</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/Yves_mpunga.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Yves Mpunga</h3>
+                            <small>Première Force Politique</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/vital_kamerhe.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Vital Kamerhe</h3>
+                            <small>Union pour la Nation Congolaise</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/matungulu1.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Freddy Matungulu</h3>
+                            <small>Synergie Electorale Notre Congo</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /.candidate card-->
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="white-box">
+                    <div class="el-card-item">
+                        <div class="el-card-avatar el-overlay-1">
+                            <img src="~/Content/image/tshiani_noel.png" />
+                        </div>
+                        <div class="el-card-content">
+                            <h3 class="box-title">Tshiani Noel</h3>
+                            <small>Independant</small>
+                            <br />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- /.col-lg-12 -->
     </div>
-    <!-- /.col-lg-12 -->
 </div>
-<p>Use this area to provide additional information.</p>
