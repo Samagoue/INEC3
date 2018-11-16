@@ -8,35 +8,35 @@ using System.Web;
 using System.Web.Mvc;
 using INEC3.Models;
 
-namespace INEC3
+namespace INEC3.Controllers
 {
-    public class Commune_ChefferieController : Controller
+    public class CirconscriptionController : Controller
     {
         private inecDBContext db = new inecDBContext();
 
-        // GET: Commune_Chefferie
+        // GET: Circonscription
         public ActionResult Index()
         {
-            var communes = db.Communes.Include(t => t.Province).Include(t => t.Territoire);
-            return View(communes.ToList());
+            var circonscriptions = db.Circonscriptions.Include(t => t.Province).Include(t => t.Territoire);
+            return View(circonscriptions.ToList());
         }
 
-        // GET: Commune_Chefferie/Details/5
+        // GET: Circonscription/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tbl_Commune_Chefferie tbl_Commune_Chefferie = db.Communes.Find(id);
-            if (tbl_Commune_Chefferie == null)
+            tbl_Circonscription tbl_Circonscription = db.Circonscriptions.Find(id);
+            if (tbl_Circonscription == null)
             {
                 return HttpNotFound();
             }
-            return View(tbl_Commune_Chefferie);
+            return View(tbl_Circonscription);
         }
 
-        // GET: Commune_Chefferie/Create
+        // GET: Circonscription/Create
         public ActionResult Create()
         {
             ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom");
@@ -44,82 +44,82 @@ namespace INEC3
             return View();
         }
 
-        // POST: Commune_Chefferie/Create
+        // POST: Circonscription/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID_Commune,Nom,Enroles,Sieges,ID_Territoire,ID_Province")] tbl_Commune_Chefferie tbl_Commune_Chefferie)
+        public ActionResult Create([Bind(Include = "ID_Circonscription,Nom,Enroles,SiegesProv,SiegesNat,ID_Territoire,ID_Province")] tbl_Circonscription tbl_Circonscription)
         {
             if (ModelState.IsValid)
             {
-                db.Communes.Add(tbl_Commune_Chefferie);
+                db.Circonscriptions.Add(tbl_Circonscription);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Commune_Chefferie.ID_Province);
-            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Commune_Chefferie.ID_Territoire);
-            return View(tbl_Commune_Chefferie);
+            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Circonscription.ID_Province);
+            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Circonscription.ID_Territoire);
+            return View(tbl_Circonscription);
         }
 
-        // GET: Commune_Chefferie/Edit/5
+        // GET: Circonscription/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tbl_Commune_Chefferie tbl_Commune_Chefferie = db.Communes.Find(id);
-            if (tbl_Commune_Chefferie == null)
+            tbl_Circonscription tbl_Circonscription = db.Circonscriptions.Find(id);
+            if (tbl_Circonscription == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Commune_Chefferie.ID_Province);
-            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Commune_Chefferie.ID_Territoire);
-            return View(tbl_Commune_Chefferie);
+            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Circonscription.ID_Province);
+            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Circonscription.ID_Territoire);
+            return View(tbl_Circonscription);
         }
 
-        // POST: Commune_Chefferie/Edit/5
+        // POST: Circonscription/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID_Commune,Nom,Enroles,Sieges,ID_Territoire,ID_Province")] tbl_Commune_Chefferie tbl_Commune_Chefferie)
+        public ActionResult Edit([Bind(Include = "ID_Circonscription,Nom,Enroles,SiegesProv,SiegesNat,ID_Territoire,ID_Province")] tbl_Circonscription tbl_Circonscription)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(tbl_Commune_Chefferie).State = EntityState.Modified;
+                db.Entry(tbl_Circonscription).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Commune_Chefferie.ID_Province);
-            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Commune_Chefferie.ID_Territoire);
-            return View(tbl_Commune_Chefferie);
+            ViewBag.ID_Province = new SelectList(db.Provinces, "ID_Province", "Nom", tbl_Circonscription.ID_Province);
+            ViewBag.ID_Territoire = new SelectList(db.Territoires, "ID_Territoire", "Nom", tbl_Circonscription.ID_Territoire);
+            return View(tbl_Circonscription);
         }
 
-        // GET: Commune_Chefferie/Delete/5
+        // GET: Circonscription/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            tbl_Commune_Chefferie tbl_Commune_Chefferie = db.Communes.Find(id);
-            if (tbl_Commune_Chefferie == null)
+            tbl_Circonscription tbl_Circonscription = db.Circonscriptions.Find(id);
+            if (tbl_Circonscription == null)
             {
                 return HttpNotFound();
             }
-            return View(tbl_Commune_Chefferie);
+            return View(tbl_Circonscription);
         }
 
-        // POST: Commune_Chefferie/Delete/5
+        // POST: Circonscription/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            tbl_Commune_Chefferie tbl_Commune_Chefferie = db.Communes.Find(id);
-            db.Communes.Remove(tbl_Commune_Chefferie);
+            tbl_Circonscription tbl_Circonscription = db.Circonscriptions.Find(id);
+            db.Circonscriptions.Remove(tbl_Circonscription);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

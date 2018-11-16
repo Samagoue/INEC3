@@ -1,0 +1,74 @@
+﻿@model INEC3.Models.tbl_Circonscription
+
+@{
+    ViewBag.Title = "Delete";
+}
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>tbl_Circonscription</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Province.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Territoire.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Territoire.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enroles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SiegesProv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SiegesProv)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SiegesNat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SiegesNat)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

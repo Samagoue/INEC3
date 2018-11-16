@@ -9,7 +9,7 @@ namespace INEC3.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(INEC3.Models.inecDBContext context)

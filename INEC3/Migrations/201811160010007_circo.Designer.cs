@@ -7,13 +7,13 @@ namespace INEC3.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class resultattble : IMigrationMetadata
+    public sealed partial class circo : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(resultattble));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(circo));
         
         string IMigrationMetadata.Id
         {
-            get { return "201810040331076_resultat tble"; }
+            get { return "201811160010007_circo"; }
         }
         
         string IMigrationMetadata.Source

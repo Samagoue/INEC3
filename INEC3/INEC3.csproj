@@ -188,11 +188,12 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\Commune_ChefferieController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BureauVoteController.cs" />
     <Compile Include="Controllers\CandidatController.cs" />
-    <Compile Include="Controllers\Commune_ChefferieController.cs" />
+    <Compile Include="Controllers\CirconscriptionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PartyController.cs" />
     <Compile Include="Controllers\ProvinceController.cs" />
@@ -255,14 +256,15 @@
     <Compile Include="Migrations\201810040307188_removed.Designer.cs">
       <DependentUpon>201810040307188_removed.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201810040331076_resultat tble.cs" />
-    <Compile Include="Migrations\201810040331076_resultat tble.Designer.cs">
-      <DependentUpon>201810040331076_resultat tble.cs</DependentUpon>
+    <Compile Include="Migrations\201811160010007_circo.cs" />
+    <Compile Include="Migrations\201811160010007_circo.Designer.cs">
+      <DependentUpon>201811160010007_circo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
     <Compile Include="Models\tbl_Candidat.cs" />
+    <Compile Include="Models\tbl_Circonscription.cs" />
     <Compile Include="Models\tbl_Commune_Chefferie.cs" />
     <Compile Include="Models\tbl_ElectionType.cs" />
     <Compile Include="Models\tbl_Party.cs" />
@@ -3317,11 +3319,6 @@
     <Content Include="Views\BureauVote\Details.cshtml" />
     <Content Include="Views\BureauVote\Edit.cshtml" />
     <Content Include="Views\BureauVote\Index.cshtml" />
-    <Content Include="Views\Commune_Chefferie\Create.cshtml" />
-    <Content Include="Views\Commune_Chefferie\Delete.cshtml" />
-    <Content Include="Views\Commune_Chefferie\Details.cshtml" />
-    <Content Include="Views\Commune_Chefferie\Edit.cshtml" />
-    <Content Include="Views\Commune_Chefferie\Index.cshtml" />
     <Content Include="Views\Pays\Create.cshtml" />
     <Content Include="Views\Pays\Delete.cshtml" />
     <Content Include="Views\Pays\Details.cshtml" />
@@ -3358,6 +3355,16 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Admin\Result.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Circonscription\Create.cshtml" />
+    <Content Include="Views\Circonscription\Delete.cshtml" />
+    <Content Include="Views\Circonscription\Details.cshtml" />
+    <Content Include="Views\Circonscription\Edit.cshtml" />
+    <Content Include="Views\Circonscription\Index.cshtml" />
+    <Content Include="Views\Commune_Chefferie\Create.cshtml" />
+    <Content Include="Views\Commune_Chefferie\Delete.cshtml" />
+    <Content Include="Views\Commune_Chefferie\Details.cshtml" />
+    <Content Include="Views\Commune_Chefferie\Edit.cshtml" />
+    <Content Include="Views\Commune_Chefferie\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3414,8 +3421,8 @@
     <EmbeddedResource Include="Migrations\201810040307188_removed.resx">
       <DependentUpon>201810040307188_removed.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201810040331076_resultat tble.resx">
-      <DependentUpon>201810040331076_resultat tble.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201811160010007_circo.resx">
+      <DependentUpon>201811160010007_circo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

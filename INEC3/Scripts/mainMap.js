@@ -353,7 +353,7 @@ function FillTopCandidate() {
 
 }
 function FillToolTipChart() {
-    $('#LblToltiptitle').text('NATIONAL RESULTS');
+    $('#LblToltiptitle').text('GLOBAL RESULTS');
     var TltipChart = $('#TooltipChart');
     TltipChart.find("li").remove();
     $.each(TopCandidate, function (i, v) {

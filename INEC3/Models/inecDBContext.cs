@@ -38,6 +38,10 @@ namespace INEC3.Models
         public DbSet<tbl_ElectionType> ElectionTypes { get; set; }
 
         public DbSet<tbl_Results> Results { get; set; }
+
+        public DbSet<tbl_Circonscription> Circonscriptions { get; set; }
+
+        
     }
 
 }

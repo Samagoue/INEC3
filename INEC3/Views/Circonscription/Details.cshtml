@@ -1,0 +1,69 @@
+﻿@model INEC3.Models.tbl_Circonscription
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+
+<h2>Details</h2>
+
+<div>
+    <h4>tbl_Circonscription</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Province.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Province.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Territoire.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Territoire.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enroles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enroles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SiegesProv)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SiegesProv)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SiegesNat)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SiegesNat)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ID_Circonscription }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
