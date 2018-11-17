@@ -6,61 +6,97 @@
 
 @Scripts.Render("~/bundles/jquery")
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
-<h2>Index</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Province.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Territoire.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enroles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SiegesProv)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SiegesNat)
-        </th>
-        <th></th>
-    </tr>
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+            <h4 class="page-title"> Circonscriptions</h4>
+        </div>
+    </div>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Province.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Territoire.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Enroles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SiegesProv)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SiegesNat)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Circonscription }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID_Circonscription }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Circonscription })
-            </td>
-        </tr>
-    }
 
-</table>
+    <div class="col-md-12">
+        <div class="white-box printableArea">
+            <p>
+                @*@Html.ActionLink("Create New", "Create")*@
+
+                
+
+                <a href="@Url.Action( "Create")"> <span class="circle circle-sm bg-success di"><i class="ti-plus"></i></span><span>  Add New</span></a>
+
+            </p>
+            <div class="table-responsive">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Province.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Territoire.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Enroles)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SiegesProv)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SiegesNat)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Province.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Territoire.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Enroles)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SiegesProv)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SiegesNat)
+                            </td>
+                            <td>
+                                <a href="@Url.Action("Edit",  new { id = item.ID_Circonscription })" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></a> @*|*@
+
+                                <a href="@Url.Action("Details",  new { id = item.ID_Circonscription })" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-info"></i></a>
+                                @*@Html.ActionLink("Details", "Details", new { id = item.ID_Circonscription }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Circonscription })*@
+                                <a href="@Url.Action("Delete",  new { id = item.ID_Circonscription })" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></a>
+
+
+
+
+
+
+
+                                @*<button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
+        <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>*@
+
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <footer class="footer text-center">
+        Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
+    </footer>
+</div>

@@ -3319,11 +3319,6 @@
     <Content Include="Views\BureauVote\Details.cshtml" />
     <Content Include="Views\BureauVote\Edit.cshtml" />
     <Content Include="Views\BureauVote\Index.cshtml" />
-    <Content Include="Views\Pays\Create.cshtml" />
-    <Content Include="Views\Pays\Delete.cshtml" />
-    <Content Include="Views\Pays\Details.cshtml" />
-    <Content Include="Views\Pays\Edit.cshtml" />
-    <Content Include="Views\Pays\Index.cshtml" />
     <Content Include="Views\Province\Create.cshtml" />
     <Content Include="Views\Province\Delete.cshtml" />
     <Content Include="Views\Province\Details.cshtml" />

@@ -12,64 +12,69 @@ ViewBag.Title = "Index";
             <h4 class="page-title"> Provinces</h4>
         </div>
     </div>
-   
+
 
     <div class="col-md-12">
         <div class="white-box printableArea">
             <p>
                 @Html.ActionLink("Create New Province", "Create")
             </p>
-            <table class="table">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Pays.Nom)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Nom)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Enroles)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.GID_1)
-                    </th>
-                    <th></th>
-                </tr>
-
-                @foreach (var item in Model)
-                {
+            <div class="table-responsive">
+                <table class="display nowrap table table-hover table-striped table-bordered">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Pays.Nom)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nom)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Enroles)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.GID_1)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Province }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.ID_Province }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Province })
-                        </td>
-                        @*<td>
-                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-key"></i></button>
-                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
-                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
-                                <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-20"><i class="ti-upload"></i></button>
-                            </td>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.Pays.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Enroles)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.GID_1)
+                        </th>
+                        <th></th>
                     </tr>
-                }
 
-            </table>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Pays.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Enroles)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GID_1)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Province }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.ID_Province }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Province })
+                            </td>
+                            @*<td>
+                                    <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-key"></i></button>
+                                    <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="icon-trash"></i></button>
+                                    <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-5"><i class="ti-pencil-alt"></i></button>
+                                    <button type="button" class="btn btn-info btn-outline btn-circle btn-lg m-r-20"><i class="ti-upload"></i></button>
+                                </td>*@
+                        </tr>
+                    }
+
+                </table>
+
+            </div>
 
         </div>
 
+
     </div>
+
     <footer class="footer text-center">
         Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
     </footer>

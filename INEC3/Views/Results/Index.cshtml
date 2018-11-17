@@ -22,79 +22,82 @@
             <p>
                 @Html.ActionLink("Create New", "Create")
             </p>
-            <table class="table">
-                <tr>
-
-                    <th>
-                        @Html.DisplayNameFor(model => model.BureauVote.Nom)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Candidat.Nom)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Party.Sigle)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Voix)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Pourcentage)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Votants)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Abstentions)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Nuls)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Exprimes)
-                    </th>
-                    <th></th>
-                </tr>
-
-                @foreach (var item in Model)
-                {
+            <div class="table-responsive">
+                <table class="display nowrap table table-hover table-striped table-bordered">
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.BureauVote.Nom)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Candidat.Nom)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Party.Sigle)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Voix)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Pourcentage)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Votants)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Abstentions)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Nuls)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Exprimes)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Result }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.ID_Result }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })
-                        </td>
-                    </tr>
-                }
 
-            </table>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BureauVote.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Candidat.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Party.Sigle)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Voix)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Pourcentage)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Votants)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Abstentions)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nuls)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Exprimes)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BureauVote.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Candidat.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Party.Sigle)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Voix)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Pourcentage)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Votants)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Abstentions)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nuls)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Exprimes)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Result }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.ID_Result }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
         </div>
+
     </div>
     <footer class="footer text-center">
         Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
