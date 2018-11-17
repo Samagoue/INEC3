@@ -246,7 +246,7 @@ function usZoom() {
 
     projection.scale(scale).translate([swidth, sheight])
     
-    statePaths.transition(t).attr('d', path).attr('class', '');
+    statePaths.transition(t).attr('d', path).attr('class', 'state');
 
     g.selectAll('.county')
         .data([])
@@ -292,6 +292,7 @@ $(document).ready(function () {
 });
 
 function FillProvinceColor() {
+    $('.state').css("fill", 'white');//Use To Reset Color
     if (ProvinceResult) {
         var last;
         $.each(ProvinceResult, function (i, v) {
@@ -303,7 +304,7 @@ function FillProvinceColor() {
     }
 }
 function FillTerritoiresColor() {
-
+    $('.county').css("fill", 'white');
     if (TerritoiresResult) {
         var last;
         $.each(TerritoiresResult, function (i, v) {
