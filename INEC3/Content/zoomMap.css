@@ -731,3 +731,38 @@ Interactive Layer
 .nvd3 line.nv-guideline {
     stroke: #ccc;
 }
+
+
+/*Home Page Responsive For Tiles*/
+@media (min-width: 320px) {
+    .responsive {
+        min-height: 140px;
+    }
+
+    .img-top-candidate {
+        max-height: 90px;
+    }
+}
+@media (min-width: 425px) {
+     .responsive {
+        min-height: 140px;
+    }
+    .img-top-candidate {
+        max-height: 90px;
+    }
+}
+@media (min-width: 768px) {
+     .responsive {
+        min-height: 155px;
+    }
+}
+@media (min-width: 1024px) {
+     .responsive {
+        min-height: 155px;
+    }
+}
+@media (min-width: 1440px) {
+     .responsive {
+        min-height: 140px;
+    }
+}

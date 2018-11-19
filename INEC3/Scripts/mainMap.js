@@ -170,7 +170,7 @@ function GenerateTooltip(res) {
         //debugger
         var tltip = TerritoiresResult.filter(function (e) { if (res.properties.GID_2) { return e.GUI_2 === res.properties.GID_2.slice(4) } });
         if (tltip.length > 0) {
-            $('#LblToltiptitle').text('Results of ' +res.properties.NAME_2);
+            $('#LblToltiptitle').text('Results of ' + res.properties.NAME_2);
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
                 $('#lblreporting').text(v.ReportedPerc + '% Reporting');
@@ -179,7 +179,7 @@ function GenerateTooltip(res) {
                 else
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + v.Perce + " %</td></tr>");
                 //Set Tooltip Chart
-                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + v.Perce + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + v.Perce + "%;background-color:" + v.Color +";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
+                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + v.Perce + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + v.Perce + "%;background-color:" + v.Color + ";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
             });
             tltipdiv.appendChild(table);
             return true;
@@ -188,24 +188,24 @@ function GenerateTooltip(res) {
     }
     else {
         $('#header').text(res.properties.NAME_1);
-        
+
         var tltip = ProvinceResult.filter(function (e) { return e.GUI_1 === res.properties.GID_1.slice(4) });
         var tvote = 0;
         if (tltip.length > 0) {
             $.each(tltip, function (i, v) {
                 tvote += parseInt(v.Votants);
             });
-            $('#LblToltiptitle').text('Results of '+res.properties.NAME_1);
+            $('#LblToltiptitle').text('Results of ' + res.properties.NAME_1);
             $('#TooltipChart').find("li").remove();
             $.each(tltip, function (i, v) {
-                $('#lblreporting').text(v.ReportedPerc +'% Reporting');
+                $('#lblreporting').text(v.ReportedPerc + '% Reporting');
                 var per = (parseInt(v.Votants) * 100 / tvote).toFixed(2);
                 if (i === 0)
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" style=\"background-color:" + v.Color + ";\">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + per + " %</td></tr>");
                 else
                     $(table).find('tbody').append("<tr><td class=\"legend-color-guide\"><div style=\"background-color:" + v.Color + ";\"></div></td><td class=\"key\" colspan=\"2\" \">" + v.Candidat + "</td><td class=\"key\">" + v.Party + "</td><td class=\"key\">" + v.Votants + "</td><td class=\"value\">" + per + " %</td></tr>");
                 //Set Tooltip Chart
-                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + per + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + per + "%;background-color:" + v.Color +";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
+                $('#TooltipChart').append("<li><h2>" + v.Candidat + "</h2> <small>" + v.Votants + "</small><div class=\"pull-right\">" + per + "% <i class=\"fa fa-level-up text-success\"></i></div><div class=\"progress\"><div class=\"progress-bar progress-bar-info\" role=\"progressbar\" aria-valuenow=\"50\" aria-valuemin=\"0\" aria-valuemax=\"100\" style=\"width:" + per + "%;background-color:" + v.Color + ";\"> <span class=\"sr-only\">20% Complete</span></div></div></li>");
             });
             tltipdiv.appendChild(table);
             return true;
@@ -236,7 +236,7 @@ $(function () {
 });
 function reset() {
     usZoom();
-    
+
 }
 function usZoom() {
     iscancel = false;
@@ -245,7 +245,7 @@ function usZoom() {
     var t = d3.transition().duration(800)
 
     projection.scale(scale).translate([swidth, sheight])
-    
+
     statePaths.transition(t).attr('d', path).attr('class', 'state');
 
     g.selectAll('.county')
@@ -281,13 +281,6 @@ $(document).ready(function () {
 
     $(window).resize(function () {
         location.reload(true);
-
-        //if ($(window).width() < 960) {
-        //    alert('Less than 960');
-        //}
-        //else {
-        //    alert('More than 960');
-        //}
     });
 });
 
@@ -331,26 +324,61 @@ function FillTopCandidate() {
     if (TopCandidate) {
         //$.each(TopCandidate, function (i, v) {
         for (var i = 0; i < 2; i++) {
-            $("#lblcandidate" + i).html(TopCandidate[i].Candidat);
-            $("#lblcandidatePer" + i).html(TopCandidate[i].Perc + ' %');
-            $("#lblcandidateVote" + i).html(TopCandidate[i].Votants);
-            $("#imgcandidate" + i).attr("src","/Content/image/Candimg_" + TopCandidate[i].Candidatimg+".png");
+            $("#lblcandidate" + i).html((TopCandidate[i]) ? TopCandidate[i].Candidat : 'Top Candidate');
+            $("#lblcandidatePer" + i).html((TopCandidate[i]) ? TopCandidate[i].Perc + ' %' : '0 %');
+            $("#lblcandidateVote" + i).html((TopCandidate[i]) ? TopCandidate[i].Votants : '');
+            if (TopCandidate[i])
+                $("#imgcandidate" + i).attr("src", "/Content/image/Candimg_" + TopCandidate[i].Candidatimg + ".png");
+            else
+                $("#imgcandidate" + i).attr("src", "/Content/image/logo.png");
         }
         //);
         FillToolTipChart();
     }
+    //else {
+    //    for (var i = 0; i < 2; i++) {
+    //        $("#lblcandidate" + i).html('');
+    //        $("#lblcandidatePer" + i).html('0 %');
+    //        $("#lblcandidateVote" + i).html('0');
+    //        $("#imgcandidate" + i).attr("src", "/Content/image/logo.png");
+    //    }
+    //}
     if (ReportPolStation) {
-        $('#ReportPolstation').html(ReportPolStation[0].Reportstation);
-        $('#PersPolstation').html(ReportPolStation[0].PersPolstation + ' %');
+        if (ReportPolStation[0]) {
+            $('#ReportPolstation').html(ReportPolStation[0].Reportstation);
+            $('#PersPolstation').html(ReportPolStation[0].PersPolstation + ' %');
+        }
+        else {
+            $('#ReportPolstation').html('');
+            $('#PersPolstation').html('0 %');
+        }
     }
+    //else {
+    //    $('#ReportPolstation').html('');
+    //    $('#PersPolstation').html('0 %');
+    //}
     if (LastUpdatedPoolstn) {
         //$('#lbllstpolingstation').html(LastUpdatedPoolstn[0].Polingstation);
         //$('#lbllastupdatedvotes').html(LastUpdatedPoolstn[0].Votants + '(' + LastUpdatedPoolstn[0].Party+')');
-        $('#lbllastupdatedProvinceName').html(LastUpdatedPoolstn[0].ProvinceName);
-        $('#lbllastupdatedProvince').html(LastUpdatedPoolstn[0].Province);
-        $('#lbllastupdatedVotants').html(LastUpdatedPoolstn[0].Votants);
-        $('#lbllastupdatedVotantsName').html(LastUpdatedPoolstn[0].Polingstation);
+        if (LastUpdatedPoolstn[0]) {
+            $('#lbllastupdatedProvinceName').html(LastUpdatedPoolstn[0].ProvinceName);
+            $('#lbllastupdatedProvince').html(LastUpdatedPoolstn[0].Province);
+            $('#lbllastupdatedVotants').html(LastUpdatedPoolstn[0].Votants);
+            $('#lbllastupdatedVotantsName').html(LastUpdatedPoolstn[0].Polingstation);
+        }
+        else {
+            $('#lbllastupdatedProvinceName').html('Province');
+            $('#lbllastupdatedProvince').html('0');
+            $('#lbllastupdatedVotants').html('0');
+            $('#lbllastupdatedVotantsName').html('Poling Stat..');
+        }
     }
+    //else {
+    //    $('#lbllastupdatedProvinceName').html('');
+    //    $('#lbllastupdatedProvince').html('');
+    //    $('#lbllastupdatedVotants').html('');
+    //    $('#lbllastupdatedVotantsName').html('');
+    //}
 
 }
 function FillToolTipChart() {
