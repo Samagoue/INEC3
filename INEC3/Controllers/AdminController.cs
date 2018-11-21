@@ -111,6 +111,8 @@ namespace INEC3.Controllers
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
                 hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
+                SqlNotification objRepo = new SqlNotification();
+                var res = objRepo.GetAllMessages();
 
                 return Json("success", JsonRequestBehavior.AllowGet);
 
@@ -180,6 +182,10 @@ namespace INEC3.Controllers
             dt = _db.GetDatatable("proc_GetProvinceResult", "");
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
             hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+
+            SqlNotification objRepo = new SqlNotification();
+            objRepo.GetAllMessages();
+
             return Json(res, JsonRequestBehavior.AllowGet);
         }
         public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
@@ -208,6 +214,10 @@ namespace INEC3.Controllers
             dt = _db.GetDatatable("proc_GetProvinceResult", "");
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
             hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+
+            SqlNotification objRepo = new SqlNotification();
+            objRepo.GetAllMessages();
+
             return Json(res, JsonRequestBehavior.AllowGet);
         }
 
