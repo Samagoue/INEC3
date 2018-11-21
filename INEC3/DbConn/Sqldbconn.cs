@@ -8,6 +8,7 @@ using System.Configuration;
 
 namespace INEC3.DbConn
 {
+    
     public class Sqldbconn
     {
 
@@ -34,6 +35,7 @@ namespace INEC3.DbConn
             DataSet ds = new DataSet();
             adp.Fill(ds);
             //adp.Fill(dt);
+            con.Close();
             return ds;
         }
     }
