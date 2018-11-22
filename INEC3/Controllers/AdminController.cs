@@ -32,7 +32,6 @@ namespace INEC3.Controllers
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
             ViewBag.Message = "Your application description page.";
             ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
-            //ViewBag.Territoire = new SelectList(db.Provinces.Select(s=>s.).ToList(), "", "");
             if (id == null)
             {
                 return View();
@@ -51,116 +50,173 @@ namespace INEC3.Controllers
 
         public JsonResult GetParty(int candidateid)
         {
-            var party = db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color }).FirstOrDefault();
-            return Json(party, JsonRequestBehavior.AllowGet);
+            try
+            {
+                var party = db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color }).FirstOrDefault();
+                return Json(party, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
 
         public JsonResult GetVoters(int polingstationid)
         {
-            var res = new Dictionary<string, string>();
-            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();
-            var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
-            var res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
-            res.Add("voters", JsonConvert.SerializeObject(voters));
-            res.Add("list", JsonConvert.SerializeObject(res1));
-            if (exprims != null)
+            try
             {
-                res.Add("exprims", JsonConvert.SerializeObject(exprims));
+
+
+                var res = new Dictionary<string, string>();
+                var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();
+                var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
+                var res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
+                res.Add("voters", JsonConvert.SerializeObject(voters));
+                res.Add("list", JsonConvert.SerializeObject(res1));
+                if (exprims != null)
+                {
+                    res.Add("exprims", JsonConvert.SerializeObject(exprims));
+                }
+                //return Json(voters, JsonRequestBehavior.AllowGet);
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
-            //return Json(voters, JsonRequestBehavior.AllowGet);
-            return Json(res, JsonRequestBehavior.AllowGet);
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
 
-        public JsonResult SaveRecord(Results tbl_Results)
+        //public JsonResult SaveRecord(Results tbl_Results)
+        //{
+        //    try
+        //    {
+
+        //        foreach (var it in tbl_Results.ResultList)
+        //        {
+        //            tbl_Results re = new tbl_Results();
+
+        //            re.ID_Result = tbl_Results.ID_Result;
+        //            re.ID_Bureauvote = tbl_Results.ID_Bureauvote;
+        //            re.Votants = tbl_Results.Votants;
+        //            re.Abstentions = tbl_Results.Abstentions;
+        //            re.Nuls = tbl_Results.Nuls;
+        //            re.Exprimes = tbl_Results.Exprimes;
+
+        //            re.ID_Candidat = it.ID_Candidat;
+        //            re.ID_Party = it.ID_Party;
+        //            re.Pourcentage = it.Pourcentage;
+        //            re.Voix = it.Voix;
+        //            re.Total_Votes = tbl_Results.Total_Votes;
+
+        //            if (tbl_Results.ID_Result == 0)
+        //            {
+        //                db.Results.Add(re);
+        //                db.SaveChanges();
+        //            }
+        //            //else
+        //            //{
+        //            //    db.Entry(re).State = EntityState.Modified;
+        //            //    db.SaveChanges();
+        //            //}
+        //        }
+
+
+        //        DataSet dt = new DataSet();
+        //        dt = _db.GetDatatable("proc_GetProvinceResult", "");
+        //        var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+        //        hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+
+        //        SqlNotification objRepo = new SqlNotification();
+        //        var res = objRepo.GetAllMessages();
+
+        //        return Json("success", JsonRequestBehavior.AllowGet);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //        return Json("error " + ex.Message.ToString(), JsonRequestBehavior.AllowGet);
+        //    }
+        //}
+
+        public JsonResult SaveListRecord(tbl_Results obj)
         {
             try
             {
 
-                foreach (var it in tbl_Results.ResultList)
+
+                if (obj.ID_Result == 0)
                 {
-                    tbl_Results re = new tbl_Results();
-
-                    re.ID_Result = tbl_Results.ID_Result;
-                    re.ID_Bureauvote = tbl_Results.ID_Bureauvote;
-                    re.Votants = tbl_Results.Votants;
-                    re.Abstentions = tbl_Results.Abstentions;
-                    re.Nuls = tbl_Results.Nuls;
-                    re.Exprimes = tbl_Results.Exprimes;
-
-                    re.ID_Candidat = it.ID_Candidat;
-                    re.ID_Party = it.ID_Party;
-                    re.Pourcentage = it.Pourcentage;
-                    re.Voix = it.Voix;
-                    re.Total_Votes = tbl_Results.Total_Votes;
-
-                    if (tbl_Results.ID_Result == 0)
+                    List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
+                    if (isExist.Count == 0)
                     {
-                        db.Results.Add(re);
+                        obj.Pourcentage = 100;
+                        obj.Exprimes = (obj.Total_Votes + obj.Abstentions + obj.Nuls);
+                        db.Results.Add(obj);
                         db.SaveChanges();
                     }
-                    //else
-                    //{
-                    //    db.Entry(re).State = EntityState.Modified;
-                    //    db.SaveChanges();
-                    //}
+                    else
+                    {
+
+                        tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
+                        if (isdublicate != null)
+                        {
+                            db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
+                            db.SaveChanges();
+                            //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                        }
+
+                        int Total_Votes = 0;
+                        if (db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Count() > 0)
+                        {
+                            var tem_total = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                            Total_Votes = string.IsNullOrEmpty(Convert.ToString(tem_total)) ? 0 : tem_total;
+                        }
+
+
+                        double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
+                        obj.Pourcentage = Perc;
+                        obj.Total_Votes = Total_Votes + obj.Voix;
+                        db.Results.Add(obj);
+                        db.SaveChanges();
+                        Total_Votes = Total_Votes + obj.Voix;
+
+                        foreach (var it in isExist)
+                        {
+                            tbl_Results re = new tbl_Results();
+                            re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
+                            double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
+                            re.Pourcentage = Percc;
+                            re.Total_Votes = Total_Votes;
+                            re.Abstentions = obj.Abstentions;
+                            re.Nuls = obj.Nuls;
+                            re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
+
+                            db.SaveChanges();
+                        }
+                        //foreach()
+                    }
+
+
                 }
-
-
+                var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
                 DataSet dt = new DataSet();
                 dt = _db.GetDatatable("proc_GetProvinceResult", "");
                 var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
                 hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
                 SqlNotification objRepo = new SqlNotification();
-                var res = objRepo.GetAllMessages();
+                objRepo.GetAllMessages();
 
-                return Json("success", JsonRequestBehavior.AllowGet);
-
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception ex)
-            {
-
-                return Json("error " + ex.Message.ToString(), JsonRequestBehavior.AllowGet);
-            }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
-        public JsonResult SaveListRecord(tbl_Results obj)
+        public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
         {
-            if (obj.ID_Result == 0)
+            try
             {
-                List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
-                if (isExist.Count == 0)
+                db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == ResultId).ToList());
+                db.SaveChanges();
+                List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).ToList();
+
+                if (isExist.Count > 0)
                 {
-                    obj.Pourcentage = 100;
-                    db.Results.Add(obj);
-                    db.SaveChanges();
-                }
-                else
-                {
-
-                    tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
-                    if (isdublicate != null)
-                    {
-                        db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
-                        db.SaveChanges();
-                        //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                    }
-
-                    int Total_Votes = 0;
-                    if (db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Count()>0)
-                    {
-                        var tem_total = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                        Total_Votes = string.IsNullOrEmpty(Convert.ToString(tem_total)) ? 0 : tem_total;
-                    }
-                    
-                    
-                    double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
-                    obj.Pourcentage = Perc;
-                    obj.Total_Votes = Total_Votes + obj.Voix;
-                    db.Results.Add(obj);
-                    db.SaveChanges();
-                    Total_Votes = Total_Votes + obj.Voix;
-
+                    int Total_Votes = isExist.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
                     foreach (var it in isExist)
                     {
                         tbl_Results re = new tbl_Results();
@@ -168,75 +224,52 @@ namespace INEC3.Controllers
                         double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
                         re.Pourcentage = Percc;
                         re.Total_Votes = Total_Votes;
-                        re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
-
+                        re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls);
                         db.SaveChanges();
                     }
-                    //foreach()
                 }
+                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
+                DataSet dt = new DataSet();
+                dt = _db.GetDatatable("proc_GetProvinceResult", "");
+                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+                hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
+                SqlNotification objRepo = new SqlNotification();
+                objRepo.GetAllMessages();
 
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
-            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
-            DataSet dt = new DataSet();
-            dt = _db.GetDatatable("proc_GetProvinceResult", "");
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-            hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-            SqlNotification objRepo = new SqlNotification();
-            objRepo.GetAllMessages();
-
-            return Json(res, JsonRequestBehavior.AllowGet);
-        }
-        public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
-        {
-            db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == ResultId).ToList());
-            db.SaveChanges();
-            List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).ToList();
-
-
-            if (isExist.Count > 0)
-            {
-                int Total_Votes = isExist.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
-                foreach (var it in isExist)
-                {
-                    tbl_Results re = new tbl_Results();
-                    re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
-                    double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
-                    re.Pourcentage = Percc;
-                    re.Total_Votes = Total_Votes;
-                    re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls);
-                    db.SaveChanges();
-                }
-            }
-            var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
-            DataSet dt = new DataSet();
-            dt = _db.GetDatatable("proc_GetProvinceResult", "");
-            var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-            hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-            SqlNotification objRepo = new SqlNotification();
-            objRepo.GetAllMessages();
-
-            return Json(res, JsonRequestBehavior.AllowGet);
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
 
         public JsonResult GetTerritoireList(int ProvinceId)
         {
+            try
+            {
             var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
             return Json(Ter, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
 
         public JsonResult GetPoolingStationList(int CommuneId)
         {
+            try
+            {
             var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
             return Json(res, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
 
         public JsonResult GetCommune(int ProvinceId, int TerritoireId)
         {
+            try
+            {
             var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
             return Json(res, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
     }
 }
