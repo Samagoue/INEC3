@@ -131,17 +131,12 @@
                 $('#ID_Party').append($('<option selected></option>').val('').html("Select Party"));
                 $('#ID_Bureauvote').append($('<option selected></option>').val('').html("Select Pooling Station"));
                 $('#ID_Province').append($('<option selected></option>').val('').html("Select Province"));
-
-               // $('#btnsave').val('Save');
             }
             else {
                 SelectParty();
                 findVoters();
             }
-
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
-
-
         });
         function SelectParty() {
             if ($('#ID_Candidat').val() > 0) {
@@ -174,7 +169,7 @@
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);
                     $('#Total_Votes').val(0);
-                    console.log(resp);
+                    //console.log(resp);
                     if (resp) {
                         if (resp.voters) {
                             var res = JSON.parse(resp.voters)
@@ -190,9 +185,9 @@
 
                         var table = $('#tbllist tbody');
                         if (resp.list) {
-                        $.each(JSON.parse(resp.list), function (i, v) {
-                            table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onclick="remove($(this))" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove" "></i></button></td></tr>')
-                        });
+                            $.each(JSON.parse(resp.list), function (i, v) {
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
+                            });
                         }
                     }
 
@@ -213,11 +208,11 @@
                     data: { ProvinceId: $('#ID_Province').val() },
                     success: function (res) {
                         if (res) {
-                        $.each(res, function (i, v) {
-                            $('#ID_Territoire').append($('<option></option>').val(v.ID_Territoire).html(v.Nom));
-                        });
+                            $.each(res, function (i, v) {
+                                $('#ID_Territoire').append($('<option></option>').val(v.ID_Territoire).html(v.Nom));
+                            });
+                        }
                     }
-                }
                 });
             }
         }
@@ -264,67 +259,62 @@
         }
 
         function CountExprimes() {
-           // var Votes = $('#Voix').val() == "" ? 0 : $('#Voix').val()
             var Abstentions = $('#Abstentions').val() == "" ? 0 : $('#Abstentions').val()
             var Nuls = $('#Nuls').val() == "" ? 0 : $('#Nuls').val()
 
-            var Votes=0
-
+            var Votes = 0
             $('#tbllist >tbody tr').each(function () {
-                Votes +=parseInt($(this).find('.votes').html())
+                Votes += parseInt($(this).find('.votes').html())
             });
-
-            //$('#tbllist >tbody tr').each(function () {
-            //    $(this).find('.percen').html((parseInt($(this).find('.votes').html()) * 100 / parseInt(Votes)).toFixed(2))
-            //});
             $('#Exprimes').val(parseInt(Votes) + parseInt(Abstentions) + parseInt(Nuls))
-            //$('#Total_Votes').val(parseInt(Votes))
-
         }
 
+        function removerecord(button) {
+            debugger
 
-        function remove(button) {
             swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this record!",
                 icon: "warning",
                 buttons: true,
                 dangerMode: true,
-            })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: '/Admin/RemoveResult',
-                            type: "GET",
-                            dataType: "json",
-                            contentType: "application/json; charset=utf-8",
-                            data: { ResultId: button.closest("tr").find('.ResultId').val(), ID_Bureauvote: $('#ID_Bureauvote').val() },
-                            success: function (resp) {
-                                swal("Success! Record has been deleted!", {
-                                    icon: "success",
+            }).then((willDelete) => {
+                if (willDelete) {
+                    $.ajax({
+                        url: '/Admin/RemoveResult',
+                        type: "GET",
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        data: { ResultId: button.closest("tr").find('.ResultId').val(), ID_Bureauvote: $('#ID_Bureauvote').val() },
+                        success: function (resp) {
+                            swal("Success! Record has been deleted!", {
+                                icon: "success",
+                            });
+                            if (resp) {
+                                
+                                resettable()
+                                var table = $('#tbllist tbody');
+                                $.each(resp, function (i, v) {
+                                    if (i == 0) {
+                                        $('#Abstentions').val(v.Abstentions)
+                                        $('#Nuls').val(v.Nuls)
+                                        $('#Exprimes').val(v.Exprimes)
+                                        $('#Total_Votes').val(v.Total_Votes)
+                                    }
+                                    table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                                 });
-                                if (resp) {
-                                    resettable()
-                                    var table = $('#tbllist tbody');
-                                    $.each(resp, function (i, v) {
-                                        table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onclick="remove($(this))" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove" "></i></button></td></tr>')
-                                    });
 
-                                }
-                                else {
-                                    toastr.error(resp, "Error");
-                                }
                             }
-                        });
+                            else {
+                                toastr.error(resp, "Error");
+                            }
+                        }
+                    });
 
-                    } else {
-                        swal("Your imaginary file is safe!");
-                    }
-                });
-
-            //button.closest("tr").remove()
-
-            //CountExprimes()
+                } else {
+                    swal("Your record is safe!");
+                }
+            });
         }
         function resetList() {
             $('#ID_Candidat').val('');
@@ -338,23 +328,17 @@
 
         function addToListAndDataBase() {
             if ($('#ID_Candidat').val() != '' && $('#Voix').val() > 0) {
-                //var table = $('#tbllist tbody');
-                //var Candidate = $('#ID_Candidat option:selected').text();
-                //var Party = $('#ID_Party option:selected').text();
                 var votes = parseInt($('#Voix').val());
-                //Percentage
                 $('#Total_Votes').val(parseInt($('#Voix').val()) + parseInt($('#Total_Votes').val()));
                 $('#Exprimes').val(parseInt($('#Total_Votes').val()) + parseInt($('#Abstentions').val()) + parseInt($('#Nuls').val()))
                 var perc = 0;
-                //var perc = (parseInt(votes) * 100 / parseInt(TVotes + votes)).toFixed(2)
-
-                CountExprimes()
+                //CountExprimes()
 
                 var tbl_Results = {
                     ID_Result: $('#ID_Result').val(),
                     ID_Bureauvote: $('#ID_Bureauvote').val(),
                     Votants: $('#Votants').val(),
-                    Total_Votes: parseInt( $('#Total_Votes').val()),
+                    Total_Votes: parseInt($('#Total_Votes').val()),
                     Abstentions: $('#Abstentions').val(),
                     Nuls: $('#Nuls').val(),
                     Exprimes: $('#Exprimes').val(),
@@ -363,29 +347,33 @@
                     Pourcentage: perc,
                     Voix: votes
                 };
-                 $.ajax({
-                     url: '/Admin/SaveListRecord',
-                        type: "POST",
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
-                     data: JSON.stringify(tbl_Results),
-                     success: function (resp) {
-                         if (resp) {
-                             resettable()
-                             var table = $('#tbllist tbody');
-                             $.each(resp, function (i, v) {
-                                 table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onclick="remove($(this))" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove" "></i></button></td></tr>')
-                             });
-                                toastr.success("Record save successfully", "Success");
-                                //var url = '@Url.Action("Index","Admin")';
-                                //window.location.href = url;
-                                resetList()
-                            }
-                            else {
-                                toastr.error(resp, "Error");
-                            }
+                $.ajax({
+                    url: '/Admin/SaveListRecord',
+                    type: "POST",
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(tbl_Results),
+                    success: function (resp) {
+                        if (resp) {
+                            resettable()
+                            var table = $('#tbllist tbody');
+                            $.each(resp, function (i, v) {
+                                if (i == 0) {
+                                    $('#Abstentions').val(v.Abstentions)
+                                    $('#Nuls').val(v.Nuls)
+                                    $('#Exprimes').val(v.Exprimes)
+                                    $('#Total_Votes').val(v.Total_Votes)
+                                }
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
+                            });
+                            toastr.success("Record save successfully", "Success");
+                            resetList()
                         }
-                    });
+                        else {
+                            toastr.error(resp, "Error");
+                        }
+                    }
+                });
 
 
             }
@@ -398,6 +386,5 @@
                 }
             }
         }
-
     </script>
 }

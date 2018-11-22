@@ -230,7 +230,7 @@
                     <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
                         <img src="~/Content/image/logo.png" alt="user" id="imgcandidate0" class="img-circle img-responsive img-top-candidate">
                     </div>
-                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr">
+                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr" style="padding-left: 20px !important;">
                         <h4 class="text-center"><span id="lblcandidate0" class="counter"></span></h4>
                         <h5><span id="lblcandidateVote0" class="counter">0</span><small> ( <span id="lblcandidatePer0" class="counter">0 %</span> )</small></h5>
                     </div>
@@ -250,7 +250,7 @@
                     <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
                         <img src="~/Content/image/logo.png" alt="user" id="imgcandidate1" class="img-circle img-responsive img-top-candidate">
                     </div>
-                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr">
+                    <div class="col-md-9 col-sm-8 col-xs-6 padding-no-lr"style="padding-left: 20px !important;">
                         <h4 class="text-center"><span id="lblcandidate1" class="counter"></span></h4>
                         <h5><span id="lblcandidateVote1" class="counter">0</span><small> ( <span id="lblcandidatePer1" class="counter">0 %</span> )</small></h5>
                     </div>
@@ -260,13 +260,11 @@
         
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
-                <div class="row">
                     <h5 class="box-title">Reported Polling Stations</h5>
                     <ul class="list-inline two-part" @*style="margin-bottom: -8px;"*@>
                         <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
                         <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
                     </ul>
-                </div>
             </div>
         </div>
         
@@ -389,9 +387,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.3.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script>
+        
         var rs =@Html.Raw(ViewBag.Province);
         var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3,LastUpdatedPoolstn=rs.Table4;
-
+        
         $('#TooltipChart').slimScroll({
             height: '370px'
         });

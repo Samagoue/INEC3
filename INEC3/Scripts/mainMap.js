@@ -1,4 +1,5 @@
-﻿var swidth = 0, sheight = 0, scale = 0;
+﻿
+var swidth = 0, sheight = 0, scale = 0;
 
 var width = $('#mapcontainer').width(),
     //height = $('#mapcontainer').height() - 30
@@ -62,35 +63,35 @@ var tooltip = d3.select("body")
 
 
 var states, counties, statePaths;
+$(document).ready(function () {
+    d3.json("/Resources/COD_TOPO.json", function (error, cod) {
+        if (error) throw error;
+        states = topojson.feature(cod, cod.objects.Provinces).features
+        counties = topojson.feature(cod, cod.objects.Territoires).features
 
-d3.json("/Resources/COD_TOPO.json", function (error, cod) {
-    if (error) throw error;
-    states = topojson.feature(cod, cod.objects.Provinces).features
-    counties = topojson.feature(cod, cod.objects.Territoires).features
-
-    statePaths = g.selectAll('.state')
-        .data(states)
-        .enter().append('path')
-        .attr('class', 'state')
-        .attr('d', path)
-        .style('fill', "white")
-        .attr("stateCode", function (d) { return d.properties.GID_1.slice(4); })
-        .on("mouseover", function (d) { if (GenerateTooltip(d)) { return tooltip.style("visibility", "visible"); } })
-        .on("mousemove", function () { return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
-        .on("mouseout", function () { FillToolTipChart(); return tooltip.style("visibility", "hidden"); })
-        .on("click", function (d) { clicked(d) });
-    g.selectAll("text")
-        .data(topojson.feature(cod, cod.objects.Provinces).features)
-        .enter()
-        .append("svg:text")
-        .text(function (d) { return d.properties.NAME_1.slice(0, 6); })
-        .attr("x", function (d) { return path.centroid(d)[0]; })
-        .attr("y", function (d) { return path.centroid(d)[1]; })
-        .attr("text-anchor", "middle")
-        .attr('font-size', '6pt');
-    FillProvinceColor();
+        statePaths = g.selectAll('.state')
+            .data(states)
+            .enter().append('path')
+            .attr('class', 'state')
+            .attr('d', path)
+            .style('fill', "white")
+            .attr("stateCode", function (d) { return d.properties.GID_1.slice(4); })
+            .on("mouseover", function (d) { if (GenerateTooltip(d)) { return tooltip.style("visibility", "visible"); } })
+            .on("mousemove", function () { return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
+            .on("mouseout", function () { FillToolTipChart(); return tooltip.style("visibility", "hidden"); })
+            .on("click", function (d) { clicked(d) });
+        g.selectAll("text")
+            .data(topojson.feature(cod, cod.objects.Provinces).features)
+            .enter()
+            .append("svg:text")
+            .text(function (d) { return d.properties.NAME_1.slice(0, 6); })
+            .attr("x", function (d) { return path.centroid(d)[0]; })
+            .attr("y", function (d) { return path.centroid(d)[1]; })
+            .attr("text-anchor", "middle")
+            .attr('font-size', '6pt');
+        FillProvinceColor();
+    });
 });
-
 function clicked(d) {
     activeProvince = d.properties.GID_1.slice(4);
     //var state = states.find(function (e) { return e.properties.GID_1.slice(4) === d.properties.GID_1.slice(4) })
