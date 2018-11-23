@@ -1,11 +1,36 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/image/logo.png">
+    @*<link rel="icon" type="image/png" sizes="16x16" href="~/Content/plugins/images/favicon.png">*@
+    <title>Shadow</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/plugins/bower_components/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
+    <!-- Menu CSS -->
+    <link href="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <!-- chartist CSS -->
+    <link href="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
+    <link href="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
+    <!-- Vector CSS -->
+    <link href="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
+    <!-- animation CSS -->
+    <link href="~/Content/css/animate.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="~/Content/css/style.css" rel="stylesheet">
+    <!-- color CSS -->
+    <link href="~/Content/css/colors/blue-dark.css" id="theme" rel="stylesheet">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
     <style>
         .logo-container {
             flex-shrink: 0;
@@ -46,59 +71,255 @@
                 -ms-flex-positive: 1;
                 flex-grow: 1;
             }
+
+        #demotext {
+            color: #131313;
+            background: #e7e5e4;
+            letter-spacing: .15em;
+            text-shadow: 1px -1px 0 #767676, -1px 2px 1px #737272, -2px 4px 1px #767474, -3px 6px 1px #787777, -4px 8px 1px #7b7a7a, -5px 10px 1px #7f7d7d, -6px 12px 1px #828181, -7px 14px 1px #868585, -8px 16px 1px #8b8a89, -9px 18px 1px #8f8e8d, -10px 20px 1px #949392, -11px 22px 1px #999897, -12px 24px 1px #9e9c9c, -13px 26px 1px #a3a1a1, -14px 28px 1px #a8a6a6, -15px 30px 1px #adabab, -16px 32px 1px #b2b1b0, -17px 34px 1px #b7b6b5, -18px 36px 1px #bcbbba, -19px 38px 1px #c1bfbf, -20px 40px 1px #c6c4c4, -21px 42px 1px #cbc9c8, -22px 44px 1px #cfcdcd, -23px 46px 1px #d4d2d1, -24px 48px 1px #d8d6d5, -25px 50px 1px #dbdad9, -26px 52px 1px #dfdddc, -27px 54px 1px #e2e0df, -28px 56px 1px #e4e3e2;
+            color: #131313;
+            background: #e7e5e4;
+        }
     </style>
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="logo-container" style="margin-bottom: -100px;">
-                <a class="logo">
-                    <img src="~/Content/image/logo.png" />
-                </a>
-            </div>
+<body class="fix-header">
+    <!-- ============================================================== -->
+    <!-- Preloader -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Wrapper -->
+    <!-- ============================================================== -->
+    <div id="wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @*@Html.ActionLink("Admin INEC", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
-            </div>
-            <div class="navbar-collapse collapse" style="margin-left: 10%;">
-                @if (Session["UserID"] != null)
-                {<ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("List", "Index", "Admin")</li>
-                        <li>@Html.ActionLink("Add Result", "Result", "Admin")</li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="@Url.Action("Index", "Admin")"><span class="glyphicon glyphicon-user"></span> @Session["UserID"]</a></li>
-                        <li><a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-user"></span> Logout </a></li>
-                    </ul>
-                }
-                else
-                {
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a href="@Url.Action("Login", "Account")"><span class="glyphicon glyphicon-user"></span> Login</a></li>
-                    </ul>
-                }
-            </div>
-        </div>
-        <div class="flag-border">
-            <div style="background-color: #007fff !important;"></div>
-            <div style="background-color: #f7d618 !important;"></div>
-            <div style="background-color: #ce1021 !important;"></div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - INEC Application by <a href="http://www.artechconsulting.us" target="_blank">www.artechconsulting.us</a></p>
-        </footer>
-    </div>
+                <div class="top-left logo-container" style="margin-bottom: -31px;">
+                    <!-- Logo -->
+                    <a class="logo" href="@Url.Action("Index","Home")">
+                        <!--This is dark logo icon--><img src="~/Content/image/logo.png" alt="home" class="dark-logo" />
+                    </a>
+                    <div style="display: inline;position: absolute;margin: 0px 2%;">
+                        <h2 style="color:white;color: #f7f1f1;text-shadow: 1px -1px 0 #afa7a7, -1px 2px 1px #111010, -2px 4px 1px #767474, -3px 6px 1px #787777,-4px 6px 1px #787777, 4px -13px 12px rgba(28,110,164,0);">Result Of Nation</h2>
+                    </div>
+                </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+            </div>
+            <div class="flag-border">
+                <div style="background-color: #007fff !important;"></div>
+                <div style="background-color: #f7d618 !important;"></div>
+                <div style="background-color: #ce1021 !important;"></div>
+            </div>
+            <!-- /.navbar-header -->
+            <!-- /.navbar-top-links -->
+            <!-- /.navbar-static-side -->
+        </nav>
+        <!-- End Top Navigation -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <div class="navbar-default sidebar" role="navigation">
+            <div class="sidebar-nav slimscrollsidebar">
+                <div class="sidebar-head">
+                    <h3><span class="fa-fw open-close"><i class="ti-menu hidden-xs"></i><i class="ti-close visible-xs"></i></span> <span class="hide-menu">Navigation</span></h3>
+                </div>
+                <ul class="nav" id="side-menu">
+                    <li class="user-pro">
+                        <a href="#" class="waves-effect">
+                            @*<img src="~/Content/plugins/images/users/varun.jpg" alt="user-img" class="img-circle">*@<i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">  Kalala<span class="fa arrow"></span></span>
+                        </a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
+                            <li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-email"></i> <span class="hide-menu">Inbox</span></a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
+                            <li><a href="javascript:void(0)"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="tables.html" class="waves-effect"><i class="mdi mdi-table fa-fw"></i> 
+                    <span class="hide-menu">Forms<span class="fa arrow"></span>
+                    <span class="label label-rouded label-danger pull-right">9</span></span></a>
+                <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                    @*@Html.ActionLink("Add Result", "Result", "Admin")*@
+                    <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
+                    <li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>
+                    @*<li><a href="data-table.html"><i class="fa-fw">D</i><span class="hide-menu">Data Table</span></a></li>
+                    <li><a href="bootstrap-tables.html"><i class="fa-fw">B</i><span class="hide-menu">Bootstrap Tables</span></a></li>
+                    <li><a href="responsive-tables.html"><i class="fa-fw">R</i><span class="hide-menu">Responsive Tables</span></a></li>
+                    <li><a href="editable-tables.html"><i class="fa-fw">E</i><span class="hide-menu">Editable Tables</span></a></li>
+                    <li><a href="foo-tables.html"><i class="fa-fw">F</i><span class="hide-menu">FooTables</span></a></li>
+                    <li><a href="jsgrid.html"><i class="fa-fw">J</i><span class="hide-menu">JsGrid Tables</span></a></li>
+                    <li><a href="table-layouts.html"><i class="fa-fw">L</i><span class="hide-menu">Table Layouts</span></a></li>
+                    <li><a href="data-table.html"><i class="fa-fw">D</i><span class="hide-menu">Data Table</span></a></li>
+                    <li><a href="bootstrap-tables.html"><i class="fa-fw">B</i><span class="hide-menu">Bootstrap Tables</span></a></li>
+                    <li><a href="responsive-tables.html"><i class="fa-fw">R</i><span class="hide-menu">Responsive Tables</span></a></li>
+                    <li><a href="editable-tables.html"><i class="fa-fw">E</i><span class="hide-menu">Editable Tables</span></a></li>
+                    <li><a href="foo-tables.html"><i class="fa-fw">F</i><span class="hide-menu">FooTables</span></a></li>
+                    <li><a href="jsgrid.html"><i class="fa-fw">J</i><span class="hide-menu">JsGrid Tables</span></a></li>*@
+                </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+        <div id="page-wrapper">
+            @RenderBody()
+
+            <!-- /.container-fluid -->
+            @*<footer class="footer text-center"> 2017 &copy; Ampleadmin brought to you by themedesigner.in </footer>*@
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+    <!-- /#wrapper -->
+    <!-- jQuery -->
+    @*<script src="~/Content/plugins/bower_components/jquery/dist/jquery.min.js"></script>*@
+    <!-- Bootstrap Core JavaScript -->
+    <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- Menu Plugin JavaScript -->
+    <script src="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+    <!--slimscroll JavaScript -->
+    <script src="~/Content/js/jquery.slimscroll.js"></script>
+    <!--Wave Effects -->
+    <script src="~/Content/js/waves.js"></script>
+    <!-- Vector map JavaScript -->
+    @*<script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
+        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-in-mill.js"></script>
+        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-us-aea-en.js"></script>*@
+    <!-- chartist chart -->
+    <script src="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
+    <script src="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
+    <!-- sparkline chart JavaScript -->
+    <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
+    <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.charts-sparkline.js"></script>
+    <!-- Custom Theme JavaScript -->
+    <script src="~/Content/js/custom.min.js"></script>
+    @*<script src="~/Content/js/dashboard3.js"></script>*@
+    <!--Style Switcher -->
+    <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
+    <!--slimscroll JavaScript -->
+    <script src="~/Content/js/jquery.slimscroll.js"></script>
+    @*@Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+
+
+
+@*<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title - My ASP.NET Application</title>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+        <style>
+            .logo-container {
+                flex-shrink: 0;
+                margin-right: 35px;
+                text-transform: uppercase;
+                z-index: 2;
+                pointer-events: none;
+            }
+
+                .logo-container .logo {
+                    display: inline-block;
+                    height: 80px;
+                    padding: 0;
+                    pointer-events: all;
+                }
+
+                    .logo-container .logo img {
+                        display: block;
+                        max-width: 100%;
+                        max-height: 100%;
+                    }
+
+            .flag-border {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 100%;
+                height: 5px;
+                z-index: -1;
+                background-color: #3b3b3b;
+            }
+
+                .flag-border > div {
+                    -webkit-box-flex: 1;
+                    -ms-flex-positive: 1;
+                    flex-grow: 1;
+                }
+        </style>
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="logo-container" style="margin-bottom: -100px;">
+                    <a class="logo">
+                        <img src="~/Content/image/logo.png" />
+                    </a>
+                </div>
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    </div>
+                    <div class="navbar-collapse collapse" style="margin-left: 10%;">
+                        @if (Session["UserID"] != null)
+                        {<ul class="nav navbar-nav">
+                                <li>@Html.ActionLink("List", "Index", "Admin")</li>
+                                <li>@Html.ActionLink("Add Result", "Result", "Admin")</li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="@Url.Action("Index", "Admin")"><span class="glyphicon glyphicon-user"></span> @Session["UserID"]</a></li>
+                                <li><a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-user"></span> Logout </a></li>
+                            </ul>
+                        }
+                        else
+                        {
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="@Url.Action("Login", "Account")"><span class="glyphicon glyphicon-user"></span> Login</a></li>
+                            </ul>
+                        }
+                    </div>
+                    </div>
+                    <div class="flag-border">
+                        <div style="background-color: #007fff !important;"></div>
+                        <div style="background-color: #f7d618 !important;"></div>
+                        <div style="background-color: #ce1021 !important;"></div>
+                    </div>
+                    </div>
+                    <div class="container body-content">
+                        @RenderBody()
+                        <hr />
+                        <footer>
+                            <p>&copy; @DateTime.Now.Year - INEC Application by <a href="http://www.artechconsulting.us" target="_blank">www.artechconsulting.us</a></p>
+                        </footer>
+                    </div>
+
+                    @Scripts.Render("~/bundles/jquery")
+                    @Scripts.Render("~/bundles/bootstrap")
+                    @RenderSection("scripts", required: false)
+                    </body>
+                    </html>*@
