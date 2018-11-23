@@ -79,60 +79,7 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
-        //public JsonResult SaveRecord(Results tbl_Results)
-        //{
-        //    try
-        //    {
-
-        //        foreach (var it in tbl_Results.ResultList)
-        //        {
-        //            tbl_Results re = new tbl_Results();
-
-        //            re.ID_Result = tbl_Results.ID_Result;
-        //            re.ID_Bureauvote = tbl_Results.ID_Bureauvote;
-        //            re.Votants = tbl_Results.Votants;
-        //            re.Abstentions = tbl_Results.Abstentions;
-        //            re.Nuls = tbl_Results.Nuls;
-        //            re.Exprimes = tbl_Results.Exprimes;
-
-        //            re.ID_Candidat = it.ID_Candidat;
-        //            re.ID_Party = it.ID_Party;
-        //            re.Pourcentage = it.Pourcentage;
-        //            re.Voix = it.Voix;
-        //            re.Total_Votes = tbl_Results.Total_Votes;
-
-        //            if (tbl_Results.ID_Result == 0)
-        //            {
-        //                db.Results.Add(re);
-        //                db.SaveChanges();
-        //            }
-        //            //else
-        //            //{
-        //            //    db.Entry(re).State = EntityState.Modified;
-        //            //    db.SaveChanges();
-        //            //}
-        //        }
-
-
-        //        DataSet dt = new DataSet();
-        //        dt = _db.GetDatatable("proc_GetProvinceResult", "");
-        //        var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-        //        hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-        //        SqlNotification objRepo = new SqlNotification();
-        //        var res = objRepo.GetAllMessages();
-
-        //        return Json("success", JsonRequestBehavior.AllowGet);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        return Json("error " + ex.Message.ToString(), JsonRequestBehavior.AllowGet);
-        //    }
-        //}
-
+        
         public JsonResult SaveListRecord(tbl_Results obj)
         {
             try

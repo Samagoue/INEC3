@@ -2,7 +2,6 @@
 var swidth = 0, sheight = 0, scale = 0;
 
 var width = $('#mapcontainer').width(),
-    //height = $('#mapcontainer').height() - 30
     height = $('#mapcontainer').height()
 var iscancel = false;
 var iszoom = false;
