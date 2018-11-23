@@ -385,7 +385,7 @@
                                     $('#Exprimes').val(v.Exprimes)
                                     $('#Total_Votes').val(v.Total_Votes)
                                 }
-                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn icon-trash btn-danger"> X </button></td></tr>')
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn icon-trash btn-danger"></button></td></tr>')
                             });
                             toastr.success("Record save successfully", "Success");
                             resetList()
