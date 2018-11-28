@@ -4,69 +4,89 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+@Scripts.Render("~/bundles/jquery")
+<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Province.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enroles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GID_2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.GID_1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SiegesProv)
-        </th>
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-xs-12">
+            <h4 class="page-title"> Territoire</h4>
+        </div>
+    </div>
 
-        <th>
-            @Html.DisplayNameFor(model => model.SiegesNat)
-        </th>
-        <th></th>
-    </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Province.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nom)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Enroles)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GID_2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.GID_1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.SiegesProv)
-        </td>
+    <div class="col-md-12">
+        <div class="white-box printableArea">
 
-        <td>
-            @Html.DisplayFor(modelItem => item.SiegesNat)
-        </td>
 
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.ID_Territoire }) |
-            @Html.ActionLink("Details", "Details", new { id = item.ID_Territoire }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ID_Territoire })
-        </td>
-    </tr>
-}
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+            <div class="table-responsive">
+                <table class="display nowrap table table-hover table-striped table-bordered">
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Province.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Enroles)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.GID_2)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.GID_1)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SiegesProv)
+                        </th>
 
-</table>
+                        <th>
+                            @Html.DisplayNameFor(model => model.SiegesNat)
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Province.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Enroles)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GID_2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.GID_1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SiegesProv)
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.SiegesNat)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Territoire }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.ID_Territoire }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Territoire })
+                            </td>
+                        </tr>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>

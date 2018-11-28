@@ -11,50 +11,63 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Province.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Territoire.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nom)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Enroles)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Sieges)
-        </th>
-        <th></th>
-    </tr>
+<div class="col-sm-12">
+    <div class="white-box">
+        <h3 class="box-title m-b-0">Data Export</h3>
+        <p class="text-muted m-b-30">Export data to Copy, CSV, Excel, PDF & Print</p>
+        <div class="table-responsive">
+            <table class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                <
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Province.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Territoire.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Nom)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Enroles)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Sieges)
+                        </th>
+                        <th></th>
+                    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Province.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Territoire.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nom)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Enroles)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Sieges)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Commune }) |
-                @Html.ActionLink("Details", "Details", new { id = item.ID_Commune }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Commune })
-            </td>
-        </tr>
-    }
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Province.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Territoire.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Nom)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Enroles)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sieges)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.ID_Commune }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.ID_Commune }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.ID_Commune })
+                            </td>
+                        </tr>
+                    }
 
-</table>
+                </table>
+            </div>
+        </div>
+    </div>
+
+                <footer class="footer text-center">
+                    Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
+                </footer>

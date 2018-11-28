@@ -18,14 +18,14 @@ else if (1440 >= $(window).width() && $(window).width() > 768) {
     swidth = -70
     scale = scale - 80
     var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);
-    console.log('Leptop-L ro Desckot');
+    console.log('Laptop or Desktop');
     //console.log(width / 11);
 }
 else if (768 >= $(window).width() && $(window).width() > 425) {
     swidth = -150;
     scale = width * 2;
     var projection = d3.geoMercator().scale(scale).translate([swidth, sheight]);//For Tablet
-    console.log('Teblet View');
+    console.log('Tablet View');
 }
 else {
     swidth = -180

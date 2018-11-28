@@ -66,9 +66,11 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                  
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BureauVote.Nom)
                                     </td>
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Candidat.Nom)
                                     </td>
@@ -108,7 +110,9 @@
     </div>
 </div>
 
-<footer class="footer text-center"> 2017 &copy; Ample Admin brought to you by themedesigner.in </footer>
+ <footer class="footer text-center">
+     Copyright © 2018 <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
+ </footer>
 @Scripts.Render("~/bundles/jquery")
 @section Scripts {
 
