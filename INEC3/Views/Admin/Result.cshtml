@@ -162,8 +162,9 @@
         function SelectParty() {
             if ($('#ID_Candidat').val() > 0) {
                 $.ajax({
-                    url: '/Admin/GetParty',
+                    url: '/api/Results/GetParty',
                     type: "GET",
+                    headers: { Authorization: bearer },
                     data: { candidateid: $('#ID_Candidat').val() },
                     success: function (resp) {
                         if (resp) {
@@ -182,8 +183,10 @@
         }
         function findVoters() {
             $.ajax({
-                url: '/Admin/GetVoters',
+                url: '/api/Results/GetVoters',
+                //url: '/Admin/GetVoters',
                 type: "GET",
+                headers: { Authorization: bearer },
                 data: { polingstationid: $('#ID_Bureauvote').val() },
                 success: function (resp) {
                     $('#Abstentions').val(0);
@@ -224,8 +227,9 @@
                 $('#ID_Territoire').html('');
                 $('#ID_Territoire').append($('<option></option>').val('').html('Select Territoire'));
                 $.ajax({
-                    url: '/Admin/GetTerritoireList',
+                    url: '/api/Results/GetTerritoireList',
                     type: 'GET',
+                    headers: { Authorization: bearer },
                     data: { ProvinceId: $('#ID_Province').val() },
                     success: function (res) {
                         if (res) {
@@ -243,13 +247,13 @@
                 $('#ID_Commune').html('');
                 $('#ID_Commune').append($('<option></option>').val('').html('Select Commune'));
                 $.ajax({
-                    url: '/Admin/GetCommune',
+                    url: '/api/Results/GetCommune',
                     type: 'GET',
+                    headers: { Authorization: bearer },
                     data: { ProvinceId: $('#ID_Province').val(), TerritoireId: $('#ID_Territoire').val() },
                     success: function (res) {
                         //console.log(res);
                         if (res) {
-
                             $.each(res, function (i, v) {
                                 $('#ID_Commune').append($('<option></option>').val(v.ID_Commune).html(v.Nom));
                             });
@@ -264,8 +268,9 @@
                 $('#ID_Bureauvote').html('');
                 $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Pooling Station'));
                 $.ajax({
-                    url: '/Admin/GetPoolingStationList',
+                    url: '/api/Results/GetPoolingStationList',
                     type: 'GET',
+                    headers: { Authorization: bearer },
                     data: { CommuneId: $('#ID_Commune').val() },
                     success: function (res) {
                         if (res) {
@@ -291,8 +296,7 @@
         }
 
         function removerecord(button) {
-            debugger
-
+           
             swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this record!",
@@ -302,10 +306,9 @@
             }).then((willDelete) => {
                 if (willDelete) {
                     $.ajax({
-                        url: '/Admin/RemoveResult',
-                        type: "GET",
-                        dataType: "json",
-                        contentType: "application/json; charset=utf-8",
+                        url: '/api/Results/RemoveResult',
+                        type: 'GET',
+                        headers: { Authorization: bearer },
                         data: { ResultId: button.closest("tr").find('.ResultId').val(), ID_Bureauvote: $('#ID_Bureauvote').val() },
                         success: function (resp) {
                             swal("Success! Record has been deleted!", {
@@ -369,8 +372,9 @@
                     Voix: votes
                 };
                 $.ajax({
-                    url: '/Admin/SaveListRecord',
+                    url: '/api/Results/SaveListRecord',
                     type: "POST",
+                    headers: { Authorization: bearer },
                     dataType: "json",
                     contentType: "application/json; charset=utf-8",
                     data: JSON.stringify(tbl_Results),

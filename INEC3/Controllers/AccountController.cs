@@ -4,11 +4,13 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+using INEC3.Models.Service;
 
 namespace INEC3.Controllers
 {
     public class AccountController : Controller
     {
+        AccountService accountService = new AccountService();
 
         // GET: Account
         public ActionResult Index()
@@ -41,12 +43,26 @@ namespace INEC3.Controllers
 
         public ActionResult Logoff()
         {
-            Session["UserID"] = null;
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-            Response.Cache.SetNoStore();
+            if (Request.Cookies["inecbearer"] != null)
+            {
+                HttpCookie myCookie = new HttpCookie("inecbearer");
+                myCookie.Expires = DateTime.Now.AddDays(-1d);
+                Response.Cookies.Add(myCookie);
+            }
             return (RedirectToAction("Index", "Home"));
         }
+        public ActionResult Register()
+        {
+            return View();
+        }
 
+        public ActionResult Vefiryemail(string securitycode)
+        {
+            if (accountService.activateaccount(securitycode))
+            {
+                return RedirectToAction("Login");
+            }
+            return RedirectToAction("Index","error",new { ermsg = "emailfail" });
+        }
     }
 }

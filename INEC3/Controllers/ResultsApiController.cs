@@ -1,67 +1,55 @@
-﻿using System;
-using INEC3.DbConn;
-using INEC3.Models;
+﻿using INEC3.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Data.Entity;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
-using Microsoft.AspNet.SignalR;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
 using System.Data;
 using Newtonsoft.Json;
+using INEC3.DbConn;
 using INEC3.Helper;
+using System.Web.Http.Results;
 
 namespace INEC3.Controllers
 {
-    public class AdminController : Controller
+    [RoutePrefix("api/Results")]
+    public class ResultsApiController : ApiController
     {
-        private inecDBContext db = new inecDBContext();
-        private Sqldbconn _db = new Sqldbconn();
+        private inecDBContext db;
+        private Sqldbconn _db;
+        private _Helper _Helper;
 
-        [AuthenticatUser]
-        public ActionResult Index()
+        public ResultsApiController()
         {
-            var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
-            return View(results.ToList());
-        }
-        [AuthenticatUser]
-
-        public ActionResult Result(int? id)
-        {
-            ViewBag.Message = "Artech Consulting";
-            ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
-            ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
-            ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
-            ViewBag.Message = "Your application description page.";
-            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
-            if (id == null)
-            {
-                return View();
-            }
-            else
-            {
-                tbl_Results tbl_Results = db.Results.Find(id);
-                if (tbl_Results == null)
-                {
-                    return HttpNotFound();
-                }
-                return View(tbl_Results);
-            }
-
+            db = new inecDBContext();
+            _db= new Sqldbconn();
+            _Helper = new _Helper();
         }
 
-        public JsonResult GetParty(int candidateid)
+        [Route("Get")]
+        [Authorize]
+        // GET api/values
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+        [Route("GetParty")]
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult GetParty(int candidateid)
         {
             try
             {
                 var party = db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color }).FirstOrDefault();
-                return Json(party, JsonRequestBehavior.AllowGet);
+                return Json(party);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        public JsonResult GetVoters(int polingstationid)
+        [Route("GetVoters")]
+        [Authorize]
+        public IHttpActionResult GetVoters(int polingstationid)
         {
             try
             {
@@ -78,12 +66,15 @@ namespace INEC3.Controllers
                     res.Add("exprims", JsonConvert.SerializeObject(exprims));
                 }
                 //return Json(voters, JsonRequestBehavior.AllowGet);
-                return Json(res, JsonRequestBehavior.AllowGet);
+                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
-        
-        public JsonResult SaveListRecord(tbl_Results obj)
+
+        [Route("SaveListRecord")]
+        [HttpPost]
+        [Authorize]
+        public IHttpActionResult SaveListRecord(tbl_Results obj)
         {
             try
             {
@@ -146,17 +137,23 @@ namespace INEC3.Controllers
                 var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
                 DataSet dt = new DataSet();
                 dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+                _Helper.SendNotification();
+
+                //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+                //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
                 SqlNotification objRepo = new SqlNotification();
                 objRepo.GetAllMessages();
 
-                return Json(res, JsonRequestBehavior.AllowGet);
+                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
-        public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
+
+        [Route("RemoveResult")]
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult RemoveResult(int ResultId, int ID_Bureauvote)
         {
             try
             {
@@ -181,45 +178,57 @@ namespace INEC3.Controllers
                 var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
                 DataSet dt = new DataSet();
                 dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+                _Helper.SendNotification();
+                
+                //_Helper.ActiveSqlNotification();
+                //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+                //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
                 SqlNotification objRepo = new SqlNotification();
                 objRepo.GetAllMessages();
 
-                return Json(res, JsonRequestBehavior.AllowGet);
+                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        public JsonResult GetTerritoireList(int ProvinceId)
+        [Route("GetTerritoireList")]
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult GetTerritoireList(int ProvinceId)
         {
             try
             {
-            var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
-            return Json(Ter, JsonRequestBehavior.AllowGet);
+                var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
+                return Json(Ter);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        public JsonResult GetPoolingStationList(int CommuneId)
+        [Route("GetPoolingStationList")]
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult GetPoolingStationList(int CommuneId)
         {
             try
             {
-            var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
-            return Json(res, JsonRequestBehavior.AllowGet);
+                var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
+                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        public JsonResult GetCommune(int ProvinceId, int TerritoireId)
+        [Route("GetCommune")]
+        [HttpGet]
+        [Authorize]
+        public IHttpActionResult GetCommune(int ProvinceId, int TerritoireId)
         {
             try
             {
-            var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
-            return Json(res, JsonRequestBehavior.AllowGet);
+                var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
+                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
+            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
     }
 }
