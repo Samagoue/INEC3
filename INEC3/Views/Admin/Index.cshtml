@@ -32,7 +32,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.BureauVote.Nom)
+                                    @Html.DisplayName("CODE_SV")
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Candidat.Nom)
@@ -121,16 +121,17 @@
     <script src="~/Content/plugins/bower_components/datatables/datatables.min.js"></script>
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
     <script type="text/javascript">
         $(document).ready(function () {
             $('#myTable').DataTable();
+
             $(document).ready(function () {
                 var table = $('#example').DataTable({
                     "columnDefs": [{
@@ -143,9 +144,7 @@
                     "displayLength": 25,
                     "drawCallback": function (settings) {
                         var api = this.api();
-                        var rows = api.rows({
-                            page: 'current'
-                        }).nodes();
+                        var rows = api.rows({ page: 'current' }).nodes();
                         var last = null;
                         api.column(2, {
                             page: 'current'
@@ -157,6 +156,7 @@
                         });
                     }
                 });
+
                 // Order by the grouping
                 $('#example tbody').on('click', 'tr.group', function () {
                     var currentOrder = table.order()[0];
@@ -166,12 +166,18 @@
                         table.order([2, 'asc']).draw();
                     }
                 });
+
             });
         });
         $('#myTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'copy', 'csv', 'excel',  'print',
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                }
             ]
         });
         $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');

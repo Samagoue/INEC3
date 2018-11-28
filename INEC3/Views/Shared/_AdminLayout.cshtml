@@ -7,7 +7,6 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="~/Content/image/logo.png">
-    @*<link rel="icon" type="image/png" sizes="16x16" href="~/Content/plugins/images/favicon.png">*@
     <title>Shadow</title>
     <!-- Bootstrap Core CSS -->
     <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -139,31 +138,21 @@
                             <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>
                             <li><a href="javascript:void(0)"><i class="ti-email"></i> <span class="hide-menu">Inbox</span></a></li>
                             <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
+                            <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
                         </ul>
                     </li>
                     <li>
-                        <a href="tables.html" class="waves-effect"><i class="mdi mdi-table fa-fw"></i> 
-                    <span class="hide-menu">Forms<span class="fa arrow"></span>
-                    <span class="label label-rouded label-danger pull-right">9</span></span></a>
-                <ul class="nav nav-second-level collapse in" aria-expanded="true">
-                    @*@Html.ActionLink("Add Result", "Result", "Admin")*@
-                    <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
-                    <li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>
-                    @*<li><a href="data-table.html"><i class="fa-fw">D</i><span class="hide-menu">Data Table</span></a></li>
-                    <li><a href="bootstrap-tables.html"><i class="fa-fw">B</i><span class="hide-menu">Bootstrap Tables</span></a></li>
-                    <li><a href="responsive-tables.html"><i class="fa-fw">R</i><span class="hide-menu">Responsive Tables</span></a></li>
-                    <li><a href="editable-tables.html"><i class="fa-fw">E</i><span class="hide-menu">Editable Tables</span></a></li>
-                    <li><a href="foo-tables.html"><i class="fa-fw">F</i><span class="hide-menu">FooTables</span></a></li>
-                    <li><a href="jsgrid.html"><i class="fa-fw">J</i><span class="hide-menu">JsGrid Tables</span></a></li>
-                    <li><a href="table-layouts.html"><i class="fa-fw">L</i><span class="hide-menu">Table Layouts</span></a></li>
-                    <li><a href="data-table.html"><i class="fa-fw">D</i><span class="hide-menu">Data Table</span></a></li>
-                    <li><a href="bootstrap-tables.html"><i class="fa-fw">B</i><span class="hide-menu">Bootstrap Tables</span></a></li>
-                    <li><a href="responsive-tables.html"><i class="fa-fw">R</i><span class="hide-menu">Responsive Tables</span></a></li>
-                    <li><a href="editable-tables.html"><i class="fa-fw">E</i><span class="hide-menu">Editable Tables</span></a></li>
-                    <li><a href="foo-tables.html"><i class="fa-fw">F</i><span class="hide-menu">FooTables</span></a></li>
-                    <li><a href="jsgrid.html"><i class="fa-fw">J</i><span class="hide-menu">JsGrid Tables</span></a></li>*@
-                </ul>
+                        <a href="tables.html" class="waves-effect">
+                            <i class="mdi mdi-table fa-fw"></i>
+                            <span class="hide-menu">
+                                Forms<span class="fa arrow"></span>
+                                <span class="label label-rouded label-danger pull-right">9</span>
+                            </span>
+                        </a>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                            <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
+                            <li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>
+                        </ul>
                     </li>
 
                 </ul>
@@ -197,11 +186,7 @@
     <script src="~/Content/js/jquery.slimscroll.js"></script>
     <!--Wave Effects -->
     <script src="~/Content/js/waves.js"></script>
-    <!-- Vector map JavaScript -->
-    @*<script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-2.0.2.min.js"></script>
-        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-world-mill-en.js"></script>
-        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-in-mill.js"></script>
-        <script src="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-us-aea-en.js"></script>*@
+
     <!-- chartist chart -->
     <script src="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
     <script src="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
@@ -210,13 +195,18 @@
     <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.charts-sparkline.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="~/Content/js/custom.min.js"></script>
-    @*<script src="~/Content/js/dashboard3.js"></script>*@
     <!--Style Switcher -->
     <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
-    @*@Scripts.Render("~/bundles/jquery")
-        @Scripts.Render("~/bundles/bootstrap")*@
+    <!--Cookiess JavaScript -->
+    <script src="~/Scripts/js.cookie.js"></script>
+    <script type="text/javascript">
+        var bearer = '';
+        if (Cookies.get('inecbearer')) {
+            bearer = Cookies.get('inecbearer');
+        }
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
@@ -326,3 +316,4 @@
                     @RenderSection("scripts", required: false)
                     </body>
                     </html>*@
+
