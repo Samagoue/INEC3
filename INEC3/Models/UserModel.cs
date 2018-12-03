@@ -28,6 +28,7 @@ namespace INEC3.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        public UserProfile UserProfile { get; set; }
         //public HttpPostedFile UserImage { get; set; }
     }
 
@@ -38,12 +39,40 @@ namespace INEC3.Models
         public Guid AspNetUsersId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string ProfilePic { get; set; }
+        public string Isactive { get; set; }
+        //public DateTime createdate { get; set; }
+        //public DateTime updatedate { get; set; }
     }
 
     public class UserLogin
     {
-        public string UserName { get; set; }
+        public string Email { get; set; }
         public string Password { get; set; }
     }
+    public class LoginUser
+    {
+        public string access_token { get; set; }
+        public string token_type { get; set; }
+        public int expires_in { get; set; }
+        public string userid { get; set; }
+        public string displayname { get; set; }
+        public string profileimg { get; set; }
+        public string issued { get; set; }
+        public string expires { get; set; }
+        public string error { get; set; }
+        public string error_description { get; set; }
+    }
+
+    public class UserDisplay
+    {
+        public string Id { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+        public bool Isactive { get; set; }
+        public bool EmailConfirmed { get; set; }
+        
+    }
+
 }

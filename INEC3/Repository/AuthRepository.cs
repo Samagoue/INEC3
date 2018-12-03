@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Threading.Tasks;
 using INEC3.IdentityClass;
+using INEC3.Models.Service;
 
 namespace INEC3.Repository
 {
@@ -14,11 +15,16 @@ namespace INEC3.Repository
     {
         private AuthContext _context;
         private UserManager<IdentityUser> _userManager;
+        private AccountService _accountService;
+        private inecDBContext _inecDBContext;
 
         public AuthRepository()
         {
             _context = new AuthContext();
             _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
+            _accountService = new AccountService();
+            _inecDBContext = new inecDBContext();
+
         }
 
         public async Task<IdentityResult> RegisterUser(UserModel userModel)
@@ -26,12 +32,24 @@ namespace INEC3.Repository
             IdentityUser user = new IdentityUser
             {
                 UserName = userModel.UserName,
-                Email=userModel.Email
+                Email = userModel.Email
             };
+
             var result = await _userManager.CreateAsync(user, userModel.Password);
+            
+            var roleresult = _userManager.AddToRole(user.Id, "User");
+
+            if (result.Succeeded)
+            {
+                userModel.UserProfile.AspNetUsersId = Guid.Parse(user.Id);
+                IdentityResult res = _accountService.RegisterUserProfile(userModel.UserProfile);
+                if (!res.Succeeded)
+                    return res;
+            }
             return result;
         }
 
+        
         public async Task<IdentityUser> FindUser(string userName, string password)
         {
             IdentityUser user = await _userManager.FindAsync(userName, password);
@@ -40,15 +58,32 @@ namespace INEC3.Repository
 
         public IdentityUser FindUserDetail(string email)
         {
-            IdentityUser user =  _userManager.FindByEmail(email);
+            IdentityUser user = _userManager.FindByEmail(email);
             return user;
+        }
+
+        public bool UserExist(string username)
+        {
+            var result = _userManager.FindByEmail(username);
+            if (result == null)
+                return false;
+            else
+                return true;
+        }
+        public bool FindUser(string email)
+        {
+            var result = _userManager.FindByEmail(email);
+            if (result == null)
+                return false;
+            else
+                return true;
         }
 
         public void Dispose()
         {
             _context.Dispose();
             _userManager.Dispose();
-
+            _inecDBContext.Dispose();
         }
     }
 }

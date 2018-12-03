@@ -21,41 +21,41 @@ namespace INEC3.DbConn
         public IEnumerable<messages> GetAllMessages()
         {
             var messages = new List<messages>();
-            using (var connection = new SqlConnection(_connString))
-            {
-                connection.Open();
-                using (var command = new SqlCommand(@"select [ID_Result],[ID_Candidat],[ID_Party],[ID_Bureauvote],[Voix] from [dbo].[tbl_Results]", connection))
-                {
-                    command.Notification = null;
+            //using (var connection = new SqlConnection(_connString))
+            //{
+            //    connection.Open();
+            //    using (var command = new SqlCommand(@"select [ID_Result],[ID_Candidat],[ID_Party],[ID_Bureauvote],[Voix] from [dbo].[tbl_Results]", connection))
+            //    {
+            //        command.Notification = null;
 
-                    var dependency = new SqlDependency(command);
-                    dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
+            //        var dependency = new SqlDependency(command);
+            //        dependency.OnChange += new OnChangeEventHandler(dependency_OnChange);
 
-                    if (connection.State == ConnectionState.Closed)
-                        connection.Open();
+            //        if (connection.State == ConnectionState.Closed)
+            //            connection.Open();
 
-                    var reader = command.ExecuteReader();
+            //        var reader = command.ExecuteReader();
 
-                }
+            //    }
 
-            }
+            //}
             return messages;
 
 
         }
         private void dependency_OnChange(object sender, SqlNotificationEventArgs e)
         {
-            if (e.Type == SqlNotificationType.Change)
-            {
-                if (e.Info == SqlNotificationInfo.Delete)
-                {
-                    DataSet dt = new DataSet();
-                    dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                    var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                    hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-                    GetAllMessages();
-                }
-            }
+            //if (e.Type == SqlNotificationType.Change)
+            //{
+            //    if (e.Info == SqlNotificationInfo.Delete)
+            //    {
+            //        DataSet dt = new DataSet();
+            //        dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            //        var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+            //        hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+            //        GetAllMessages();
+            //    }
+            //}
         }
     }
 

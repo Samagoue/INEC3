@@ -195,9 +195,6 @@
         padding-left: 0px !important;
         padding-right: 0px !important;
     }
-
-    
-
 </style>
 
 @*Moved In>Content/zoomMap.css <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />*@
@@ -237,14 +234,14 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
                 @*<h3 class="box-title">2nd <label id="lblsecond">Candidate 2</label></h3>*@
                 @*<ul class="list-inline two-part">
-                    <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
-                    <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
-                </ul>*@
+                        <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
+                        <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
+                    </ul>*@
 
                 <div class="row text-center">
                     <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
@@ -257,25 +254,25 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
-                    <h5 class="box-title">Reported Polling Stations</h5>
-                    <ul class="list-inline two-part" @*style="margin-bottom: -8px;"*@>
-                        <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
-                        <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
-                    </ul>
+                <h5 class="box-title">Reported Polling Stations</h5>
+                <ul class="list-inline two-part" @*style="margin-bottom: -8px;"*@>
+                    <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
+                    <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
+                </ul>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
                 <h5 class="box-title">Last Reported Pol. Stat.</h5>
                 @*<h3 class="box-title"><label id="lbllstpolingstation"></label></h3>*@
                 @*<ul class="list-inline two-part">
-                    <li class="text-center"><span id="lbllastupdatedProvince" style="font-size: 18px !important;"></span></li>
-                    <li class="text-center"><span id="lbllastupdatedTerritoire" style="font-size: 18px !important;"></span></li>
-                </ul>*@
+                        <li class="text-center"><span id="lbllastupdatedProvince" style="font-size: 18px !important;"></span></li>
+                        <li class="text-center"><span id="lbllastupdatedTerritoire" style="font-size: 18px !important;"></span></li>
+                    </ul>*@
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6 text-center"><label id="lbllastupdatedVotantsName" style="font-weight: 300 !important;"></label><br /><span id="lbllastupdatedVotants" style="font-size: 20px !important;"></span></div>
 
@@ -376,6 +373,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqud3mapHome")
+    @Scripts.Render("~/bundles/HomeCustomjs")
     @*<script src="https://d3js.org/d3.v4.min.js"></script>*@
     @*<script src="https://unpkg.com/topojson-client@3"></script>*@
     @*<script src="~/Scripts/d3/d3.v4.min.js"></script>
@@ -387,10 +385,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.3.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script>
-        
+
         var rs =@Html.Raw(ViewBag.Province);
         var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3,LastUpdatedPoolstn=rs.Table4;
-        
+
         $('#TooltipChart').slimScroll({
             height: '370px'
         });

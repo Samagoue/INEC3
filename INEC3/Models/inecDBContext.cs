@@ -48,6 +48,7 @@ namespace INEC3.Models
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
+        public System.Data.Entity.DbSet<INEC3.Models.UserDisplay> UserDisplays { get; set; }
     }
 
 }

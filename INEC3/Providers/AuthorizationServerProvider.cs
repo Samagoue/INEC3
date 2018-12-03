@@ -1,7 +1,10 @@
 ﻿using INEC3.Models;
 using INEC3.Repository;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 
 using System;
@@ -13,8 +16,10 @@ using System.Web;
 
 namespace INEC3.Providers
 {
+
     public class AuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
+        private bool DevloperMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["DevloperMode"]);
         public override Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             context.Validated();
@@ -23,6 +28,8 @@ namespace INEC3.Providers
 
         public override async Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
+            try
+            {
             context.OwinContext.Response.Headers.Add("Access-Control-Allow-Origin", new[] { "*" });
             var property = new Dictionary<string, string>();
             using (AuthRepository _repo = new AuthRepository())
@@ -34,7 +41,28 @@ namespace INEC3.Providers
                     context.SetError("invalid_grant", "The user name or password is incorrect.");
                     return;
                 }
-                property = getproperty(user.Id);
+                else if (!user.EmailConfirmed && !DevloperMode)
+                {
+                    context.SetError("invalid_grant", "Confirm email.");
+                    return;
+                }
+                //property = getproperty(user.Id);
+                property.Add("Email",user.Email);
+                property.Add("Id", user.Id);
+                property.Add("Name", user.UserName);
+                //
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Name, "test"));
+                claims.Add(new Claim(ClaimTypes.Email, "test@gmail.com"));
+                var id = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+
+                AuthenticationProperties authenticationProperties = new AuthenticationProperties(property);
+                    //var user = new ApplicationUser() { UserName = model.UserName  };
+                    //ClaimsIdentity oAuthIdentity = await userr.GenerateUserIdentityAsync(usermanager, OAuthDefaults.AuthenticationType);
+                    //ClaimsIdentity cookiesIdentity = await userr.GenerateUserIdentityAsync(usermanager, CookieAuthenticationDefaults.AuthenticationType);
+                    context.Request.Context.Authentication.SignIn(authenticationProperties);
+
+                //
             }
             var identity = new ClaimsIdentity(context.Options.AuthenticationType);
             identity.AddClaim(new Claim("sub", context.UserName));
@@ -56,6 +84,12 @@ namespace INEC3.Providers
             var ticket = new AuthenticationTicket(identity, props);
             //context.Validated(identity);
             context.Validated(ticket);
+            }
+            catch (Exception ex)
+            {
+
+              
+            }
         }
         public override Task TokenEndpoint(OAuthTokenEndpointContext context)
         {

@@ -304,6 +304,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\Service\AccountService.cs" />
+    <Compile Include="Models\Service\AdminService.cs" />
+    <Compile Include="Models\Service\ResultsService.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
     <Compile Include="Models\tbl_Candidat.cs" />
     <Compile Include="Models\tbl_Circonscription.cs" />

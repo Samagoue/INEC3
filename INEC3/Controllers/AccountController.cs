@@ -62,7 +62,7 @@ namespace INEC3.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return RedirectToAction("Index","error",new { ermsg = "emailfail" });
+            return RedirectToAction("Index","error",new { ermsg = "emailfail",ret="returnurl='abc'" });
         }
     }
 }
