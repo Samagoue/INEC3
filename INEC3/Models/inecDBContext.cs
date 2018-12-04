@@ -1,27 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
+﻿using System.Data.Entity;
 
 namespace INEC3.Models
 {
-
     public class inecDBContext : DbContext
     {
-        
-
         public inecDBContext() : base("inecConn")
         {
-
             Database.SetInitializer<inecDBContext>(null);
-
         }
-        public DbSet<UserProfile> UserProfile { get; set; }
 
         public DbSet<tbl_Pays> Pays { get; set; }
 
@@ -43,11 +29,9 @@ namespace INEC3.Models
 
         public DbSet<tbl_Circonscription> Circonscriptions { get; set; }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
-
+        //public DbSet<UserDisplay> UserDisplays { get; set; }
+        public DbSet<UserProfile> UserProfile { get; set; }
+        //public DbSet<UserPolStation> UserPolStation { get; set; }
     }
 
 }

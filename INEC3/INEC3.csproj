@@ -304,6 +304,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\Service\AccountService.cs" />
+    <Compile Include="Models\Service\AdminService.cs" />
+    <Compile Include="Models\Service\ResultsService.cs" />
     <Compile Include="Models\tbl_BureauVote.cs" />
     <Compile Include="Models\tbl_Candidat.cs" />
     <Compile Include="Models\tbl_Circonscription.cs" />
@@ -322,8 +324,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\admin\bootstrap.css" />
-    <Content Include="Content\admin\Site.css" />
     <Content Include="Content\bootstrap\dist\css\bootstrap.min.css" />
     <Content Include="Content\bootstrap\dist\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\bootstrap\dist\js\bootstrap.js" />
@@ -382,6 +382,20 @@
     <Content Include="Content\css\icons\weather-icons\less\css\variables-wind-names.css" />
     <Content Include="Content\css\spinners.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\image\Candimg_1.png" />
+    <Content Include="Content\image\Candimg_10.png" />
+    <Content Include="Content\image\Candimg_13.png" />
+    <Content Include="Content\image\Candimg_14.png" />
+    <Content Include="Content\image\Candimg_15.png" />
+    <Content Include="Content\image\Candimg_17.png" />
+    <Content Include="Content\image\Candimg_19.png" />
+    <Content Include="Content\image\Candimg_2.png" />
+    <Content Include="Content\image\Candimg_20.png" />
+    <Content Include="Content\image\Candimg_21.png" />
+    <Content Include="Content\image\Candimg_4.png" />
+    <Content Include="Content\image\Candimg_5.png" />
+    <Content Include="Content\image\Candimg_6.png" />
+    <Content Include="Content\image\Candimg_7.png" />
     <Content Include="Content\image\logo.png" />
     <Content Include="Content\js\cbpFWTabs.js" />
     <Content Include="Content\js\chat.js" />
@@ -2311,7 +2325,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3287,6 +3300,8 @@
     <Content Include="Views\Commune_Chefferie\Index.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
+    <Content Include="Views\Admin\Users.cshtml" />
+    <Content Include="Views\Admin\ManageUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

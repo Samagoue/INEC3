@@ -1,13 +1,16 @@
 ﻿
 $(document).ready(function () {
-
+    $(".preloader").fadeOut();
     $("#btnsignup").click(function () {
+        $('.preloader').show();
         if ($('#frmsignup').valid()) {
+
             var UserModel = {
                 UserName: $('#Email').val(),
                 Email: $('#Email').val(),
                 Password: $('#Password').val(),
-                ConfirmPassword: $('#ConfirmPassword').val()
+                ConfirmPassword: $('#ConfirmPassword').val(),
+                UserProfile: { FirstName: $('#Name').val(), LastName: '' }
             };
 
             $.ajax({
@@ -15,13 +18,13 @@ $(document).ready(function () {
                 url: "/api/Account/Register",
                 data: UserModel,
                 success: function (data) {
-                    //debugger
+                    $(".preloader").fadeOut();
                     if (data.succeeded) {
                         window.location.href = '/Account/Login';
                     }
-                    //console.log(data);
                 },
                 error: function (ex) {
+                    $(".preloader").fadeOut();
                     if (ex.responseJSON) {
                         if (ex.responseJSON.modelState) {
                             var eror = ex.responseJSON.modelState[""];
@@ -38,21 +41,24 @@ $(document).ready(function () {
                 }
             });
         }
+        else {
+            $(".preloader").fadeOut();
+        }
     });
 });
 
 $("#frmsignup").validate({
     rules: {
-        Name: "required",
+        Name: { required: true },
         Email: { required: true, email: true },
-        Password: "required",
-        ConfirmPassword: "required",
+        Password: { required: "Please Enter Password", minlength: 5 },
+        ConfirmPassword: { minlength: 5, equalTo: "#Password" }
 
     },
     messages: {
         Name: "Please Enter Name",
         Email: "Please Enter Valide Email",
-        Password: "Please Enter Password",
+        Password: { required: "Please Enter Password", minlength: "Enter at least {0} characters" },
         ConfirmPassword: "Please Enter Confirm Password",
     },
 }

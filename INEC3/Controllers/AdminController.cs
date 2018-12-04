@@ -11,13 +11,14 @@ using Microsoft.AspNet.SignalR;
 using System.Data;
 using Newtonsoft.Json;
 using INEC3.Helper;
-
+using INEC3.Models.Service;
 namespace INEC3.Controllers
 {
     public class AdminController : Controller
     {
         private inecDBContext db = new inecDBContext();
         private Sqldbconn _db = new Sqldbconn();
+        private AdminService AdminService = new AdminService();
 
         [AuthenticatUser]
         public ActionResult Index()
@@ -26,7 +27,6 @@ namespace INEC3.Controllers
             return View(results.ToList());
         }
         [AuthenticatUser]
-
         public ActionResult Result(int? id)
         {
             ViewBag.Message = "Artech Consulting";
@@ -51,6 +51,19 @@ namespace INEC3.Controllers
 
         }
 
+        public ActionResult Users()
+        {
+            List<UserDisplay> model = new List<UserDisplay>();
+            return View(AdminService.GetUserList());
+        }
+        [HttpPost]
+        public ActionResult ManageUser(string userid)
+        {
+            UserDisplay model = new UserDisplay();
+            model.UserId = userid;
+            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
+            return View(model);
+        }
         public JsonResult GetParty(int candidateid)
         {
             try
@@ -60,7 +73,6 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
         public JsonResult GetVoters(int polingstationid)
         {
             try
@@ -82,7 +94,6 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-        
         public JsonResult SaveListRecord(tbl_Results obj)
         {
             try
@@ -191,7 +202,6 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
         public JsonResult GetTerritoireList(int ProvinceId)
         {
             try
@@ -201,7 +211,6 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
         public JsonResult GetPoolingStationList(int CommuneId)
         {
             try
@@ -211,7 +220,6 @@ namespace INEC3.Controllers
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
-
         public JsonResult GetCommune(int ProvinceId, int TerritoireId)
         {
             try

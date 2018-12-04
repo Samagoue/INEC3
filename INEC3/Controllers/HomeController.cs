@@ -9,6 +9,7 @@ using Microsoft.AspNet.SignalR;
 using INEC3.DbConn;
 using System.Data;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace INEC3.Controllers
 {
@@ -22,6 +23,12 @@ namespace INEC3.Controllers
             DataSet dt = new DataSet();
             dt = _db.GetDatatable("proc_GetProvinceResult", "");
             ViewBag.Province = JsonConvert.SerializeObject(dt);
+            
+            //using (StreamReader r = new StreamReader("/Resources/COD_TOPO.json"))
+            //{
+            //    string json = r.ReadToEnd();
+            //    ViewBag.CODJson = json;
+            //}
 
             SqlNotification objRepo = new SqlNotification();
             var res = objRepo.GetAllMessages();

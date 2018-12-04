@@ -195,9 +195,6 @@
         padding-left: 0px !important;
         padding-right: 0px !important;
     }
-
-    
-
 </style>
 
 @*Moved In>Content/zoomMap.css <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />*@
@@ -212,9 +209,7 @@
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <ol class="breadcrumb">
                 <li><a href="@Url.Action("Index","Home")">Home</a></li>
-
                 <li class="active">Index</li>
-
             </ol>
         </div>
         <!-- /.col-lg-12 -->
@@ -237,15 +232,9 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
-                @*<h3 class="box-title">2nd <label id="lblsecond">Candidate 2</label></h3>*@
-                @*<ul class="list-inline two-part">
-                    <li><img src="~/Content/image/Martin_Fayulu.png" class="img-circle" style="width: 78%;"></li>
-                    <li class="text-right"><span id="lblcandidate1" class="counter">0 %</span></li>
-                </ul>*@
-
                 <div class="row text-center">
                     <div class="col-md-3 col-sm-4 col-xs-6 padding-no-lr">
                         <img src="~/Content/image/logo.png" alt="user" id="imgcandidate1" class="img-circle img-responsive img-top-candidate">
@@ -257,25 +246,20 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
-                    <h5 class="box-title">Reported Polling Stations</h5>
-                    <ul class="list-inline two-part" @*style="margin-bottom: -8px;"*@>
-                        <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
-                        <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
-                    </ul>
+                <h5 class="box-title">Reported Polling Stations</h5>
+                <ul class="list-inline two-part" @*style="margin-bottom: -8px;"*@>
+                    <li class="text-left"><span id="ReportPolstation" class="counter">0</span> Reported</li>
+                    <li class="text-right"><span id="PersPolstation" class="counter">0</span></li>
+                </ul>
             </div>
         </div>
-        
+
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
                 <h5 class="box-title">Last Reported Pol. Stat.</h5>
-                @*<h3 class="box-title"><label id="lbllstpolingstation"></label></h3>*@
-                @*<ul class="list-inline two-part">
-                    <li class="text-center"><span id="lbllastupdatedProvince" style="font-size: 18px !important;"></span></li>
-                    <li class="text-center"><span id="lbllastupdatedTerritoire" style="font-size: 18px !important;"></span></li>
-                </ul>*@
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-6 text-center"><label id="lbllastupdatedVotantsName" style="font-weight: 300 !important;"></label><br /><span id="lbllastupdatedVotants" style="font-size: 20px !important;"></span></div>
 
@@ -293,11 +277,8 @@
             <div id="mapcontainer" class="white-box">
                 <div id="map" style="height: 410px"></div>
                 <div style="cursor: pointer;z-index:200;position:absolute;top:25px;left:41px;">
-
                     <i class="mdi mdi-magnify-plus eln-map-buttons" id="btnzoomin"></i>
                     <i class="mdi mdi-magnify-minus eln-map-buttons" id="btnzoomout"></i>
-                    @*<button id="btnzoomout" class="btn eln-map-buttons"><span class="glyphicon glyphicon-zoom-out"></span></button>
-                        <button id="btncancel" onclick="activearea()" class="btn eln-map-buttons" disabled><span class="glyphicon glyphicon-remove"></span></button>*@
                     <i class="mdi mdi-close-circle eln-map-buttons" id="btncancel" onclick="activearea()" disabled></i>
                 </div>
             </div>
@@ -307,34 +288,7 @@
             <div class="white-box">
                 <h3 class="box-title" id="LblToltiptitle">National Results</h3>
                 <ul class="country-state  p-t-20" id="TooltipChart">
-                    @*<li>
-                            <h2>Felix Tshisekedi</h2> <small>1200768</small>
-                            <div class="pull-right">48% <i class="fa fa-level-up text-success"></i></div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:48%;"> <span class="sr-only">48% Complete</span></div>
-                            </div>
-                        </li>
-                        <li>
-                            <h2>Vital Kamerhe</h2> <small>953674</small>
-                            <div class="pull-right">28% <i class="fa fa-level-up text-success"></i></div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-inverse" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:28%;"> <span class="sr-only">28% Complete</span></div>
-                            </div>
-                        </li>
-                        <li>
-                            <h2>Emmanuel Shadary</h2> <small>740876</small>
-                            <div class="pull-right">25% <i class="fa fa-level-down text-danger"></i></div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:25%;"> <span class="sr-only">25% Complete</span></div>
-                            </div>
-                        </li>
-                        <li>
-                            <h2>Martin Fayulu</h2> <small>540324</small>
-                            <div class="pull-right">20% <i class="fa fa-level-up text-success"></i></div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:20%;"> <span class="sr-only">20% Complete</span></div>
-                            </div>
-                        </li>*@
+                   
                 </ul>
             </div>
         </div>
@@ -349,8 +303,7 @@
     <table class="eln-table eln-results-table">
         <thead>
             <tr style="border-bottom: 1px solid #181819;">
-                @*<th colspan="2" class="x-value">Alabama <strong style="color:#6f6d6d !important;"> 100% Reporting </strong></th>*@
-
+               
                 <th class="eln-header eln-name" colspan="3" style="color:#383636 !important;"><strong>Candidate</strong></th>
                 <th style="color:#383636 !important;"><strong>Party</strong></th>
                 <th style="color:#383636 !important;"><strong>Votes</strong></th>
@@ -358,15 +311,7 @@
             </tr>
         </thead>
         <tbody>
-            @*<tr>
-                    <td class="legend-color-guide"><div style="background-color:#cc3d3d;"></div></td>
-                    <td class="key" colspan="2" style="background-color:#cc3d3d;">Donald J. Trump</td>
-                    <td class="key">Rep</td>
-                    <td class="key">55,333,000</td>
-                    <td class="value">62.1 %</td>
-                    <td class="value">9</td>
-                </tr>*@
-
+            
         </tbody>
     </table>
 </div>
@@ -376,6 +321,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqud3mapHome")
+    @Scripts.Render("~/bundles/HomeCustomjs")
     @*<script src="https://d3js.org/d3.v4.min.js"></script>*@
     @*<script src="https://unpkg.com/topojson-client@3"></script>*@
     @*<script src="~/Scripts/d3/d3.v4.min.js"></script>
@@ -387,10 +333,10 @@
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.3.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script>
-        
+
         var rs =@Html.Raw(ViewBag.Province);
         var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3,LastUpdatedPoolstn=rs.Table4;
-        
+
         $('#TooltipChart').slimScroll({
             height: '370px'
         });

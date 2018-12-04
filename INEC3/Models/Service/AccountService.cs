@@ -57,6 +57,19 @@ namespace INEC3.Models.Service
             return false;
         }
 
-
+        public IdentityResult RegisterUserProfile(UserProfile userProfile)
+        {
+            try
+            {
+                userProfile.Isactive = "true";
+                db.UserProfile.Add(userProfile);
+                db.SaveChanges();
+                return IdentityResult.Success;
+            }
+            catch (Exception ex)
+            {
+                return IdentityResult.Failed(ex.Message.ToString());
+            }
+        }
     }
 }
