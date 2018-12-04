@@ -29,7 +29,7 @@ namespace INEC3.Models.Service
                     while (rdr.Read())
                     {
                         UserDisplay u = new UserDisplay();
-                        u.Id = Convert.ToString(rdr["Id"]);
+                        u.UserId = Convert.ToString(rdr["Id"]);
                         u.Email = Convert.ToString(rdr["Email"]);
                         u.Name = Convert.ToString(rdr["FirstName"]);
                         u.Role = Convert.ToString(rdr["RoleName"]);

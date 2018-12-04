@@ -56,7 +56,14 @@ namespace INEC3.Controllers
             List<UserDisplay> model = new List<UserDisplay>();
             return View(AdminService.GetUserList());
         }
-
+        [HttpPost]
+        public ActionResult ManageUser(string userid)
+        {
+            UserDisplay model = new UserDisplay();
+            model.UserId = userid;
+            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
+            return View(model);
+        }
         public JsonResult GetParty(int candidateid)
         {
             try

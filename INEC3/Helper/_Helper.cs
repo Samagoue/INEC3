@@ -131,7 +131,7 @@ namespace INEC3.Helper
             {
                 user.UserName = iduser.UserName;
                 user.Email = iduser.Email;
-                user.Id = iduser.Id;
+                user.UserId = iduser.Id;
                 return user;
             }
             return null;

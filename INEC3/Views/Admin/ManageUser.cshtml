@@ -1,0 +1,148 @@
+﻿@model INEC3.Models.UserDisplay
+@{
+    ViewBag.Title = "ManageUser";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    input, select, textarea {
+        max-width: 480px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row bg-title">
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Manage User</h4>
+        </div>
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <a href="@Url.Action("Users")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">User List</a>
+            <ol class="breadcrumb">
+                <li>User</li>
+                <li class="active">Manage</li>
+            </ol>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="white-box">
+                <p></p>
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                            @Html.AntiForgeryToken()
+                            
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
+
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Province")
+                                        @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Territoire")
+                                        @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Commune")
+                                        @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                        
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Pooling Station")
+                                        @*@Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()", @required = true })*@
+                                        <select id="ID_Bureauvote" name="ID_Bureauvote" class="form-control selectpicker" multiple data-style="form-control"></select>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $(".preloader").fadeOut();
+        });
+        function GetTerritoireList() {
+            if ($('#ID_Province').val() > 0) {
+                $(".preloader").show();
+                $('#ID_Territoire').html('');
+                $('#ID_Territoire').append($('<option></option>').val('').html('Select Territoire'));
+                $.ajax({
+                    url: '/api/Results/GetTerritoireList',
+                    type: 'GET',
+                    headers: { Authorization: bearer },
+                    data: { ProvinceId: $('#ID_Province').val() },
+                    success: function (res) {
+                        if (res) {
+                            $.each(res, function (i, v) {
+                                $('#ID_Territoire').append($('<option></option>').val(v.ID_Territoire).html(v.Nom));
+                            });
+                        }
+                    }
+                });
+                $(".preloader").fadeOut();
+            }
+        }
+        function GetCommune() {
+            if ($('#ID_Territoire').val() > 0) {
+                $(".preloader").show();
+                $('#ID_Commune').html('');
+                //$('#ID_Commune').append($('<option></option>').val('').html('Select Commune'));
+                $.ajax({
+                    url: '/api/Results/GetCommune',
+                    type: 'GET',
+                    headers: { Authorization: bearer },
+                    data: { ProvinceId: $('#ID_Province').val(), TerritoireId: $('#ID_Territoire').val() },
+                    success: function (res) {
+                        //console.log(res);
+                        if (res) {
+                            $.each(res, function (i, v) {
+                                $('#ID_Commune').append($('<option></option>').val(v.ID_Commune).html(v.Nom));
+                            });
+                        }
+                        $(".preloader").fadeOut();
+                    },
+                    error: function (err) {
+                        $(".preloader").fadeOut();
+                    }
+                });
+            }
+
+        }
+        function GetPoolingStation() {
+            if ($('#ID_Commune').val() > 0) {
+                $(".preloader").show();
+                $('#ID_Bureauvote').html('');
+                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Pooling Station'));
+                $.ajax({
+                    url: '/api/Results/GetPoolingStationList',
+                    type: 'GET',
+                    headers: { Authorization: bearer },
+                    data: { CommuneId: $('#ID_Commune').val() },
+                    success: function (res) {
+                        if (res) {
+                            $.each(res, function (i, v) {
+                                $('#ID_Bureauvote').append($('<option></option>').val(v.ID_Bureauvote).html(v.Nom));
+                            });
+                            $('#ID_Bureauvote').selectpicker('refresh');
+                        }
+                        $(".preloader").fadeOut();
+                    },
+                    error: function (err) {
+                        $(".preloader").fadeOut();
+                    }
+                });
+            }
+        }
+    </script>
+}

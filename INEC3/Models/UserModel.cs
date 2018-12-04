@@ -65,7 +65,8 @@ namespace INEC3.Models
 
     public class UserDisplay
     {
-        public string Id { get; set; }
+        [Key]
+        public string UserId { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
@@ -74,5 +75,18 @@ namespace INEC3.Models
         public bool EmailConfirmed { get; set; }
         
     }
-
+    public class UserPolStation
+    {
+        [Key]
+        public int ID_UserPolStation { get; set; }
+        public string UserID { get; set; }
+        public string Createdate { get; set; }
+        public string Province { get; set; }
+        public string Territoire { get; set; }
+        public string CommuneName { get; set; }
+        public int ID_Bureauvote { get; set; }
+        public string PolStationName { get; set; }
+        //public int ID_Province { get; set; }
+        //public int ID_Territoire { get; set; }
+    }
 }
