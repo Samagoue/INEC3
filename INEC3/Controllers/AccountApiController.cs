@@ -36,6 +36,7 @@ namespace INEC3.Controllers
         {
             try
             {
+                userModel.UserName = userModel.Email;
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);

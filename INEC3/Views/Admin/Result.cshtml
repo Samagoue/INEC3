@@ -136,11 +136,13 @@
     </div>*@
 
 @section Scripts {
+
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".preloader").fadeOut();
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
@@ -192,7 +194,7 @@
                 headers: { Authorization: bearer },
                 data: { polingstationid: $('#ID_Bureauvote').val() },
                 success: function (result) {
-                    
+
                     $('#Abstentions').val(0);
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);

@@ -4,7 +4,7 @@
     ViewBag.Title = "Users";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+@Scripts.Render("~/bundles/jquery")
 
 <div class="container-fluid">
     <div class="row bg-title">
@@ -46,53 +46,53 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
-                                <tr>
-                                    <td></td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Email)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    @if (item.Role == "SuperAdmin")
-                                    {
+                                    <tr>
+                                        <td></td>
                                         <td>
-                                            <select class="form-control">
-                                                <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
-                                                <option>User</option>
-                                            </select>
+                                            @Html.DisplayFor(modelItem => item.Email)
                                         </td>
-                                    }
-                                    else
-                                    {
                                         <td>
-                                            <select class="form-control">
-                                                <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
-                                                <option>SuperAdmin</option>
-                                            </select>
+                                            @Html.DisplayFor(modelItem => item.Name)
                                         </td>
-                                    }
+                                        @if (item.Role == "SuperAdmin")
+                                        {
+                                            <td>
+                                                <select class="form-control">
+                                                    <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
+                                                    <option>User</option>
+                                                </select>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <select class="form-control">
+                                                    <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
+                                                    <option>SuperAdmin</option>
+                                                </select>
+                                            </td>
+                                        }
 
-                                    @if (item.Isactive)
-                                    {
-                                        <td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i> </button></td>
-                                    }
-                                    else
-                                    {
-                                        <td><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-times"></i> </button></td>
-                                    }
-                                    @if (item.EmailConfirmed)
-                                    {
-                                        <td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i> </button></td>
-                                    }
-                                    else
-                                    {
-                                        <td><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-times"></i> </button></td>
-                                    }
-                                    <td>
-                                        <button class="btn btn-primary  waves-effect waves-light" onclick="Manage('@item.UserId')" type="submit" formmethod="post" formaction="@Url.Action("ManageUser")">Assign Polling Station</button>
-                                    </td>
-                                </tr>
+                                        @if (item.Isactive)
+                                        {
+                                            <td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i> </button></td>
+                                        }
+                                        else
+                                        {
+                                            <td><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-times"></i> </button></td>
+                                        }
+                                        @if (item.EmailConfirmed)
+                                        {
+                                            <td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i> </button></td>
+                                        }
+                                        else
+                                        {
+                                            <td><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-times"></i> </button></td>
+                                        }
+                                        <td>
+                                            <button class="btn btn-primary  waves-effect waves-light" onclick="Manage('@item.UserId')" type="submit" formmethod="post" formaction="@Url.Action("ManageUser")">Assign Polling Station</button>
+                                        </td>
+                                    </tr>
                                 }
                             </tbody>
                         </table>
@@ -104,12 +104,14 @@
 </div>
 
 <footer class="footer text-center"> 2017 &copy; Ample Admin brought to you by themedesigner.in </footer>
-@Scripts.Render("~/bundles/jquery")
+
 
 @section Scripts {
+
     <!-- Custom Theme JavaScript -->
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".preloader").fadeOut();
             //$('#myTable').DataTable();
         });
         function Manage(id) {

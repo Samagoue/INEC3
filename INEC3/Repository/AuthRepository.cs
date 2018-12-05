@@ -41,10 +41,21 @@ namespace INEC3.Repository
 
             if (result.Succeeded)
             {
-                userModel.UserProfile.AspNetUsersId = Guid.Parse(user.Id);
-                IdentityResult res = _accountService.RegisterUserProfile(userModel.UserProfile);
-                if (!res.Succeeded)
-                    return res;
+                if (userModel.UserProfile == null)
+                {
+                    UserProfile userProfile = new UserProfile();
+                    userProfile.AspNetUsersId = Guid.Parse(user.Id);
+                    IdentityResult res = _accountService.RegisterUserProfile(userProfile);
+                    if (!res.Succeeded)
+                        return res;
+                }
+                else
+                {
+                    userModel.UserProfile.AspNetUsersId = Guid.Parse(user.Id);
+                    IdentityResult res = _accountService.RegisterUserProfile(userModel.UserProfile);
+                    if (!res.Succeeded)
+                        return res;
+                }
             }
             return result;
         }

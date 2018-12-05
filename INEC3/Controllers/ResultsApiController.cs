@@ -52,7 +52,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetParty")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public JsonResult GetParty(int candidateid)
         {
             JsonResult res = new JsonResult();
@@ -79,10 +79,29 @@ namespace INEC3.Controllers
             }
             return res;
         }
+        [System.Web.Http.Route("GetProvince")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetProvince()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = resultsService.getProvince();
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
 
+        /////////////////////////////
+        
         [System.Web.Http.Route("PolStationCahngeGet")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public JsonResult PolStationCahngeGet(int polingstationid)
         //public IHttpActionResult GetVoters(int polingstationid)
         {
@@ -101,7 +120,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("SaveListRecord")]
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult SaveListRecord(tbl_Results obj)
         {
             try
@@ -178,7 +197,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("RemoveResult")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult RemoveResult(int ResultId, int ID_Bureauvote)
         {
             try
@@ -234,7 +253,7 @@ namespace INEC3.Controllers
         //Use UserPoolingStationGet Instred This
         [System.Web.Http.Route("GetPoolingStationList")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult GetPoolingStationList(int CommuneId)
         {
             try
@@ -265,7 +284,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetCommune")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult GetCommune(int ProvinceId, int TerritoireId)
         {
             try
