@@ -48,6 +48,7 @@ namespace INEC3.Controllers
                 HttpCookie myCookie = new HttpCookie("inecbearer");
                 myCookie.Expires = DateTime.Now.AddDays(-1d);
                 Response.Cookies.Add(myCookie);
+
             }
             return (RedirectToAction("Index", "Home"));
         }

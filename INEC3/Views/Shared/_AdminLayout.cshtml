@@ -1,4 +1,14 @@
-﻿<!DOCTYPE html>
+﻿@using INEC3.Helper
+@using INEC3.Controllers;
+@{ 
+    Base _base = new Base();
+    AccountApiController accapi = new AccountApiController();
+    string username = "";
+    username = _base.GetCookie("inceusername");
+    //var name = User.Identity.Name;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -22,6 +32,7 @@
     <link href="~/Content/css/animate.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="~/Content/css/style.css" rel="stylesheet">
+    
     <!-- color CSS -->
     <link href="~/Content/css/colors/blue-dark.css" id="theme" rel="stylesheet">
     <!-- Select CSS -->
@@ -133,7 +144,7 @@
                 <ul class="nav" id="side-menu">
                     <li class="user-pro">
                         <a href="#" class="waves-effect">
-                            @*<img src="~/Content/plugins/images/users/varun.jpg" alt="user-img" class="img-circle">*@<i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">  Kalala<span class="fa arrow"></span></span>
+                            @*<img src="~/Content/plugins/images/users/varun.jpg" alt="user-img" class="img-circle">*@<i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">  @username<span class="fa arrow"></span></span>
                         </a>
                         <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
                             <li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
@@ -153,7 +164,10 @@
                         </a>
                         <ul class="nav nav-second-level collapse in" aria-expanded="true">
                             <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
-                            <li><a href="@Url.Action("Users","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Manage User</span></a></li>
+                            @if (accapi.IsInRole(username, "SuperAdmin"))
+                            {
+                                <li><a href="@Url.Action("Users","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Manage User</span></a></li>
+                            }
                             <li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>
                         </ul>
                     </li>
@@ -185,6 +199,7 @@
     <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->
     <script src="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+   
     <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
     <!--Wave Effects -->
@@ -206,7 +221,7 @@
     <script src="~/Scripts/js.cookie.js"></script>
     <!--Multiselect JavaScript -->
     <script src="~/Content/plugins/bower_components/bootstrap-select/bootstrap-select.min.js" type="text/javascript"></script>
-    
+
     <script type="text/javascript">
         var bearer = '';
         if (Cookies.get('inecbearer')) {

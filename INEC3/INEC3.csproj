@@ -241,7 +241,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\AuthenticatUser.cs" />
+    <Compile Include="Helper\Base.cs" />
     <Compile Include="Helper\Email.cs" />
+    <Compile Include="Helper\EncryptDecrypt.cs" />
     <Compile Include="Helper\_Helper.cs" />
     <Compile Include="IdentityClass\AuthContext.cs" />
     <Compile Include="Migrations\201810030140544_initialcreate.cs" />
@@ -302,6 +304,7 @@
       <DependentUpon>201811160010007_circo.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\HelperModel.cs" />
     <Compile Include="Models\inecDBContext.cs" />
     <Compile Include="Models\Service\AccountService.cs" />
     <Compile Include="Models\Service\AdminService.cs" />

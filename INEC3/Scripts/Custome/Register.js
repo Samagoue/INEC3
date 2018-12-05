@@ -20,6 +20,15 @@ $(document).ready(function () {
                 success: function (data) {
                     $(".preloader").fadeOut();
                     if (data.succeeded) {
+                        $.toast({
+                            heading: 'Welcome to shadow',
+                            text: 'Check your email and confirm.',
+                            position: 'top-right',
+                            loaderBg: '#ff6849',
+                            icon: 'success',
+                            hideAfter: 3500,
+                            stack: 6
+                        });
                         window.location.href = '/Account/Login';
                     }
                 },

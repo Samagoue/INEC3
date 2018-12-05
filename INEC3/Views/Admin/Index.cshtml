@@ -4,7 +4,7 @@
     ViewBag.Title = "Result List";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+@Scripts.Render("~/bundles/jquery")
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
@@ -66,7 +66,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                  
+
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BureauVote.Nom)
                                     </td>
@@ -110,26 +110,27 @@
     </div>
 </div>
 
- <footer class="footer text-center">
-     Copyright © 2018 <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
- </footer>
-@Scripts.Render("~/bundles/jquery")
+<footer class="footer text-center">
+    Copyright © 2018 <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
+</footer>
+
 @section Scripts {
 
     <!-- Custom Theme JavaScript -->
     @*<script src="~/Content/js/custom.min.js"></script>*@
     <script src="~/Content/plugins/bower_components/datatables/datatables.min.js"></script>
     <!-- start - This is for export functionality only -->
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    @*<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>*@
     <!-- end - This is for export functionality only -->
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".preloader").fadeOut();
             $('#myTable').DataTable();
 
             $(document).ready(function () {
@@ -169,17 +170,17 @@
 
             });
         });
-        $('#myTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel',  'print',
-                {
-                    extend: 'pdfHtml5',
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL'
-                }
-            ]
-        });
-        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
+                //$('#myTable').DataTable({
+                //    dom: 'Bfrtip',
+                //    buttons: [
+                //        'copy', 'csv', 'excel',  'print',
+                //        {
+                //            extend: 'pdfHtml5',
+                //            orientation: 'landscape',
+                //            pageSize: 'LEGAL'
+                //        }
+                //    ]
+                //});
+                //$('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
     </script>
 }

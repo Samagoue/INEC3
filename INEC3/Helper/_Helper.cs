@@ -22,7 +22,7 @@ namespace INEC3.Helper
         private AccountService _accountService;
         private inecDBContext _inecDBContext;
         private UserManager<IdentityUser> _userManager;
-
+        private AdminService _adminservice;
         public _Helper()
         {
             _context = new AuthContext();
@@ -30,6 +30,7 @@ namespace INEC3.Helper
             _inecDBContext = new inecDBContext();
             _authRepository = new AuthRepository();
             _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
+            _adminservice = new AdminService();
         }
         private Sqldbconn _db = new Sqldbconn();
         public bool SendNotification()
@@ -96,21 +97,21 @@ namespace INEC3.Helper
                     _context.Roles.Add(roleToChoose);
                     _context.SaveChanges();
                 }
+
                 IdentityUser user = new IdentityUser
                 {
                     UserName = "Admin@shadow.com",
                     Email = "Admin@shadow.com",
                     PasswordHash = "Admin@1234",
-                    EmailConfirmed=true
+                    EmailConfirmed = true
                 };
-                var result =  _userManager.Create(user,user.PasswordHash);
-
-                var roleresult = _userManager.AddToRole(user.Id, "SuperAdmin");
-                UserProfile userProfile = new UserProfile();
-                userProfile.FirstName = "Admin";
-                userProfile.LastName = "Admin";
+                var result = _userManager.Create(user, user.PasswordHash);
                 if (result.Succeeded)
                 {
+                    var roleresult = _userManager.AddToRole(user.Id, "SuperAdmin");
+                    UserProfile userProfile = new UserProfile();
+                    userProfile.FirstName = "Admin";
+                    userProfile.LastName = "Admin";
                     userProfile.AspNetUsersId = Guid.Parse(user.Id);
                     IdentityResult res = _accountService.RegisterUserProfile(userProfile);
                 }
@@ -122,19 +123,8 @@ namespace INEC3.Helper
                 return false;
             }
         }
+
         
-        public UserDisplay FindUserDetail(string email)
-        {
-            UserDisplay user = new UserDisplay();
-            IdentityUser iduser = _authRepository.FindUserDetail(email);
-            if(iduser != null)
-            {
-                user.UserName = iduser.UserName;
-                user.Email = iduser.Email;
-                user.UserId = iduser.Id;
-                return user;
-            }
-            return null;
-        }
+
     }
 }

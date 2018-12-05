@@ -3,7 +3,7 @@
     ViewBag.Title = "ManageUser";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+@Scripts.Render("~/bundles/jquery")
 <style>
     input, select, textarea {
         max-width: 480px;
@@ -30,44 +30,45 @@
                 <p></p>
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                            @Html.AntiForgeryToken()
-                            
-                            <div class="row">
-                                <div class="col-md-12">
-                                    @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
+                        @Html.AntiForgeryToken()
 
-                                    <div class="form-group col-md-6">
-                                        @Html.Label("Province")
-                                        @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        @Html.Label("Territoire")
-                                        @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
-                                        }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
-                                    </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
 
-                                    <div class="form-group col-md-6">
-                                        @Html.Label("Commune")
-                                        @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
-                                        }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
-                                        
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        @Html.Label("Pooling Station")
-                                        @*@Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()", @required = true })*@
-                                        <select id="ID_Bureauvote" name="ID_Bureauvote" class="form-control selectpicker" multiple data-style="form-control"></select>
-                                    </div>
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Province")
+                                    @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
                                 </div>
-                                <div class="clearfix"></div>
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Territoire")
+                                    @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
+                                    }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Commune")
+                                    @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
+                                    }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+
+                                </div>
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Pooling Station")
+                                    @*@Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()", @required = true })*@
+                                    <select id="ID_Bureauvote" name="ID_Bureauvote" class="form-control selectpicker" multiple data-style="form-control"></select>
+                                </div>
                             </div>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@Scripts.Render("~/bundles/jquery")
+
 @section Scripts {
+
     <script type="text/javascript">
         $(function () {
             $(".preloader").fadeOut();

@@ -23,32 +23,89 @@ namespace INEC3.Models.Service
             _Helper = new _Helper();
         }
 
-
+        public dynamic getcandidate()
+        {
+            return db.Candidats.Select(s => new { Id = s.ID_Candidat, Value = s.Nom }).ToList();
+        }
         public dynamic GetParty(int candidateid)
         {
-            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color }).FirstOrDefault();
+            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color,s.Party.Sigle }).FirstOrDefault();
 
         }
-        public dynamic PolStationCahngeGet(int polingstationid)
+        public dynamic GetPartyList(int candidateid)
         {
-            var res = new Dictionary<string, string>();
-            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();
-            var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
-            var res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
-            res.Add("voters", JsonConvert.SerializeObject(voters));
-            res.Add("list", JsonConvert.SerializeObject(res1));
-            if (exprims != null)
-            {
-                res.Add("exprims", JsonConvert.SerializeObject(exprims));
-            }
-            return res;
+            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color, s.Party.Sigle }).ToList();
+
+        }
+        public dynamic getProvince()
+        {
+            return db.Provinces.Select(s => new { Id = s.ID_Province, Value = s.Nom }).ToList();
+        }
+        public string PolStationCahngeGet(int polingstationid)
+        {
+                Responce resp = new Responce();
+
+                var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();//Total Voters
+                if (voters != null)
+                {
+                    resp.Total_Voters = voters.Enroles;
+                }
+                var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
+                if (exprims != null)
+                {
+                    resp.Abstentions = exprims.Abstentions;
+                    resp.Exprimes = exprims.Exprimes;
+                    resp.Nuls = exprims.Nuls;
+                    resp.Total_Votes = exprims.Total_Votes;
+
+                }
+
+                List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix }).ToList();
+                if (res1 != null)
+                {
+                    resp.ResultList = res1;
+                }
+                return JsonConvert.SerializeObject(resp);
+            
+
         }
 
         public dynamic UserPolingStationGet()
         {
             //return db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
-            return db.BureauVotes.Select(s => new { Id=s.ID_Bureauvote,Value= s.Nom }).ToList();
-             
+            return db.BureauVotes.Select(s => new { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
+
         }
     }
+    public class Responce
+    {
+        public List<Resultt> ResultList { get; set; }
+
+        public int Abstentions { get; set; }
+        public int Exprimes { get; set; }
+        public int Nuls { get; set; }
+        public int Total_Votes { get; set; }
+        public int Total_Voters { get; set; }
+        public int ID_Province { get; set; }
+        public int ID_Territoire { get; set; }
+
+        //public int ID_Party { get; set; }
+        //public int ID_Result { get; set; }
+        //public int ID_Candidat { get; set; }
+        //public int ID_Bureauvote { get; set; }
+        //public int Voix { get; set; }
+        //public double? Pourcentage { get; set; }
+        //public int Votants { get; set; }
+    }
+    public class Resultt
+    {
+        public int ID_Result { get; set; }
+        public int ID_Candidat { get; set; }
+        public string Candidate { get; set; }//Nom
+        public int ID_Party { get; set; }
+        public string Party { get; set; }//Sigle
+        public double? Pourcentage { get; set; }//
+        public int Votes { get; set; }//Voix
+    }
+
 }

@@ -33,16 +33,36 @@ namespace INEC3.Controllers
             resultsService = new ResultsService();
 
         }
-
-        [System.Web.Http.Route("GetParty")]
+        [System.Web.Http.Route("GetCandidateList")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
-        public JsonResult GetParty(int candidateid)
+        public JsonResult GetCandidateList()
         {
-            UserDisplay profile = GetUserProfile();
             JsonResult res = new JsonResult();
             try
             {
+                res.Data = resultsService.getcandidate();
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+        [System.Web.Http.Route("GetParty")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetParty(int candidateid)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                //var claimsIdentity = User.Identity as ClaimsIdentity;
+                //if (claimsIdentity != null)
+                //{
+                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
+                //}
                 var resp = resultsService.GetParty(candidateid);
                 if (resp != null)
                     res.Data = resp;
@@ -60,16 +80,65 @@ namespace INEC3.Controllers
             return res;
         }
 
+        [System.Web.Http.Route("GetPartyList")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetPartyList(int candidateid)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                //var claimsIdentity = User.Identity as ClaimsIdentity;
+                //if (claimsIdentity != null)
+                //{
+                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
+                //}
+                var resp = resultsService.GetPartyList(candidateid);
+                if (resp != null)
+                    res.Data = resp;
+                else
+                {
+                    res.ContentType = "fail";
+                    res.Data = "No record found";
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+        [System.Web.Http.Route("GetProvince")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetProvince()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = resultsService.getProvince();
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+        /////////////////////////////
+        
         [System.Web.Http.Route("PolStationCahngeGet")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public JsonResult PolStationCahngeGet(int polingstationid)
         //public IHttpActionResult GetVoters(int polingstationid)
         {
             JsonResult res = new JsonResult();
             try
             {
-                res.Data = resultsService.PolStationCahngeGet(polingstationid);
+                res.Data = JsonConvert.DeserializeObject(resultsService.PolStationCahngeGet(polingstationid));
             }
             catch (Exception ex)
             {
@@ -81,13 +150,11 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("SaveListRecord")]
         [System.Web.Http.HttpPost]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult SaveListRecord(tbl_Results obj)
         {
             try
             {
-
-
                 if (obj.ID_Result == 0)
                 {
                     List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
@@ -160,7 +227,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("RemoveResult")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult RemoveResult(int ResultId, int ID_Bureauvote)
         {
             try
@@ -216,7 +283,7 @@ namespace INEC3.Controllers
         //Use UserPoolingStationGet Instred This
         [System.Web.Http.Route("GetPoolingStationList")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult GetPoolingStationList(int CommuneId)
         {
             try
@@ -247,7 +314,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetCommune")]
         [System.Web.Http.HttpGet]
-        [System.Web.Http.Authorize]
+        //[System.Web.Http.Authorize]
         public IHttpActionResult GetCommune(int ProvinceId, int TerritoireId)
         {
             try
@@ -258,36 +325,5 @@ namespace INEC3.Controllers
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        [System.Web.Http.Route("Sample")]
-        public JsonResult Sample(int id)
-        {
-            JsonResult res = new JsonResult();
-            try
-            {
-                if (id == 1)
-                {
-                    res.Data = new { status = "true", ImageURL = "", message = "Profile Image uploaded successfully." };
-                }
-                else
-                    res.Data = "Delete successful.";
-            }
-            catch (Exception ex)
-            {
-                res.ContentType = "error";
-                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
-            }
-            return res;
-        }
-        public UserDisplay GetUserProfile()
-        {
-            UserDisplay user = new UserDisplay();
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            if (claimsIdentity != null)
-            {
-                string email = claimsIdentity?.FindFirst(c => c.Type == "sub")?.Value;
-                return _Helper.FindUserDetail(email);
-            }
-            return user;
-        }
     }
 }
