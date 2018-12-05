@@ -32,6 +32,11 @@ namespace INEC3.Models.Service
             return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color,s.Party.Sigle }).FirstOrDefault();
 
         }
+        public dynamic GetPartyList(int candidateid)
+        {
+            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color, s.Party.Sigle }).ToList();
+
+        }
         public dynamic getProvince()
         {
             return db.Provinces.Select(s => new { Id = s.ID_Province, Value = s.Nom }).ToList();

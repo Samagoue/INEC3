@@ -58,12 +58,42 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                var claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null)
-                {
-                    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
-                }
+                //var claimsIdentity = User.Identity as ClaimsIdentity;
+                //if (claimsIdentity != null)
+                //{
+                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
+                //}
                 var resp = resultsService.GetParty(candidateid);
+                if (resp != null)
+                    res.Data = resp;
+                else
+                {
+                    res.ContentType = "fail";
+                    res.Data = "No record found";
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+        [System.Web.Http.Route("GetPartyList")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetPartyList(int candidateid)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                //var claimsIdentity = User.Identity as ClaimsIdentity;
+                //if (claimsIdentity != null)
+                //{
+                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
+                //}
+                var resp = resultsService.GetPartyList(candidateid);
                 if (resp != null)
                     res.Data = resp;
                 else
