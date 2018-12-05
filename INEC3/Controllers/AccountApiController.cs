@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using INEC3.Helper;
 using System.Web.Security;
 
 namespace INEC3.Controllers
@@ -22,6 +23,7 @@ namespace INEC3.Controllers
         private AuthRepository _repository = null;
         private AccountService _accountService;
         private bool DevloperMode =Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["DevloperMode"]);
+        Base _base = new Base();
         public AccountApiController()
         {
             _repository = new AuthRepository();
@@ -50,7 +52,8 @@ namespace INEC3.Controllers
                     if (!string.IsNullOrEmpty(userModel.UserName) && !string.IsNullOrEmpty(userModel.Password))
                     {
 
-                        user = _repository.FindUserDetail(userModel.Email);
+                        user = _repository.FindUserDetailByEmail(userModel.Email);
+                        FormsAuthentication.SetAuthCookie(userModel.Email, false);
                         if (!_accountService.SendEmailVerification(user.Email, user.Id))
                         {
                             return BadRequest("Email sending fail. try after some time.");
@@ -66,25 +69,6 @@ namespace INEC3.Controllers
                 return BadRequest(ex.Message.ToString());
             }
         }
-
-        //[HttpPost]
-        //[Route("Login")]
-        //public async Task<IdentityUser> LoginAsync(UserLogin userlogin)
-        //{
-        //    IdentityUser user;
-        //    if (!string.IsNullOrEmpty(userlogin.UserName) && !string.IsNullOrEmpty(userlogin.Password))
-        //    {
-        //        user = await _repository.FindUser(userlogin.UserName, userlogin.Password);
-        //        return user;
-        //    }
-        //    else
-        //    {
-        //        var response = new HttpResponseMessage(HttpStatusCode.NoContent);
-        //        response.Content = new StringContent("Enter Username or Password");
-        //    }
-        //    return null;
-        //}
-
 
         [HttpPost]
         [AllowAnonymous]
@@ -113,7 +97,7 @@ namespace INEC3.Controllers
                 HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(res.access_token))
                 {
-                    //FormsAuthentication.SetAuthCookie(res.displayname,true);
+                    _base.SaveCookie("inceusername", res.displayname);
                     return Request.CreateResponse<LoginUser>(HttpStatusCode.OK, res);
                 }
                else if (!string.IsNullOrEmpty(res.error_description))
@@ -158,6 +142,23 @@ namespace INEC3.Controllers
                 return BadRequest(ModelState);
             }
             return null;
+        }
+
+        public bool IsInRole(string username, string role)
+        {
+            return _repository.IsInRole(username, role);
+        }
+        public UserDisplay FindUserDetailByKey(string username)
+        {
+            try
+            {
+                return _accountService.FindUserDisplay("UserName", username);
+            }
+            catch (Exception ex)
+            {
+                return null;
+
+            }
         }
     }
 }

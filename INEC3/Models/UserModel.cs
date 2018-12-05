@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -32,16 +33,17 @@ namespace INEC3.Models
         //public HttpPostedFile UserImage { get; set; }
     }
 
+    [Table("UserProfile")]
     public class UserProfile
     {
-        [Key]
+        
         public int UserProfileId { get; set; }
         public Guid AspNetUsersId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Isactive { get; set; }
-        //public DateTime createdate { get; set; }
-        //public DateTime updatedate { get; set; }
+        public string Createdate { get; set; }
+        public string Updatedate { get; set; }
     }
 
     public class UserLogin
@@ -49,6 +51,7 @@ namespace INEC3.Models
         public string Email { get; set; }
         public string Password { get; set; }
     }
+
     public class LoginUser
     {
         public string access_token { get; set; }
@@ -75,6 +78,8 @@ namespace INEC3.Models
         public bool EmailConfirmed { get; set; }
         
     }
+
+    [Table("UserPolStation")]
     public class UserPolStation
     {
         [Key]

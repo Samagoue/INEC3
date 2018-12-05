@@ -22,38 +22,56 @@
     </div>
     <!-- /row -->
     <div class="row">
-        <div class="col-sm-12">
-            <div class="white-box">
-                <h3 class="box-title m-b-0">User List</h3>
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading">MANAGE USERS</div>
                 <div class="table-responsive">
 
                     @using (Html.BeginForm())
                     {
                         <input type="hidden" value="0" name="userid" id="userid" />
 
-                        <table id="myTable" class="table table-striped">
-                            <tr>
-                                <th>Email</th>
-                                <th>Name</th>
-                                <th>Role</th>
-                                <th>Active</th>
-                                <th>Email</th>
-                                <th></th>
-                            </tr>
-
-                            @foreach (var item in Model)
-                            {
+                        <table id="myTable" class="table table-hover manage-u-table">
+                            <thead>
                                 <tr>
-
+                                    <th class="text-center" style="width: 70px">#</th>
+                                    <th>Email</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                    <th>Active</th>
+                                    <th>Email</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td></td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Email)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Role)
-                                    </td>
+                                    @if (item.Role == "SuperAdmin")
+                                    {
+                                        <td>
+                                            <select class="form-control">
+                                                <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
+                                                <option>User</option>
+                                            </select>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <select class="form-control">
+                                                <option selected> @Html.DisplayFor(modelItem => item.Role)</option>
+                                                <option>SuperAdmin</option>
+                                            </select>
+                                        </td>
+                                    }
 
                                     @if (item.Isactive)
                                     {
@@ -72,13 +90,11 @@
                                         <td><button type="button" class="btn btn-warning btn-circle"><i class="fa fa-times"></i> </button></td>
                                     }
                                     <td>
-                                        @*<a class="btn btn-primary pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light " href="#">Manage</a>*@
-                                        @*@Html.ActionLink("Manage User", "ManageUser", new { id = item.Id }, new {@class="btn btn-primary pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light " })*@
-                                        <button class="btn btn-primary left waves-effect waves-light" onclick="Manage('@item.UserId')" type="submit" formmethod="post" formaction="@Url.Action("ManageUser")">Manage User</button>
+                                        <button class="btn btn-primary  waves-effect waves-light" onclick="Manage('@item.UserId')" type="submit" formmethod="post" formaction="@Url.Action("ManageUser")">Assign Polling Station</button>
                                     </td>
                                 </tr>
-                            }
-
+                                }
+                            </tbody>
                         </table>
                     }
                 </div>

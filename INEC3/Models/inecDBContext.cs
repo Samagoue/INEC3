@@ -30,8 +30,8 @@ namespace INEC3.Models
         public DbSet<tbl_Circonscription> Circonscriptions { get; set; }
 
         //public DbSet<UserDisplay> UserDisplays { get; set; }
-        public DbSet<UserProfile> UserProfile { get; set; }
-        //public DbSet<UserPolStation> UserPolStation { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<UserPolStation> UserPolStations { get; set; }
     }
 
 }

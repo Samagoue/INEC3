@@ -33,16 +33,36 @@ namespace INEC3.Controllers
             resultsService = new ResultsService();
 
         }
+        [System.Web.Http.Route("GetCandidateList")]
+        [System.Web.Http.HttpGet]
+        public JsonResult GetCandidateList()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = resultsService.getcandidate();
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
 
         [System.Web.Http.Route("GetParty")]
         [System.Web.Http.HttpGet]
         [System.Web.Http.Authorize]
         public JsonResult GetParty(int candidateid)
         {
-            UserDisplay profile = GetUserProfile();
             JsonResult res = new JsonResult();
             try
             {
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
+                }
                 var resp = resultsService.GetParty(candidateid);
                 if (resp != null)
                     res.Data = resp;
@@ -69,7 +89,7 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                res.Data = resultsService.PolStationCahngeGet(polingstationid);
+                res.Data = JsonConvert.DeserializeObject(resultsService.PolStationCahngeGet(polingstationid));
             }
             catch (Exception ex)
             {
@@ -86,8 +106,6 @@ namespace INEC3.Controllers
         {
             try
             {
-
-
                 if (obj.ID_Result == 0)
                 {
                     List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
@@ -258,36 +276,5 @@ namespace INEC3.Controllers
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
-        [System.Web.Http.Route("Sample")]
-        public JsonResult Sample(int id)
-        {
-            JsonResult res = new JsonResult();
-            try
-            {
-                if (id == 1)
-                {
-                    res.Data = new { status = "true", ImageURL = "", message = "Profile Image uploaded successfully." };
-                }
-                else
-                    res.Data = "Delete successful.";
-            }
-            catch (Exception ex)
-            {
-                res.ContentType = "error";
-                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
-            }
-            return res;
-        }
-        public UserDisplay GetUserProfile()
-        {
-            UserDisplay user = new UserDisplay();
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            if (claimsIdentity != null)
-            {
-                string email = claimsIdentity?.FindFirst(c => c.Type == "sub")?.Value;
-                return _Helper.FindUserDetail(email);
-            }
-            return user;
-        }
     }
 }

@@ -36,7 +36,7 @@ namespace INEC3.Repository
             };
 
             var result = await _userManager.CreateAsync(user, userModel.Password);
-            
+
             var roleresult = _userManager.AddToRole(user.Id, "User");
 
             if (result.Succeeded)
@@ -49,35 +49,43 @@ namespace INEC3.Repository
             return result;
         }
 
-        
+
         public async Task<IdentityUser> FindUser(string userName, string password)
         {
             IdentityUser user = await _userManager.FindAsync(userName, password);
             return user;
         }
 
-        public IdentityUser FindUserDetail(string email)
+        public IdentityUser FindUserDetailByEmail(string email)
         {
             IdentityUser user = _userManager.FindByEmail(email);
             return user;
         }
 
-        public bool UserExist(string username)
+        public IdentityUser FindUserDetailByUserName(string username)
         {
-            var result = _userManager.FindByEmail(username);
-            if (result == null)
-                return false;
-            else
-                return true;
+            IdentityUser user = _userManager.FindByName(username);
+            return user;
         }
-        public bool FindUser(string email)
+
+        public bool IsInRole(string UserName, string role)
         {
-            var result = _userManager.FindByEmail(email);
-            if (result == null)
-                return false;
-            else
-                return true;
+            IdentityUser user = FindUserDetailByUserName(UserName);
+            if (user != null)
+            {
+                return _userManager.IsInRole(user.Id, role);
+            }
+            return false;
         }
+
+        //public bool FindUser(string email)
+        //{
+        //    var result = _userManager.FindByEmail(email);
+        //    if (result == null)
+        //        return false;
+        //    else
+        //        return true;
+        //}
 
         public void Dispose()
         {

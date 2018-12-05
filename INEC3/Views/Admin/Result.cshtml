@@ -7,6 +7,7 @@
 @Scripts.Render("~/bundles/jquery")
 <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
 
+@*<h2>Upload Election Result</h2>*@
 <style>
     input, select, textarea {
         max-width: 480px;
@@ -14,114 +15,125 @@
 </style>
 
 <div class="container-fluid">
+
     <div class="row bg-title">
-            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h4 class="page-title">Result's</h4>
-            </div>
-            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                <a href="@Url.Action("Index")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">List</a>
-                <ol class="breadcrumb">
-                    <li>Result</li>
-                    <li class="active">Add</li>
-                </ol>
-            </div>
-            <!-- /.col-lg-12 -->
+
+        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4 class="page-title">Result's</h4>
         </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="white-box">
-                    <p></p>
-                    <div class="row">
-                        <div class="col-sm-12 col-xs-12">
-                            @using (Html.BeginForm("CreateResult", "Home", FormMethod.Post, new { id = "form" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
+        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+            <a href="@Url.Action("Index")" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">List</a>
+            <ol class="breadcrumb">
+                <li>Result</li>
+                <li class="active">Add</li>
+            </ol>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="white-box">
+                @*<h3 class="box-title m-b-0">Result Forms</h3>*@
+                <p></p>
+                <div class="row">
+                    <div class="col-sm-12 col-xs-12">
+                        @using (Html.BeginForm("CreateResult", "Home", FormMethod.Post, new { id = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.ID_Candidat, "Province")
-                                            @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
-                                            @Html.ValidationMessageFor(model => model.ID_Candidat, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.ID_Party, "Territoire")
-                                            @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
-                                            }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
-                                            @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
-                                        </div>
 
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.ID_Bureauvote, "Commune")
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
 
-                                            @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
-                                            }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
-                                            @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
-                                            @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "findVoters()", @required = true })
-                                            @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.Votants)
-                                            @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.Abstentions)
-                                            @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
-                                            @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
-                                        </div>
-
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.Nuls)
-                                            @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
-                                            @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.LabelFor(model => model.Exprimes)
-                                            @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
-                                            @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Total Votes")
-                                            @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" } })
-                                        </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Candidat, "Province")
+                                        @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Candidat, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Party, "Territoire")
+                                        @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
                                     </div>
 
-                                    <div class="col-md-12">
-                                        <table class="table" id="tbllist">
-                                            <thead class="table-bordered">
-                                                <tr>
-                                                    <th>@Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()" })</th>
-                                                    <th>@Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })</th>
-                                                    <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })</th>
-                                                    <th colspan="2"><button type="button" onclick="addToListAndDataBase()" class="btn btn-primary pull-right">Add</button></th>
-                                                </tr>
-                                                <tr>
-                                                    <th>Candidate</th>
-                                                    <th>Party</th>
-                                                    <th>Votes</th>
-                                                    <th>Percentage</th>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Bureauvote, "Commune")
+
+                                        @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
                                     </div>
-                                    <div class="clearfix"></div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
+                                        @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "PolStationCahngeGet()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Votants)
+                                        @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Abstentions)
+                                        @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Nuls)
+                                        @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Exprimes)
+                                        @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Total Votes")
+                                        @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
                                 </div>
-                            }
-                        </div>
+
+
+                                <div class="col-md-12">
+                                    <table class="table" id="tbllist">
+                                        <thead class="table-bordered">
+                                            <tr>
+                                                <th>@Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()" })</th>
+                                                <th>@Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })</th>
+                                                <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })</th>
+                                                <th colspan="2"><button type="button" onclick="addToListAndDataBase()" class="btn btn-primary pull-right">Add</button></th>
+                                            </tr>
+                                            <tr>
+                                                <th>Candidate</th>
+                                                <th>Party</th>
+                                                <th>Votes</th>
+                                                <th>Percentage</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
@@ -143,7 +155,7 @@
             }
             else {
                 SelectParty();
-                findVoters();
+                PolStationCahngeGet();
             }
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
         });
@@ -155,57 +167,58 @@
                     headers: { Authorization: bearer },
                     data: { candidateid: $('#ID_Candidat').val() },
                     success: function (resp) {
-                        if (resp) {
-                            $("#ID_Party").val(resp.ID_Party);
-                            if (resp.Color != null)
-                                $("#ID_Party").css("background", resp.Color);
-                            else $("#ID_Party").css("background", '#e2e2e2');
-                        }
-                        else {
-                            console.log("SelectParty(): Something Wrong")
+                        debugger
+                        if (resp.contentType != 'error') {
+                            if (resp.data) {
+                                $("#ID_Party").val(resp.data.iD_Party);
+                                if (resp.data.color != null)
+                                    $("#ID_Party").css("background", resp.data.color);
+                                else $("#ID_Party").css("background", '#e2e2e2');
+                            }
+                            else {
+                                console.log("SelectParty(): Something Wrong")
+                            }
                         }
                     }
-
                 });
             }
         }
-        function findVoters() {
+        function PolStationCahngeGet() {
             $.ajax({
-                url: '/api/Results/GetVoters',
+                url: '/api/Results/PolStationCahngeGet',
+                //url: '/api/Results/GetVoters',
                 //url: '/Admin/GetVoters',
                 type: "GET",
                 headers: { Authorization: bearer },
                 data: { polingstationid: $('#ID_Bureauvote').val() },
-                success: function (resp) {
+                success: function (result) {
+                    
                     $('#Abstentions').val(0);
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);
                     $('#Total_Votes').val(0);
-                    //console.log(resp);
-                    if (resp) {
-                        if (resp.voters) {
-                            var res = JSON.parse(resp.voters)
-                            $('#Votants').val(res.Enroles);
+                    if (result.contentType != 'error') {
+                        var resp = result.data
+                        if (resp) {
+                            $('#Votants').val(resp.Total_Voters);
+                            $('#Abstentions').val(resp.Abstentions);
+                            $('#Exprimes').val(resp.Exprimes);
+                            $('#Nuls').val(resp.Nuls);
+                            $('#Total_Votes').val(resp.Total_Votes);
+                            //}
                         }
-                        if (resp.exprims) {
-                            var res = JSON.parse(resp.exprims);
-                            $('#Abstentions').val(res.Abstentions);
-                            $('#Exprimes').val(res.Exprimes);
-                            $('#Nuls').val(res.Nuls);
-                            $('#Total_Votes').val(res.Total_Votes);
-                        }
-
                         var table = $('#tbllist tbody');
-                        if (resp.list) {
-                            $.each(JSON.parse(resp.list), function (i, v) {
-                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn icon-trash btn-danger"></button></td></tr>')
+                        if (resp.ResultList) {
+                            $.each(resp.ResultList, function (i, v) {
+                                debugger
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Candidate + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Votes + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                             });
                         }
                     }
 
                     else {
                         $('#Votants').val(0);
-                        console.log("findVoters(): Something Wrong")
+                        console.log("PolStationCahngeGet(): Something Wrong")
                     }
                 }
             });
@@ -284,7 +297,7 @@
         }
 
         function removerecord(button) {
-           
+
             swal({
                 title: "Are you sure?",
                 text: "Once deleted, you will not be able to recover this record!",
@@ -313,7 +326,7 @@
                                         $('#Exprimes').val(v.Exprimes)
                                         $('#Total_Votes').val(v.Total_Votes)
                                     }
-                                    table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn icon-trash btn-danger"></button></td></tr>')
+                                    table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                                 });
 
                             }
@@ -377,7 +390,7 @@
                                     $('#Exprimes').val(v.Exprimes)
                                     $('#Total_Votes').val(v.Total_Votes)
                                 }
-                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn icon-trash btn-danger"></button></td></tr>')
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                             });
                             toastr.success("Record save successfully", "Success");
                             resetList()

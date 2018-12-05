@@ -18,7 +18,7 @@ namespace INEC3.Controllers
     {
         private inecDBContext db = new inecDBContext();
         private Sqldbconn _db = new Sqldbconn();
-        private AdminService AdminService = new AdminService();
+        private AccountService accountService = new AccountService();
 
         [AuthenticatUser]
         public ActionResult Index()
@@ -54,7 +54,7 @@ namespace INEC3.Controllers
         public ActionResult Users()
         {
             List<UserDisplay> model = new List<UserDisplay>();
-            return View(AdminService.GetUserList());
+            return View(accountService.GetUserList());
         }
         [HttpPost]
         public ActionResult ManageUser(string userid)
