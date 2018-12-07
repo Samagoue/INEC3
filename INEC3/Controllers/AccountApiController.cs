@@ -6,7 +6,6 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -14,10 +13,14 @@ using System.Web;
 using System.Web.Http;
 using INEC3.Helper;
 using System.Web.Security;
+using System.Web.Mvc;
+using INEC3.IdentityClass;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace INEC3.Controllers
 {
-    [RoutePrefix("api/Account")]
+    [System.Web.Http.RoutePrefix("api/Account")]
     public class AccountApiController : ApiController
     {
         private AuthRepository _repository = null;
@@ -31,7 +34,7 @@ namespace INEC3.Controllers
         }
 
         //[AllowAnonymous]
-        [Route("Register")]
+        [System.Web.Http.Route("Register")]
         public async Task<IHttpActionResult> Register(UserModel userModel)
         {
             try
@@ -71,9 +74,9 @@ namespace INEC3.Controllers
             }
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [Route("Login")]
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.AllowAnonymous]
+        [System.Web.Http.Route("Login")]
         public async Task<HttpResponseMessage> LoginUser(UserLogin model)
         {
             // Invoke the "token" OWIN service to perform the login: /api/token
@@ -112,6 +115,41 @@ namespace INEC3.Controllers
             }
         }
 
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.AllowAnonymous]
+        [System.Web.Http.Route("ForgotPassword")]
+        public JsonResult ForgotPassword(string email)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                string resttoken = _repository.GeneratePasswordResetToken(email);
+                
+                if (!string.IsNullOrEmpty(resttoken))
+                {
+                    if (_accountService.ForgotPassword(resttoken,email))
+                    {
+                        res.Data = "Check your email and verify";
+                        return res;
+                    }
+                }
+                else
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Email not found";
+                    return res;
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+        
+        
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -145,6 +183,7 @@ namespace INEC3.Controllers
             return null;
         }
 
+        [System.Web.Http.Route("IsInRole")]
         public bool IsInRole(string username, string role)
         {
             return _repository.IsInRole(username, role);

@@ -4,7 +4,9 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace INEC3.Models.Service
 {
@@ -13,8 +15,8 @@ namespace INEC3.Models.Service
         private inecDBContext db;
         private Sqldbconn _db;
         private _Helper _Helper;
-        //private AuthContext _context;
-
+        string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
+        public SqlCommandText _smodel = new SqlCommandText();
         public ResultsService()
         {
             //_context = new AuthContext();
@@ -75,6 +77,35 @@ namespace INEC3.Models.Service
             //return db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
             return db.BureauVotes.Select(s => new { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
 
+        }
+        public List<RoleModel> GetRoleList()
+        {
+            List<RoleModel> role = new List<RoleModel>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                //using (SqlCommand cmd = new SqlCommand("Select * from vw_UserProfile", con))
+                using (SqlCommand cmd = new SqlCommand(_smodel.SelectRoleList, con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            RoleModel u = new RoleModel();
+                            u.Id = Convert.ToString(rdr["Id"]);
+                            u.Role = Convert.ToString(rdr["Name"]);
+                            role.Add(u);
+                        }
+                    }
+                    con.Close();
+
+                }
+
+            }
+            return role;
         }
     }
     public class Responce

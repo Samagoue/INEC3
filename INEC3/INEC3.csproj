@@ -219,6 +219,7 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountApiController.cs" />
@@ -245,7 +246,7 @@
     <Compile Include="Helper\Email.cs" />
     <Compile Include="Helper\EncryptDecrypt.cs" />
     <Compile Include="Helper\_Helper.cs" />
-    <Compile Include="IdentityClass\AuthContext.cs" />
+    <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Migrations\201810030140544_initialcreate.cs" />
     <Compile Include="Migrations\201810030140544_initialcreate.Designer.cs">
       <DependentUpon>201810030140544_initialcreate.cs</DependentUpon>
@@ -305,7 +306,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\HelperModel.cs" />
-    <Compile Include="Models\inecDBContext.cs" />
+    <Compile Include="Context\inecDBContext.cs" />
     <Compile Include="Models\Service\AccountService.cs" />
     <Compile Include="Models\Service\AdminService.cs" />
     <Compile Include="Models\Service\ResultsService.cs" />
@@ -3217,6 +3218,9 @@
     <Content Include="Content\css\icons\weather-icons\sass\weather-icons-wind.scss" />
     <Content Include="Content\css\icons\weather-icons\sass\weather-icons.min.scss" />
     <Content Include="Content\css\icons\weather-icons\sass\weather-icons.scss" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\shaddow - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -3237,15 +3241,6 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Templates\ForgotPassword.htm" />
     <Content Include="Templates\WelcomeEmail.htm" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -3305,6 +3300,13 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Admin\Users.cshtml" />
     <Content Include="Views\Admin\ManageUser.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

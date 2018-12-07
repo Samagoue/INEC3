@@ -6,22 +6,23 @@ using System.Data.SqlClient;
 using INEC3.DbConn;
 using INEC3.Helper;
 using INEC3.IdentityClass;
+using INEC3.Repository;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-
+using INEC3.Models;
 namespace INEC3.Models.Service
 {
     public class AccountService
     {
         private inecDBContext db = new inecDBContext();
-        private AuthContext _context;
+        private ApplicationDbContext _context;
         private UserManager<IdentityUser> _userManager;
         private Sqldbconn _sqldb = new Sqldbconn();
         string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
         public SqlCommandText _smodel = new SqlCommandText();
         public AccountService()
         {
-            _context = new AuthContext();
+            _context = new ApplicationDbContext();
             _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
 
         }
@@ -131,5 +132,29 @@ namespace INEC3.Models.Service
             }
             return user;
         }
+
+        public bool ForgotPassword(string resttoken, string email)
+        {
+            try
+            {
+                
+                string msg = Email.GetTemplateString((int)Email.EmailTemplates.ForgotPassword);
+                msg = msg.Replace("{Name}", email);
+                string SiteLink = System.Web.HttpContext.Current.Request.Url.Scheme + "://" + System.Web.HttpContext.Current.Request.Url.Authority + "/Account/ForgotPassword?action=forgotpassword" + resttoken;
+
+                msg = msg.Replace("{ResetLink}", SiteLink);
+                if (Email.SendMail(email, "Shadow Email Verify", msg))
+                {
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
     }
+
 }

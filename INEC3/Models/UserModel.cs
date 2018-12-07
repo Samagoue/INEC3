@@ -36,7 +36,7 @@ namespace INEC3.Models
     [Table("UserProfile")]
     public class UserProfile
     {
-        
+
         public int UserProfileId { get; set; }
         public Guid AspNetUsersId { get; set; }
         public string FirstName { get; set; }
@@ -76,7 +76,7 @@ namespace INEC3.Models
         public string Role { get; set; }
         public bool Isactive { get; set; }
         public bool EmailConfirmed { get; set; }
-        
+
     }
 
     [Table("UserPolStation")]
@@ -93,5 +93,13 @@ namespace INEC3.Models
         public string PolStationName { get; set; }
         //public int ID_Province { get; set; }
         //public int ID_Territoire { get; set; }
+    }
+
+    public class ForgotPasswordModel
+    {
+        public Guid UserId { get; set; }
+        public string SecurityCode { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

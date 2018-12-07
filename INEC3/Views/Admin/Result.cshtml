@@ -17,18 +17,16 @@
 <div class="container-fluid">
 
     <div class="row bg-title">
-
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
             <h4 class="page-title">Result's</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-            <a href="@Url.Action("Index")" class="btn btn-danger pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">List</a>
+            <a href="@Url.Action("Index")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">List</a>
             <ol class="breadcrumb">
                 <li>Result</li>
                 <li class="active">Add</li>
             </ol>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
     <div class="row">
         <div class="col-sm-12">
@@ -130,13 +128,7 @@
     </div>
 </div>
 
-
-@*<div>
-        @Html.ActionLink("Back to List", "Index")
-    </div>*@
-
 @section Scripts {
-
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
@@ -170,11 +162,11 @@
                     data: { candidateid: $('#ID_Candidat').val() },
                     success: function (resp) {
                         debugger
-                        if (resp.contentType != 'error') {
-                            if (resp.data) {
-                                $("#ID_Party").val(resp.data.iD_Party);
+                        if (resp.ContentType != 'error') {
+                            if (resp.Data) {
+                                $("#ID_Party").val(resp.Data.ID_Party);
                                 if (resp.data.color != null)
-                                    $("#ID_Party").css("background", resp.data.color);
+                                    $("#ID_Party").css("background", resp.Data.Color);
                                 else $("#ID_Party").css("background", '#e2e2e2');
                             }
                             else {
@@ -199,8 +191,8 @@
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);
                     $('#Total_Votes').val(0);
-                    if (result.contentType != 'error') {
-                        var resp = result.data
+                    if (result.ContentType != 'error') {
+                        var resp = result.Data
                         if (resp) {
                             $('#Votants').val(resp.Total_Voters);
                             $('#Abstentions').val(resp.Abstentions);

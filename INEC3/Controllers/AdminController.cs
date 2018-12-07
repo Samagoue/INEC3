@@ -19,7 +19,7 @@ namespace INEC3.Controllers
         private inecDBContext db = new inecDBContext();
         private Sqldbconn _db = new Sqldbconn();
         private AccountService accountService = new AccountService();
-
+        private ResultsService resultsService = new ResultsService();
         [AuthenticatUser]
         public ActionResult Index()
         {
@@ -53,17 +53,24 @@ namespace INEC3.Controllers
 
         public ActionResult Users()
         {
+
             List<UserDisplay> model = new List<UserDisplay>();
             return View(accountService.GetUserList());
         }
         [HttpPost]
         public ActionResult ManageUser(string userid)
         {
+            ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
+            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
+            ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
+            ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
+            ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
             UserDisplay model = new UserDisplay();
             model.UserId = userid;
-            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
+
             return View(model);
         }
+
         public JsonResult GetParty(int candidateid)
         {
             try
@@ -206,8 +213,8 @@ namespace INEC3.Controllers
         {
             try
             {
-            var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
-            return Json(Ter, JsonRequestBehavior.AllowGet);
+                var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
+                return Json(Ter, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
@@ -215,8 +222,8 @@ namespace INEC3.Controllers
         {
             try
             {
-            var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
-            return Json(res, JsonRequestBehavior.AllowGet);
+                var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
@@ -224,8 +231,8 @@ namespace INEC3.Controllers
         {
             try
             {
-            var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
-            return Json(res, JsonRequestBehavior.AllowGet);
+                var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
+                return Json(res, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
         }
