@@ -21,7 +21,7 @@ namespace INEC3.App_Start
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = true,
-                RequireUniqueEmail = false
+                RequireUniqueEmail = true
             };
 
             // Configure validation logic for passwords

@@ -49,7 +49,7 @@
                                 </div>
                                 <div class="form-group col-md-6" id="Territoire" style="display:none;">
                                     @Html.Label("Territoire")
-                                    @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                    @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
                                 </div>
 
                                 <div class="form-group col-md-6" id="Commune" style="display:none;">
@@ -62,6 +62,9 @@
                                     @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })
                                     @*<select id="ID_Bureauvote" name="ID_Bureauvote" class="form-control selectpicker" multiple data-style="form-control"></select>*@
                                 </div>
+                            </div>
+                            <div class="col-sm-12 col-xs-12">
+                                <button type="button" id="brnsave" class="btn btn-primary pull-right">Save</button>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -80,6 +83,7 @@
             $(".preloader").fadeOut();
             RoleChange();
             $("#Role option:contains('SuperAdmin')").remove();
+            $('#brnsave').on('click', function () { SaveRole() });
         });
         function GetTerritoireList() {
             if ($('#ID_Province').val() > 0) {
@@ -154,7 +158,6 @@
             }
         }
         function RoleChange() {
-            debugger
             var select = $("#Role option:selected").text();
             if (select == "Province") {
                 $("#Province").show()
@@ -166,17 +169,57 @@
                 $("#Province").hide()
                 $("#Territoire").show()
                 $("#Commune").hide()
-                $("#PollingStation").hide()}
+                $("#PollingStation").hide()
+            }
             else if (select == "Commune") {
                 $('#Province').hide()
                 $('#Territoire').hide()
                 $('#Commune').show()
-                $('#PollingStation').hide()}
+                $('#PollingStation').hide()
+            }
             else if (select == "PollingStation") {
                 $('#Province').hide()
                 $('#Territoire').hide()
                 $('#Commune').hide()
-                $('#PollingStation').show()}
+                $('#PollingStation').show()
+            }
+        }
+        function SaveRole() {
+            $(".preloader").show();
+
+            var data = {
+                UserID: $('#UserId').val(),
+                AssignRole: $("#Role option:selected").text(),
+                AssignID: 0
+            };
+            
+            if (data.AssignRole == "Province") { data.AssignID = $('#ID_Province').val(); }
+            else if (data.AssignRole == "Territoire") { data.AssignID = $('#ID_Territoire').val(); }
+            else if (data.AssignRole == "Commune") { data.AssignID = $('#ID_Commune').val(); }
+            else if (data.AssignRole == "PollingStation") { data.AssignID = $('#ID_Bureauvote').val(); }
+            if (data.AssignID != "" || data.AssignRole != "" || data.AssignID != "" && data.AssignRole != "") {
+                $.ajax({
+                    url: '/Admin/UserPolStation',
+                    type: 'POST',
+                    //headers: { Authorization: bearer },
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        if (res) {
+                            alert(res);
+                        }
+                        $(".preloader").fadeOut();
+                    },
+                    error: function (err) {
+                        alert(err);
+                        $(".preloader").fadeOut();
+                    }
+                });
+            }
+            else {
+                alert('Please Select Value');
+            }
         }
     </script>
 }

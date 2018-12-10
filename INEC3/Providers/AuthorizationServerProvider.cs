@@ -74,18 +74,20 @@ namespace INEC3.Providers
 
         public Dictionary<string, string> getproperty(string userid,string displayname)
         {
-            //Guid useridg = Guid.Parse(userid);
-            Dictionary<string, string> d = new Dictionary<string, string>();
-            //inecDBContext _db = new inecDBContext();
-            //var uf = _db.UserProfile.Where(w => w.AspNetUsersId == useridg).FirstOrDefault();
-            //if (uf != null)
-            //{
-            d.Add("userid", userid);
-            d.Add("displayname", displayname);
-            //d.Add("profileimg", "picgoesr here");
-            //}
-
-            return d;
+            using (AuthRepository _repo = new AuthRepository())
+            {
+                Dictionary<string, string> d = new Dictionary<string, string>();
+                //inecDBContext _db = new inecDBContext();
+                //var uf = _db.UserProfile.Where(w => w.AspNetUsersId == useridg).FirstOrDefault();
+                //if (uf != null)
+                //{
+                d.Add("userid", userid);
+                d.Add("displayname", displayname);
+                d.Add("role", _repo.GetUserRole(userid));
+                //d.Add("profileimg", "picgoesr here");
+                //}
+                return d;
+            }
         }
     }
 }

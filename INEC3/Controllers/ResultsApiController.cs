@@ -128,7 +128,7 @@ namespace INEC3.Controllers
         }
 
         /////////////////////////////
-        
+
         [System.Web.Http.Route("PolStationCahngeGet")]
         [System.Web.Http.HttpGet]
         //[System.Web.Http.Authorize]
@@ -332,7 +332,72 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                res.Data=(resultsService.GetRoleList());
+                res.Data = (resultsService.GetRoleList());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+
+        [System.Web.Http.Route("GetUserDDL")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Authorize]
+        public JsonResult GetUserDDL()
+        {
+            JsonResult res = new JsonResult();
+            try
+
+            {
+                string UserId = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
+                }
+                res.Data = (resultsService.GetUserDDL(UserId));
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+
+        [System.Web.Http.Route("GetDashBoardTiles")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetDashBoardTiles()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.GetDashBoardTiles());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+        [System.Web.Http.Route("UserIndexList")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult UserIndexList()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.UserIndexList());
             }
             catch (Exception ex)
             {

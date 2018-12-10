@@ -7,12 +7,15 @@ using System.Linq;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using INEC3.Repository;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace INEC3.Models.Service
 {
     public class ResultsService
     {
         private inecDBContext db;
+        private AuthRepository _auth;
         private Sqldbconn _db;
         private _Helper _Helper;
         string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
@@ -23,6 +26,7 @@ namespace INEC3.Models.Service
             db = new inecDBContext();
             _db = new Sqldbconn();
             _Helper = new _Helper();
+            _auth = new AuthRepository();
         }
 
         public dynamic getcandidate()
@@ -31,7 +35,7 @@ namespace INEC3.Models.Service
         }
         public dynamic GetParty(int candidateid)
         {
-            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color,s.Party.Sigle }).FirstOrDefault();
+            return db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color, s.Party.Sigle }).FirstOrDefault();
 
         }
         public dynamic GetPartyList(int candidateid)
@@ -45,33 +49,39 @@ namespace INEC3.Models.Service
         }
         public string PolStationCahngeGet(int polingstationid)
         {
-                Responce resp = new Responce();
+            Responce resp = new Responce();
 
-                var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();//Total Voters
-                if (voters != null)
-                {
-                    resp.Total_Voters = voters.Enroles;
-                }
-                var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
-                if (exprims != null)
-                {
-                    resp.Abstentions = exprims.Abstentions;
-                    resp.Exprimes = exprims.Exprimes;
-                    resp.Nuls = exprims.Nuls;
-                    resp.Total_Votes = exprims.Total_Votes;
+            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();//Total Voters
+            if (voters != null)
+            {
+                resp.Total_Voters = voters.Enroles;
+            }
+            var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
+            if (exprims != null)
+            {
+                resp.Abstentions = exprims.Abstentions;
+                resp.Exprimes = exprims.Exprimes;
+                resp.Nuls = exprims.Nuls;
+                resp.Total_Votes = exprims.Total_Votes;
 
-                }
+            }
 
-                List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix }).ToList();
-                if (res1 != null)
-                {
-                    resp.ResultList = res1;
-                }
-                return JsonConvert.SerializeObject(resp);
-            
+            List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix }).ToList();
+            if (res1 != null)
+            {
+                resp.ResultList = res1;
+            }
+            return JsonConvert.SerializeObject(resp);
+
 
         }
 
+        public dynamic GetDashBoardTiles()
+        {
+            DataSet dt = new DataSet();
+            dt = _db.GetDatatable("proc_DashbardTiles", "");
+            return dt;
+        }
         public dynamic UserPolingStationGet()
         {
             //return db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
@@ -107,6 +117,46 @@ namespace INEC3.Models.Service
             }
             return role;
         }
+        public UserDropDown GetUserDDL(string UserId)
+        {
+            UserDropDown ddl = new UserDropDown();
+            var userpol = db.UserPolStations.Where(w => w.UserID == UserId).FirstOrDefault();
+            if (userpol != null)
+            {
+                if (userpol.AssignRole == UserManageRoles.ProvinceUser)
+                {
+                    ddl.Province = db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
+                    ddl.Territoire = db.Territoires.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                }
+                else if (userpol.AssignRole == UserManageRoles.TerritoireUser)
+                {
+                    ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    ddl.Commune = db.Communes.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
+                }
+                else if (userpol.AssignRole == UserManageRoles.CommuneUser)
+                {
+                    ddl.Commune = db.Communes.Where(w => w.ID_Commune == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
+                    ddl.PolStation = db.BureauVotes.Where(w => w.ID_Commune == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
+                }
+                else if (userpol.AssignRole == UserManageRoles.PollingUser)
+                {
+                    ddl.PolStation = db.BureauVotes.Where(w => w.ID_Bureauvote == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
+                }
+
+            }
+            return ddl;
+        }
+        public dynamic UserIndexList()
+        {
+            var results = (from res in db.Results
+                           join ce in db.Communes on res.BureauVote.ID_Commune equals ce.ID_Commune
+                           join te in db.Territoires on ce.ID_Territoire equals te.ID_Territoire
+                           join pr in db.Provinces on te.ID_Province equals pr.ID_Province
+                           join ca in db.Candidats on res.ID_Candidat equals ca.ID_Candidat
+                           join pa in db.Parties on res.ID_Party equals pa.ID_Party
+                           select new { Party=pa.Nom,Candidats=ca.Nom, Provinces = pr.Nom, Territoires=te.Nom,res.Voix,res.Votants,res.Nuls,res.Exprimes,res.Total_Votes });
+            return results;
+        }
     }
     public class Responce
     {
@@ -138,5 +188,16 @@ namespace INEC3.Models.Service
         public double? Pourcentage { get; set; }//
         public int Votes { get; set; }//Voix
     }
-
+    public class UserDropDown
+    {
+        public List<DropDown> Province { get; set; }
+        public List<DropDown> Territoire { get; set; }
+        public List<DropDown> Commune { get; set; }
+        public List<DropDown> PolStation { get; set; }
+    }
+    public class DropDown
+    {
+        public int Id { get; set; }
+        public string Value { get; set; }
+    }
 }

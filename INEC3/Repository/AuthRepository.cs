@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
 using INEC3.IdentityClass;
 using INEC3.Models.Service;
-
+using System.Linq;
 
 namespace INEC3.Repository
 {
@@ -107,23 +107,42 @@ namespace INEC3.Repository
             var result = _userManager.Create(user, user.PasswordHash);
             return result;
         }
-        public IdentityResult AddUserRole(string userid,string role)
+        public IdentityResult AddUserRole(string userid, string role)
         {
             var result = _userManager.AddToRole(userid, "SuperAdmin");
             return result;
         }
-
-        public void GetRolesList()
+        public IdentityResult ChangeUserRole(string userid, string updatedrole)
         {
-            var result = _context.Roles.GetEnumerator();
-            var c=result;
+            IdentityResult res = new IdentityResult();
+            var oldrole = _userManager.GetRoles(userid).FirstOrDefault();
+            if (!string.Equals(oldrole,updatedrole))
+            {
+                res = _userManager.RemoveFromRole(userid, oldrole);
+                if (res.Succeeded)
+                {
+                    res = _userManager.AddToRole(userid, updatedrole);
+                }
+                return res;
+            }
+            return res;
+        }
+        public string GetUserRole(string userid)
+        {
+            return _userManager.GetRoles(userid).FirstOrDefault();
         }
 
-        public void Dispose()
-        {
-            _context.Dispose();
-            _userManager.Dispose();
-            _inecDBContext.Dispose();
-        }
+    public void GetRolesList()
+    {
+        var result = _context.Roles.GetEnumerator();
+        var c = result;
     }
+
+    public void Dispose()
+    {
+        _context.Dispose();
+        _userManager.Dispose();
+        _inecDBContext.Dispose();
+    }
+}
 }

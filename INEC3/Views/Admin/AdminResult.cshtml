@@ -1,6 +1,5 @@
-﻿@model INEC3.Models.UserDisplay
+﻿@model INEC3.Models.tbl_Results
 @{
-
     ViewBag.Title = "Result";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
@@ -19,7 +18,7 @@
 
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-            <h4 class="page-title">@Model.Name Result's</h4>
+            <h4 class="page-title">Result's</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <a href="@Url.Action("Index")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">List</a>
@@ -32,70 +31,71 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="white-box">
+                @*<h3 class="box-title m-b-0">Result Forms</h3>*@
                 <p></p>
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        @using (Html.BeginForm("Result", "Admin", FormMethod.Post, new { id = "form" }))
+                        @using (Html.BeginForm("CreateResult", "Home", FormMethod.Post, new { id = "form" }))
                         {
                             @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
 
                             <div class="row">
                                 <div class="col-md-12">
-                                    @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
-                                    @Html.HiddenFor(model => model.Role, new { @id = "Role" })
-                                    @if (@ViewBag.Province != null)
-                                    {
-                                        <div class="form-group col-md-6" id="Province" style="display:none;">
-                                            @Html.Label("Province")
-                                            @*@Html.LabelFor(model => model.ID_Candidat, "Province")*@
-                                            @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
-                                        </div>
-                                    }
-                                    @if (@ViewBag.Territoire != null)
-                                    {
-                                        <div class="form-group col-md-6" id="Territoire" style="display:none;">
-                                            @*@Html.LabelFor(model => model.ID_Party, "Territoire")*@
-                                            @Html.Label("Territoire")
-                                            @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
-                                        </div>
-                                    }
-                                    @if (@ViewBag.Commune != null)
-                                    {
-                                        <div class="form-group col-md-6" id="Commune" style="display:none;">
-                                            @Html.Label("Commune")
-                                            @*@Html.LabelFor(model => model.ID_Bureauvote, "Commune")*@
-                                            @Html.DropDownList("ID_Commune", new SelectList(ViewBag.Commune, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
-                                        </div>
-                                    }
-                                    @if (@ViewBag.ID_Bureauvote != null)
-                                    {
-                                        <div class="form-group col-md-6" id="PollingStation" style="display:none;">
-                                            @Html.Label("Pooling Station")
-                                            @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.ID_Bureauvote, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "PolStationCahngeGet()", @required = true })
-                                        </div>
-                                    }
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Votants")
-                                            @Html.Editor("Votants", new { htmlAttributes = new { @class = "form-control", @id = "Votants" } })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Abstentions")
-                                            @Html.Editor("Abstentions", new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0", @id = "Votants" } })
-                                        </div>
+                                    @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
 
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Nuls")
-                                            @Html.Editor("Nuls", new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0", @id = "Votants" } })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Exprimes")
-                                            @Html.Editor("Exprimes", new { htmlAttributes = new { @class = "form-control", @Value = "0", @id = "Votants" } })
-                                        </div>
-                                        <div class="form-group col-md-6">
-                                            @Html.Label("Total Votes")
-                                            @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" }, @id = "Total_Votes" })
-                                        </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Candidat, "Province")
+                                        @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Candidat, "", new { @class = "text-danger" })
                                     </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Party, "Territoire")
+                                        @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Bureauvote, "Commune")
+
+                                        @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
+                                        }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.ID_Bureauvote, "Pooling Station")
+                                        @Html.DropDownList("ID_Bureauvote", null, htmlAttributes: new { @class = "form-control", @onchange = "PolStationCahngeGet()", @required = true })
+                                        @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Votants)
+                                        @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Abstentions)
+                                        @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Nuls)
+                                        @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.LabelFor(model => model.Exprimes)
+                                        @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
+                                        @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Total Votes")
+                                        @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" } })
+                                    </div>
+                                </div>
 
 
                                 <div class="col-md-12">
@@ -104,7 +104,7 @@
                                             <tr>
                                                 <th>@Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()" })</th>
                                                 <th>@Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })</th>
-                                                <th> @Html.Editor("Voix", new { htmlAttributes = new { @class = "form-control", @Value = "0", @id = "Voix" } })</th>
+                                                <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })</th>
                                                 <th colspan="2"><button type="button" onclick="addToListAndDataBase()" class="btn btn-primary pull-right">Add</button></th>
                                             </tr>
                                             <tr>
@@ -134,7 +134,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            ShowUserView();
+            $(".preloader").fadeOut();
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
@@ -152,7 +152,6 @@
                 PolStationCahngeGet();
             }
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
-            $(".preloader").fadeOut();
         });
         function SelectParty() {
             if ($('#ID_Candidat').val() > 0) {
@@ -345,6 +344,7 @@
         function resettable() {
             $('#tbllist tbody>tr').remove();
         }
+
         function addToListAndDataBase() {
             if ($('#ID_Candidat').val() != '' && $('#Voix').val() > 0) {
                 var votes = parseInt($('#Voix').val());
@@ -404,33 +404,6 @@
                 if ($('#ID_Candidat').val() == '') {
                     toastr.warning("Select Candidate");
                 }
-            }
-        }
-        function ShowUserView() {
-            var select = $("#Role").val();
-            if (select == "Province") {
-                $("#Province").show()
-                $("#Territoire").show()
-                $("#Commune").show()
-                $("#PollingStation").show()
-            }
-            else if (select == "Territoire") {
-                $("#Province").hide()
-                $("#Territoire").show()
-                $("#Commune").show()
-                $("#PollingStation").show()
-            }
-            else if (select == "Commune") {
-                $('#Province').hide()
-                $('#Territoire').hide()
-                $('#Commune').show()
-                $('#PollingStation').show()
-            }
-            else if (select == "PollingStation") {
-                $('#Province').hide()
-                $('#Territoire').hide()
-                $('#Commune').hide()
-                $('#PollingStation').show()
             }
         }
     </script>

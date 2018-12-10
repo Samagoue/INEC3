@@ -25,7 +25,7 @@ namespace INEC3.Controllers
     {
         private AuthRepository _repository = null;
         private AccountService _accountService;
-        private bool DevloperMode =Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["DevloperMode"]);
+        private bool DevloperMode = Convert.ToBoolean(System.Configuration.ConfigurationManager.AppSettings["DevloperMode"]);
         Base _base = new Base();
         public AccountApiController()
         {
@@ -104,7 +104,7 @@ namespace INEC3.Controllers
                     _base.SaveCookie("inceusername", res.displayname);
                     return Request.CreateResponse<LoginUser>(HttpStatusCode.OK, res);
                 }
-               else if (!string.IsNullOrEmpty(res.error_description))
+                else if (!string.IsNullOrEmpty(res.error_description))
                 {
                     return Request.CreateErrorResponse(HttpStatusCode.BadRequest, res.error_description);
                 }
@@ -124,10 +124,10 @@ namespace INEC3.Controllers
             try
             {
                 string resttoken = _repository.GeneratePasswordResetToken(email);
-                
+
                 if (!string.IsNullOrEmpty(resttoken))
                 {
-                    if (_accountService.ForgotPassword(resttoken,email))
+                    if (_accountService.ForgotPassword(resttoken, email))
                     {
                         res.Data = "Check your email and verify";
                         return res;
@@ -147,8 +147,8 @@ namespace INEC3.Controllers
             }
             return res;
         }
-        
-        
+
+
 
         protected override void Dispose(bool disposing)
         {
@@ -188,11 +188,11 @@ namespace INEC3.Controllers
         {
             return _repository.IsInRole(username, role);
         }
-        public UserDisplay FindUserDetailByKey(string username)
+        public UserDisplay FindUserDetailByKey(string key, string value)
         {
             try
             {
-                return _accountService.FindUserDisplay("UserName", username);
+                return _accountService.FindUserDisplay(key, value);
             }
             catch (Exception ex)
             {

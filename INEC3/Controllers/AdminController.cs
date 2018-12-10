@@ -4,14 +4,13 @@ using INEC3.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
-using Microsoft.AspNet.SignalR;
 using System.Data;
-using Newtonsoft.Json;
 using INEC3.Helper;
 using INEC3.Models.Service;
+using INEC3.Repository;
+using INEC3.Helper;
+
 namespace INEC3.Controllers
 {
     public class AdminController : Controller
@@ -20,14 +19,46 @@ namespace INEC3.Controllers
         private Sqldbconn _db = new Sqldbconn();
         private AccountService accountService = new AccountService();
         private ResultsService resultsService = new ResultsService();
+        private AuthRepository authRepository = new AuthRepository();
+        private Base _base = new Base();
+        //============User Area
+        [AuthenticatUser]
+        public ActionResult Result(int? id)
+        {
+            string username = "";
+            username = _base.GetCookie("inceusername");
+            UserDisplay user = accountService.FindUserDisplay("UserName", username);
+            ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
+            ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
+            if (user == null)
+            {
+                return View();
+            }
+            else
+            {
+                UserDropDown ddl = resultsService.GetUserDDL(user.UserId);
+                if (ddl.Province != null)
+                    ViewBag.Province = new SelectList(ddl.Province, "Id", "Value", 0);
+                if (ddl.Territoire != null)
+                    ViewBag.Territoire = new SelectList(ddl.Territoire, "Id", "Value", 0);
+                if (ddl.Commune != null)
+                    ViewBag.Commune = new SelectList(ddl.Commune, "Id", "Value", 0);
+                if (ddl.PolStation != null)
+                    ViewBag.ID_Bureauvote = new SelectList(ddl.PolStation, "Id", "Value");
+                return View(user);
+            }
+        }
+        //User Area End 
+
         [AuthenticatUser]
         public ActionResult Index()
         {
             var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
             return View(results.ToList());
         }
+
         [AuthenticatUser]
-        public ActionResult Result(int? id)
+        public ActionResult AdminResult(int? id)
         {
             ViewBag.Message = "Artech Consulting";
             ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
@@ -71,170 +102,47 @@ namespace INEC3.Controllers
             return View(model);
         }
 
-        public JsonResult GetParty(int candidateid)
-        {
-            try
-            {
-                var party = db.Candidats.Where(w => w.ID_Candidat == candidateid).Select(s => new { s.ID_Party, s.Party.Color }).FirstOrDefault();
-                return Json(party, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult GetVoters(int polingstationid)
-        {
-            try
-            {
 
 
-                var res = new Dictionary<string, string>();
-                var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();
-                var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
-                var res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix }).ToList();
-                res.Add("voters", JsonConvert.SerializeObject(voters));
-                res.Add("list", JsonConvert.SerializeObject(res1));
-                if (exprims != null)
+        [HttpPost]
+        public JsonResult UserPolStation(UserPolStation obj)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                var role = authRepository.ChangeUserRole(obj.UserID, obj.AssignRole);
+                if (role.Errors.Count() == 0)
                 {
-                    res.Add("exprims", JsonConvert.SerializeObject(exprims));
-                }
-                //return Json(voters, JsonRequestBehavior.AllowGet);
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult SaveListRecord(tbl_Results obj)
-        {
-            try
-            {
-
-
-                if (obj.ID_Result == 0)
-                {
-                    List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
-                    if (isExist.Count == 0)
+                    UserPolStation isexist = db.UserPolStations.Where(w => w.UserID == obj.UserID).FirstOrDefault();
+                    if (isexist == null)
                     {
-                        obj.Pourcentage = 100;
-                        obj.Exprimes = (obj.Total_Votes + obj.Abstentions + obj.Nuls);
-                        db.Results.Add(obj);
+                        db.UserPolStations.Add(obj);
                         db.SaveChanges();
+                        res.Data = ("User role add succesfully");
                     }
                     else
                     {
-
-                        tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
-                        if (isdublicate != null)
-                        {
-                            db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
-                            db.SaveChanges();
-                            //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                        }
-
-                        int Total_Votes = 0;
-                        if (db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Count() > 0)
-                        {
-                            var tem_total = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                            Total_Votes = string.IsNullOrEmpty(Convert.ToString(tem_total)) ? 0 : tem_total;
-                        }
-
-
-                        double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
-                        obj.Pourcentage = Perc;
-                        obj.Total_Votes = Total_Votes + obj.Voix;
-                        db.Results.Add(obj);
+                        isexist.AssignID = obj.AssignID;
+                        isexist.AssignRole = obj.AssignRole;
                         db.SaveChanges();
-                        Total_Votes = Total_Votes + obj.Voix;
-
-                        foreach (var it in isExist)
-                        {
-                            tbl_Results re = new tbl_Results();
-                            re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
-                            double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
-                            re.Pourcentage = Percc;
-                            re.Total_Votes = Total_Votes;
-                            re.Abstentions = obj.Abstentions;
-                            re.Nuls = obj.Nuls;
-                            re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
-
-                            db.SaveChanges();
-                        }
-                        //foreach()
+                        res.Data = ("User role updated succesfully");
                     }
-
-
+                    res.ContentType = "success";
                 }
-                var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
-                DataSet dt = new DataSet();
-                dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-                SqlNotification objRepo = new SqlNotification();
-                objRepo.GetAllMessages();
-
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult RemoveResult(int ResultId, int ID_Bureauvote)
-        {
-            try
-            {
-                db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == ResultId).ToList());
-                db.SaveChanges();
-                List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).ToList();
-
-                if (isExist.Count > 0)
+                else
                 {
-                    int Total_Votes = isExist.Where(w => w.ID_Bureauvote == ID_Bureauvote).Sum(s => s.Voix);
-                    foreach (var it in isExist)
-                    {
-                        tbl_Results re = new tbl_Results();
-                        re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
-                        double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
-                        re.Pourcentage = Percc;
-                        re.Total_Votes = Total_Votes;
-                        re.Exprimes = (Total_Votes + re.Abstentions + re.Nuls);
-                        db.SaveChanges();
-                    }
+                    res.ContentType = "fail";
+                    res.Data = (role.Errors.ToString());
                 }
-                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
-                DataSet dt = new DataSet();
-                dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+            }
+            catch (Exception ex)
+            {
 
-                SqlNotification objRepo = new SqlNotification();
-                objRepo.GetAllMessages();
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
 
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult GetTerritoireList(int ProvinceId)
-        {
-            try
-            {
-                var Ter = db.Territoires.Where(w => w.ID_Province == ProvinceId).Select(s => new { s.ID_Territoire, s.Nom }).ToList();
-                return Json(Ter, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult GetPoolingStationList(int CommuneId)
-        {
-            try
-            {
-                var res = db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
-        public JsonResult GetCommune(int ProvinceId, int TerritoireId)
-        {
-            try
-            {
-                var res = db.Communes.Where(w => w.ID_Province == ProvinceId && w.ID_Territoire == TerritoireId).Select(s => new { s.ID_Commune, s.Nom }).ToList();
-                return Json(res, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet); }
-        }
     }
 }
