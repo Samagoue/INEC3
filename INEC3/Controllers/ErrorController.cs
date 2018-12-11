@@ -9,9 +9,11 @@ namespace INEC3.Controllers
     public class ErrorController : Controller
     {
         // GET: Error
-        public ActionResult Index(string ermsg="")
+        //public ActionResult Index(string ermsg="")
+        public ActionResult Index(string id="")
         {
-            ViewBag.error = ermsg;
+            ViewBag.error = id;
+            //ViewBag.error = id;
             return View();
         }
     }

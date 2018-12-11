@@ -9,7 +9,6 @@ using System.Data;
 using INEC3.Helper;
 using INEC3.Models.Service;
 using INEC3.Repository;
-using INEC3.Helper;
 
 namespace INEC3.Controllers
 {
@@ -36,6 +35,10 @@ namespace INEC3.Controllers
             }
             else
             {
+                if (user.Role == UserManageRoles.SuperAdmin)
+                {
+                    return RedirectToAction("AdminResult");
+                }
                 UserDropDown ddl = resultsService.GetUserDDL(user.UserId);
                 if (ddl.Province != null)
                     ViewBag.Province = new SelectList(ddl.Province, "Id", "Value", 0);
@@ -57,6 +60,13 @@ namespace INEC3.Controllers
             return View(results.ToList());
         }
 
+        [AuthenticatUser]
+        public ActionResult AdminIndex()
+        {
+
+            //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
+            return View(resultsService.ResultViewList());
+        }
         [AuthenticatUser]
         public ActionResult AdminResult(int? id)
         {
@@ -91,6 +101,7 @@ namespace INEC3.Controllers
         [HttpPost]
         public ActionResult ManageUser(string userid)
         {
+            
             ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
             ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
             ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);

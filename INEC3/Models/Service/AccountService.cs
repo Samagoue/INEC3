@@ -80,7 +80,6 @@ namespace INEC3.Models.Service
             List<UserDisplay> user = new List<UserDisplay>();
             using (SqlConnection con = new SqlConnection(constring))
             {
-                //using (SqlCommand cmd = new SqlCommand("Select * from vw_UserProfile", con))
                 using (SqlCommand cmd = new SqlCommand(_smodel.vw_UserProfile, con))
                 {
                     cmd.CommandType = CommandType.Text;

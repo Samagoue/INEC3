@@ -100,7 +100,7 @@
     <!-- ============================================================== -->
     <!-- Preloader -->
     <!-- ============================================================== -->
-    <div class="preloader">
+    <div class="preloader" style="background: rgba(255, 255, 255, 0.58);">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
         </svg>
@@ -148,9 +148,9 @@
                         <a href="#" class="waves-effect">
                             @*<img src="~/Content/plugins/images/users/varun.jpg" alt="user-img" class="img-circle">*@<i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">  @username<span class="fa arrow"></span></span>
                         </a>
-                        <ul class="nav nav-second-level collapse" aria-expanded="false" style="height: 0px;">
-                            <li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="true" >
+                            @*<li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
+                            <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>*@
                             <li><a href="javascript:void(0)"><i class="ti-email"></i> <span class="hide-menu">Inbox</span></a></li>
                             <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
                             <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
@@ -161,7 +161,7 @@
                             <i class="mdi mdi-table fa-fw"></i>
                             <span class="hide-menu">
                                 Forms<span class="fa arrow"></span>
-                                <span class="label label-rouded label-danger pull-right">9</span>
+                                @*<span class="label label-rouded label-danger pull-right">9</span>*@
                             </span>
                         </a>
                         <ul class="nav nav-second-level collapse in" aria-expanded="true">
@@ -169,13 +169,13 @@
                             @if (accapi.IsInRole(username, "SuperAdmin"))
                             {
                                 <li><a href="@Url.Action("Users","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Manage User</span></a></li>
-                                <li><a href="@Url.Action("AdminResult","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Admin Result List</span></a></li>
+                                <li><a href="@Url.Action("AdminResult","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Admin Result List</span></a></li>
                             }
                             else
                             {
                                 <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
                             }
-                            <li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>
+                            @*<li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>*@
                         </ul>
                     </li>
 

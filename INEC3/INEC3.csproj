@@ -307,6 +307,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\HelperModel.cs" />
     <Compile Include="Context\inecDBContext.cs" />
+    <Compile Include="Models\ResultViewModel.cs" />
     <Compile Include="Models\Service\AccountService.cs" />
     <Compile Include="Models\Service\AdminService.cs" />
     <Compile Include="Models\Service\ResultsService.cs" />
@@ -3302,6 +3303,7 @@
     <Content Include="Views\Admin\ManageUser.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Admin\Result.cshtml" />
+    <Content Include="Views\Admin\AdminIndex.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

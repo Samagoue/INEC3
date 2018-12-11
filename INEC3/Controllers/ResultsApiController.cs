@@ -16,6 +16,7 @@ using System.Security.Claims;
 namespace INEC3.Controllers
 {
     [System.Web.Http.RoutePrefix("api/Results")]
+    [System.Web.Http.Authorize]
     public class ResultsApiController : ApiController
     {
         private inecDBContext db;
@@ -52,7 +53,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetParty")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult GetParty(int candidateid)
         {
             JsonResult res = new JsonResult();
@@ -82,7 +82,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetPartyList")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult GetPartyList(int candidateid)
         {
             JsonResult res = new JsonResult();
@@ -111,7 +110,6 @@ namespace INEC3.Controllers
         }
         [System.Web.Http.Route("GetProvince")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult GetProvince()
         {
             JsonResult res = new JsonResult();
@@ -131,9 +129,7 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("PolStationCahngeGet")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult PolStationCahngeGet(int polingstationid)
-        //public IHttpActionResult GetVoters(int polingstationid)
         {
             JsonResult res = new JsonResult();
             try
@@ -150,84 +146,40 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("SaveListRecord")]
         [System.Web.Http.HttpPost]
-        //[System.Web.Http.Authorize]
-        public IHttpActionResult SaveListRecord(tbl_Results obj)
+        public JsonResult SaveListRecord(tbl_Results obj)
         {
+            JsonResult res = new JsonResult();
             try
             {
-                if (obj.ID_Result == 0)
+                string UserId = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
                 {
-                    List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
-                    if (isExist.Count == 0)
-                    {
-                        obj.Pourcentage = 100;
-                        obj.Exprimes = (obj.Total_Votes + obj.Abstentions + obj.Nuls);
-                        db.Results.Add(obj);
-                        db.SaveChanges();
-                    }
-                    else
-                    {
-
-                        tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
-                        if (isdublicate != null)
-                        {
-                            db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
-                            db.SaveChanges();
-                            //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                        }
-
-                        int Total_Votes = 0;
-                        if (db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Count() > 0)
-                        {
-                            var tem_total = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
-                            Total_Votes = string.IsNullOrEmpty(Convert.ToString(tem_total)) ? 0 : tem_total;
-                        }
-
-
-                        double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
-                        obj.Pourcentage = Perc;
-                        obj.Total_Votes = Total_Votes + obj.Voix;
-                        db.Results.Add(obj);
-                        db.SaveChanges();
-                        Total_Votes = Total_Votes + obj.Voix;
-
-                        foreach (var it in isExist)
-                        {
-                            tbl_Results re = new tbl_Results();
-                            re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
-                            double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
-                            re.Pourcentage = Percc;
-                            re.Total_Votes = Total_Votes;
-                            re.Abstentions = obj.Abstentions;
-                            re.Nuls = obj.Nuls;
-                            re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
-
-                            db.SaveChanges();
-                        }
-                        //foreach()
-                    }
-
-
+                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
                 }
-                var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
-                DataSet dt = new DataSet();
-                dt = _db.GetDatatable("proc_GetProvinceResult", "");
-                _Helper.SendNotification();
+                if (string.IsNullOrEmpty(UserId))
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Invalid request";
+                    return res;
+                }
+                else
+                {
+                    obj.UserId = UserId;
+                    res.Data = (resultsService.SaveListRecord(obj));
+                }
 
-                //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-                SqlNotification objRepo = new SqlNotification();
-                objRepo.GetAllMessages();
-
-                return Json(res);
             }
-            catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
         }
 
         [System.Web.Http.Route("RemoveResult")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public IHttpActionResult RemoveResult(int ResultId, int ID_Bureauvote)
         {
             try
@@ -251,13 +203,9 @@ namespace INEC3.Controllers
                     }
                 }
                 var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
-                DataSet dt = new DataSet();
-                dt = _db.GetDatatable("proc_GetProvinceResult", "");
                 _Helper.SendNotification();
 
                 //_Helper.ActiveSqlNotification();
-                //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-                //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
 
                 SqlNotification objRepo = new SqlNotification();
                 objRepo.GetAllMessages();
@@ -269,7 +217,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetTerritoireList")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public IHttpActionResult GetTerritoireList(int ProvinceId)
         {
             try
@@ -283,7 +230,6 @@ namespace INEC3.Controllers
         //Use UserPoolingStationGet Instred This
         [System.Web.Http.Route("GetPoolingStationList")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public IHttpActionResult GetPoolingStationList(int CommuneId)
         {
             try
@@ -296,7 +242,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("UserPolingStationGet")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult UserPolingStationGet()
         {
             JsonResult res = new JsonResult();
@@ -314,7 +259,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetCommune")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public IHttpActionResult GetCommune(int ProvinceId, int TerritoireId)
         {
             try
@@ -373,7 +317,6 @@ namespace INEC3.Controllers
 
         [System.Web.Http.Route("GetDashBoardTiles")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult GetDashBoardTiles()
         {
             JsonResult res = new JsonResult();
@@ -391,7 +334,6 @@ namespace INEC3.Controllers
         }
         [System.Web.Http.Route("UserIndexList")]
         [System.Web.Http.HttpGet]
-        //[System.Web.Http.Authorize]
         public JsonResult UserIndexList()
         {
             JsonResult res = new JsonResult();
