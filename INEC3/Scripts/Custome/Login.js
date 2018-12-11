@@ -30,7 +30,8 @@ $(document).ready(function () {
                             });
                             var res = 'Bearer ' + resp.access_token;
                             Cookies.set('inecbearer', res, { expires: 1 });
-                            window.location.href = '/Admin';
+                            //window.location.href = '/Admin';
+                            window.location.href = resp.returnUrl;
                         }
                         else {
                             $.toast({

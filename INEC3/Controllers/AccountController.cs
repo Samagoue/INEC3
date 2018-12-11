@@ -11,10 +11,10 @@ namespace INEC3.Controllers
         AccountService accountService = new AccountService();
 
         // GET: Account
-        public ActionResult Index()
-        {
-            return View();
-        }
+        //public ActionResult Index()
+        //{
+        //    return View();
+        //}
         public ActionResult Login()
         {
             return View();
@@ -61,7 +61,7 @@ namespace INEC3.Controllers
             {
                 return RedirectToAction("Login");
             }
-            return RedirectToAction("Index","error",new { ermsg = "emailfail",ret="returnurl='abc'" });
+            return RedirectToAction("Index","error",new { id = "emailfail",ret="returnurl='abc'" });
         }
 
         public ActionResult ForgotPassword(string userId, string code)

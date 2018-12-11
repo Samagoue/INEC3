@@ -33,6 +33,7 @@ namespace INEC3.Models
         public int Abstentions { get; set; }
         public int Nuls { get; set; }
         public int Exprimes { get; set; }
+        public string UserId { get; set; }
 
     }
 

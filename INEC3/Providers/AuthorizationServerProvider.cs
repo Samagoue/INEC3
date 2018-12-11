@@ -81,11 +81,18 @@ namespace INEC3.Providers
                 //var uf = _db.UserProfile.Where(w => w.AspNetUsersId == useridg).FirstOrDefault();
                 //if (uf != null)
                 //{
+                string role = _repo.GetUserRole(userid);
                 d.Add("userid", userid);
                 d.Add("displayname", displayname);
                 d.Add("role", _repo.GetUserRole(userid));
-                //d.Add("profileimg", "picgoesr here");
-                //}
+                if (role ==UserManageRoles.SuperAdmin)
+                {
+                    d.Add("returnUrl", "/Admin/AdminIndex");
+                }
+                else
+                {
+                    d.Add("returnUrl", "/Admin");
+                }
                 return d;
             }
         }

@@ -61,6 +61,7 @@ namespace INEC3.Models
         public string displayname { get; set; }
         public string profileimg { get; set; }
         public string role { get; set; }
+        public string returnUrl { get; set; }
         public string issued { get; set; }
         public string expires { get; set; }
         public string error { get; set; }

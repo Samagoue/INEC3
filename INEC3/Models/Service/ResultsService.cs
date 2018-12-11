@@ -127,11 +127,14 @@ namespace INEC3.Models.Service
                 {
                     ddl.Province = db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
                     ddl.Territoire = db.Territoires.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    ddl.Commune = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Commune" } };
+                    ddl.PolStation = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Poll Station" } };
                 }
                 else if (userpol.AssignRole == UserManageRoles.TerritoireUser)
                 {
                     ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
                     ddl.Commune = db.Communes.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
+                    ddl.PolStation = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Poll Station" } };
                 }
                 else if (userpol.AssignRole == UserManageRoles.CommuneUser)
                 {
@@ -154,8 +157,113 @@ namespace INEC3.Models.Service
                            join pr in db.Provinces on te.ID_Province equals pr.ID_Province
                            join ca in db.Candidats on res.ID_Candidat equals ca.ID_Candidat
                            join pa in db.Parties on res.ID_Party equals pa.ID_Party
-                           select new { Party=pa.Nom,Candidats=ca.Nom, Provinces = pr.Nom, Territoires=te.Nom,res.Voix,res.Votants,res.Nuls,res.Exprimes,res.Total_Votes });
+                           select new { Party = pa.Nom, Candidats = ca.Nom, Provinces = pr.Nom, Territoires = te.Nom, res.Voix, res.Votants, res.Nuls, res.Exprimes, res.Total_Votes });
             return results;
+        }
+        public dynamic SaveListRecord(tbl_Results obj)
+        {
+            if (obj.ID_Result == 0)
+            {
+                List<tbl_Results> isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();//&& w.ID_Candidat == obj.ID_Candidat
+                if (isExist.Count == 0)
+                {
+                    obj.Pourcentage = 100;
+                    obj.Exprimes = (obj.Total_Votes + obj.Abstentions + obj.Nuls);
+                    db.Results.Add(obj);
+                    db.SaveChanges();
+                }
+                else
+                {
+
+                    tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
+                    if (isdublicate != null)
+                    {
+                        db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
+                        db.SaveChanges();
+                        //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                    }
+
+                    int Total_Votes = 0;
+                    if (db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Count() > 0)
+                    {
+                        var tem_total = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
+                        Total_Votes = string.IsNullOrEmpty(Convert.ToString(tem_total)) ? 0 : tem_total;
+                    }
+
+
+                    double Perc = Double.Parse(((obj.Voix * 100.00) / (Total_Votes + obj.Voix)).ToString("0.00"));
+                    obj.Pourcentage = Perc;
+                    obj.Total_Votes = Total_Votes + obj.Voix;
+                    db.Results.Add(obj);
+                    db.SaveChanges();
+                    Total_Votes = Total_Votes + obj.Voix;
+
+                    foreach (var it in isExist)
+                    {
+                        tbl_Results re = new tbl_Results();
+                        re = isExist.Where(w => w.ID_Result == it.ID_Result).FirstOrDefault();
+                        double Percc = Double.Parse(((re.Voix * 100.00) / Total_Votes).ToString("0.00"));
+                        re.Pourcentage = Percc;
+                        re.Total_Votes = Total_Votes;
+                        re.Abstentions = obj.Abstentions;
+                        re.Nuls = obj.Nuls;
+                        re.Exprimes = (re.Total_Votes + obj.Abstentions + obj.Nuls);
+
+                        db.SaveChanges();
+                    }
+                }
+            }
+            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
+            //DataSet dt = new DataSet();
+            //dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            _Helper.SendNotification();
+
+            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
+            //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
+
+            SqlNotification objRepo = new SqlNotification();
+            objRepo.GetAllMessages();
+
+            return res;
+        }
+        public List<ResultViewModel> ResultViewList()
+        {
+            List<ResultViewModel> res = new List<ResultViewModel>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlist, con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        ResultViewModel r = new ResultViewModel();
+                        r.ID_Result = Convert.ToInt32(rdr["ID_Result"]);
+                        r.UserId = Convert.ToString(rdr["UserId"]);
+                        r.Candidat = Convert.ToString(rdr["Candidat"]);
+                        r.Party = Convert.ToString(rdr["Party"]);
+                        r.Voix = Convert.ToInt32(rdr["Voix"]);
+                        r.Pourcentage = Convert.ToDouble(rdr["Pourcentage"]);
+                        r.Votants = Convert.ToInt32(rdr["Votants"]);
+                        r.Abstentions = Convert.ToInt32(rdr["Abstentions"]);
+                        r.Nuls = Convert.ToInt32(rdr["Nuls"]);
+                        r.Exprimes = Convert.ToInt32(rdr["Exprimes"]);
+                        r.Total_Votes = Convert.ToInt32(rdr["Total_Votes"]);
+                        r.FirstName = Convert.ToString(rdr["FirstName"]);
+                        r.Province = Convert.ToString(rdr["Province"]);
+                        r.Territoire = Convert.ToString(rdr["Territoire"]);
+                        r.Commune = Convert.ToString(rdr["Commune"]);
+                        r.PolStation = Convert.ToString(rdr["PolStation"]);
+                        res.Add(r);
+                    }
+                    con.Close();
+
+                }
+
+            }
+            return res;
         }
     }
     public class Responce
