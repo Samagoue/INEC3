@@ -36,10 +36,10 @@
                                     @Html.DisplayNameFor(model => model.BureauVote.Nom)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.Candidat.Nom)
+                                    @Html.DisplayNameFor(model => model.BureauVote.Code_SV)
                                 </th>
                                 <th>
-                                    @Html.DisplayNameFor(model => model.BureauVote.Code_SV)
+                                    @Html.DisplayNameFor(model => model.Candidat.Nom)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Party.Sigle)
@@ -74,12 +74,11 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BureauVote.Nom)
                                     </td>
-
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Candidat.Nom)
-                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BureauVote.Code_SV)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Candidat.Nom)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Party.Sigle)
