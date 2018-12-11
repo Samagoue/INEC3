@@ -36,7 +36,7 @@ namespace INEC3.Models
     [Table("UserProfile")]
     public class UserProfile
     {
-        
+
         public int UserProfileId { get; set; }
         public Guid AspNetUsersId { get; set; }
         public string FirstName { get; set; }
@@ -60,6 +60,7 @@ namespace INEC3.Models
         public string userid { get; set; }
         public string displayname { get; set; }
         public string profileimg { get; set; }
+        public string role { get; set; }
         public string issued { get; set; }
         public string expires { get; set; }
         public string error { get; set; }
@@ -76,7 +77,7 @@ namespace INEC3.Models
         public string Role { get; set; }
         public bool Isactive { get; set; }
         public bool EmailConfirmed { get; set; }
-        
+
     }
 
     [Table("UserPolStation")]
@@ -86,12 +87,23 @@ namespace INEC3.Models
         public int ID_UserPolStation { get; set; }
         public string UserID { get; set; }
         public string Createdate { get; set; }
-        public string Province { get; set; }
-        public string Territoire { get; set; }
-        public string CommuneName { get; set; }
-        public int ID_Bureauvote { get; set; }
-        public string PolStationName { get; set; }
+        public int AssignID { get; set; }//One Of Province/Territoire/Commune/BureauVote
+        public string AssignRole { get; set; }
+
+        //public string Province { get; set; }
+        //public string Territoire { get; set; }
+        //public string CommuneName { get; set; }
+        //public int ID_Bureauvote { get; set; }
+        //public string PolStationName { get; set; }
         //public int ID_Province { get; set; }
         //public int ID_Territoire { get; set; }
+    }
+
+    public class ForgotPasswordModel
+    {
+        public Guid UserId { get; set; }
+        public string SecurityCode { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
     }
 }

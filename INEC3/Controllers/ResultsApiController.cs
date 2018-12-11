@@ -21,12 +21,12 @@ namespace INEC3.Controllers
         private inecDBContext db;
         private Sqldbconn _db;
         private _Helper _Helper;
-        private AuthContext _context;
+        private ApplicationDbContext _context;
         private ResultsService resultsService;
 
         public ResultsApiController()
         {
-            _context = new AuthContext();
+            _context = new ApplicationDbContext();
             db = new inecDBContext();
             _db = new Sqldbconn();
             _Helper = new _Helper();
@@ -128,7 +128,7 @@ namespace INEC3.Controllers
         }
 
         /////////////////////////////
-        
+
         [System.Web.Http.Route("PolStationCahngeGet")]
         [System.Web.Http.HttpGet]
         //[System.Web.Http.Authorize]
@@ -325,5 +325,87 @@ namespace INEC3.Controllers
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
         }
 
+        [System.Web.Http.Route("GetAllRoll")]
+        [System.Web.Http.HttpGet]
+        public JsonResult GetAllRoll()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.GetRoleList());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+
+        [System.Web.Http.Route("GetUserDDL")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Authorize]
+        public JsonResult GetUserDDL()
+        {
+            JsonResult res = new JsonResult();
+            try
+
+            {
+                string UserId = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
+                }
+                res.Data = (resultsService.GetUserDDL(UserId));
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+
+        [System.Web.Http.Route("GetDashBoardTiles")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult GetDashBoardTiles()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.GetDashBoardTiles());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+        [System.Web.Http.Route("UserIndexList")]
+        [System.Web.Http.HttpGet]
+        //[System.Web.Http.Authorize]
+        public JsonResult UserIndexList()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.UserIndexList());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
     }
 }

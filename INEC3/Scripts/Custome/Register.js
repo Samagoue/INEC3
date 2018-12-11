@@ -4,7 +4,6 @@ $(document).ready(function () {
     $("#btnsignup").click(function () {
         $('.preloader').show();
         if ($('#frmsignup').valid()) {
-
             var UserModel = {
                 UserName: $('#Email').val(),
                 Email: $('#Email').val(),
@@ -12,7 +11,6 @@ $(document).ready(function () {
                 ConfirmPassword: $('#ConfirmPassword').val(),
                 UserProfile: { FirstName: $('#Name').val(), LastName: '' }
             };
-
             $.ajax({
                 type: "POST",
                 url: "/api/Account/Register",
