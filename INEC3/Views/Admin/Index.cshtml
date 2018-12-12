@@ -1,4 +1,4 @@
-﻿@model IEnumerable<INEC3.Models.tbl_Results>
+@model IEnumerable<INEC3.Models.tbl_Results>
 
 @{
     ViewBag.Title = "Result List";
@@ -14,7 +14,7 @@
             <h4 class="page-title">Result</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-            <a href="@Url.Action("Result")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">Add New</a>
+            <a href="@Url.Action("Result")" class="btn btn-primary pull-right m-l-20 hidden-xs hidden-sm waves-effect waves-light">Add New</a>
             <ol class="breadcrumb">
                 <li><a href="#">Result</a></li>
                 <li class="active">List</li>
@@ -31,8 +31,12 @@
                     <table id="myTable" class="table table-striped">
                         <thead>
                             <tr>
+                                
                                 <th>
-                                    @Html.DisplayName("CODE_SV")
+                                    @Html.DisplayNameFor(model => model.BureauVote.Nom)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.BureauVote.Code_SV)
                                 </th>
                                 <th>
                                     @Html.DisplayNameFor(model => model.Candidat.Nom)
@@ -70,7 +74,9 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.BureauVote.Nom)
                                     </td>
-
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.BureauVote.Code_SV)
+                                    </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Candidat.Nom)
                                     </td>
