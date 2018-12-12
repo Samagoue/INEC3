@@ -39,7 +39,10 @@
                                     @Html.DisplayName("Territoire")
                                 </th>
                                 <th>
-                                    @Html.DisplayName("PolStation")
+                                    @Html.DisplayName("Commune")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("CODE_SV")
                                 </th>
                                 <th>
                                     @Html.DisplayName("User")
@@ -55,15 +58,6 @@
                                 </th>
                                 <th>
                                     @Html.DisplayName("Pourcentage")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Votants")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Abstentions")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Nuls")
                                 </th>
                                 <th>
                                     @Html.DisplayName("Exprimes")
@@ -84,6 +78,9 @@
                                     @Html.DisplayFor(modelItem => item.Territoire)
                                 </td>
                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Commune)
+                                </td>
+                                <td>
                                     @Html.DisplayFor(modelItem => item.PolStation)
                                 </td>
                                 <td>
@@ -101,15 +98,6 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Pourcentage) %
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Votants)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Abstentions)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Nuls)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Exprimes)

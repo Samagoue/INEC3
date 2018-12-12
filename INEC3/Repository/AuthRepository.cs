@@ -127,6 +127,10 @@ namespace INEC3.Repository
             }
             return res;
         }
+        public IdentityResult ChangePassword(PasswordChangeModel model)
+        {
+            return _userManager.ChangePassword(model.UserId, model.CurrentPassword, model.NewPassword);
+        }
         public string GetUserRole(string userid)
         {
             return _userManager.GetRoles(userid).FirstOrDefault();

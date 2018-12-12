@@ -56,8 +56,19 @@ namespace INEC3.Controllers
         [AuthenticatUser]
         public ActionResult Index()
         {
+
+            var userid = _base.UserCode;
+            if (string.IsNullOrEmpty(userid)) { 
             var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
-            return View(results.ToList());
+                return View(results.ToList());
+            }
+            else
+            {
+                var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party).Where(w => w.UserId == userid);
+                return View(results.ToList());
+            }
+
+            
         }
 
         [AuthenticatUser]

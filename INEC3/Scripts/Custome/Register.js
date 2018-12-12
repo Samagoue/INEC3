@@ -16,17 +16,10 @@ $(document).ready(function () {
                 url: "/api/Account/Register",
                 data: UserModel,
                 success: function (data) {
+                    debugger
                     $(".preloader").fadeOut();
-                    if (data.succeeded) {
-                        $.toast({
-                            heading: 'Welcome to shadow',
-                            text: 'Check your email and confirm.',
-                            position: 'top-right',
-                            loaderBg: '#ff6849',
-                            icon: 'success',
-                            hideAfter: 3500,
-                            stack: 6
-                        });
+                    if (data.Succeeded) {
+                        $.toast({ heading: 'Welcome to shadow', text: 'Check your email and confirm.', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
                         window.location.href = '/Account/Login';
                     }
                 },
@@ -35,14 +28,17 @@ $(document).ready(function () {
                     if (ex.responseJSON) {
                         if (ex.responseJSON.modelState) {
                             var eror = ex.responseJSON.modelState[""];
-                            alert(eror[0]);
+                            $.toast({ heading: 'Invalid Data !', text: eror[0], position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 6 });
+                            //alert(eror[0]);
                             console.log('Error ' + ex);
                         }
-                        else if (ex.responseJSON.message) {
-                            alert(ex.responseJSON.message);
+                        else if (ex.responseJSON.Message) {
+                            $.toast({ heading: 'Invalid Data !', text: ex.responseJSON.Message, position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 6 });
+                            //alert(ex.responseJSON.Message);
                         }
                         else {
-                            alert("Something Wrong Try Again");
+                            $.toast({ heading: 'Oopss..!', text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+                            //alert("Something Wrong Try Again");
                         }
                     }
                 }

@@ -130,6 +130,12 @@
 <script src="~/Content/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
 <script>
     setTimeout(function () { $('#username').focus(); }, 0);
+    $(function () {
+        var success = @((TempData["success"] != null).ToString().ToLower());
+        if (success == true) {
+            $.toast({ headers: 'Success!', text: '@TempData["success"]', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
+        }
+    });
 </script>
 <!--Login and bearer -->
 <script src="~/Scripts/Custome/Login.js"></script>
