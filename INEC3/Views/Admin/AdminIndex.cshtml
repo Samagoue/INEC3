@@ -39,6 +39,9 @@
                                     @Html.DisplayName("Territoire")
                                 </th>
                                 <th>
+                                    @Html.DisplayName("Commune")
+                                </th>
+                                <th>
                                     @Html.DisplayName("PolStation")
                                 </th>
                                 <th>
@@ -82,6 +85,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Territoire)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Commune)
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.PolStation)
