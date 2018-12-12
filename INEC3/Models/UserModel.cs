@@ -107,4 +107,14 @@ namespace INEC3.Models
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
     }
+
+    public class PasswordChangeModel
+    {
+        //[Required]
+        public string UserId { get; set; }
+        [Required]
+        public string CurrentPassword { get; set; }
+        [Required]
+        public string NewPassword { get; set; }
+    }
 }

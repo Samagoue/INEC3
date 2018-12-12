@@ -59,6 +59,7 @@ namespace INEC3.Controllers
         {
             if (accountService.activateaccount(securitycode))
             {
+                TempData["success"] = "Email verification success. Login with credentials";
                 return RedirectToAction("Login");
             }
             return RedirectToAction("Index","error",new { id = "emailfail",ret="returnurl='abc'" });

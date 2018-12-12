@@ -6,7 +6,7 @@
 }
 
 @Scripts.Render("~/bundles/jquery")
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
+@*<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />*@
 
 @*<h2>Upload Election Result</h2>*@
 <style>
@@ -14,7 +14,12 @@
         max-width: 480px;
     }
 </style>
-
+@if (@ViewBag.Province == null && @ViewBag.Territoire == null && @ViewBag.Commune == null && @ViewBag.ID_Bureauvote == null)
+{ 
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><b> Please Contact Admin.</b> You Don't have assign any Area.
+    </div>
+}
 <div class="container-fluid">
 
     <div class="row bg-title">
@@ -130,7 +135,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -153,6 +158,10 @@
             }
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
             $(".preloader").fadeOut();
+            var success = @((TempData["success"] != null).ToString().ToLower());
+            if (success == true) {
+                $.toast({ headers: 'Success!', text: '@TempData["success"]', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
+            }
         });
         function SelectParty() {
             if ($('#ID_Candidat').val() > 0) {
@@ -407,14 +416,14 @@
                                 }
                                 table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                             });
-                            $.toast({ text: 'Record save successfully', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
+                            $.toast({headers:'Success!', text: 'Record save successfully', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
                             resetList()
                         }
                         else {
                             if (resp.ContentType == 'fail')
                                 $.toast({ text: resp.Data, position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 6 });
                             else
-                                $.toast({ text: 'Oops something wrong try after sometime', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+                                $.toast({ headers: 'Error!', text: 'Oops something wrong try after sometime', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                         }
                         $(".preloader").fadeOut();
                     },
@@ -428,10 +437,10 @@
             }
             else {
                 if ($('#Voix').val() == 0) {
-                    toastr.warning("Enter value more than zero");
+                    $.toast({ heading: 'Invalid Value', text: 'Enter votes more than zero.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                 }
                 if ($('#ID_Candidat').val() == '') {
-                    toastr.warning("Select Candidate");
+                    $.toast({ heading: 'Invalid Candidate', text: 'Select Candidate.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                 }
             }
         }

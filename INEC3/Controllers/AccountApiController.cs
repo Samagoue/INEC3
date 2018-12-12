@@ -17,6 +17,7 @@ using System.Web.Mvc;
 using INEC3.IdentityClass;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.AspNet.Identity.Owin;
+using System.Security.Claims;
 
 namespace INEC3.Controllers
 {
@@ -33,7 +34,8 @@ namespace INEC3.Controllers
             _accountService = new AccountService();
         }
 
-        //[AllowAnonymous]
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.AllowAnonymous]
         [System.Web.Http.Route("Register")]
         public async Task<IHttpActionResult> Register(UserModel userModel)
         {
@@ -43,6 +45,11 @@ namespace INEC3.Controllers
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
+                }
+                var isexist = _repository.FindUserDetailByUserName(userModel.UserName);
+                if (isexist != null)
+                {
+                    return BadRequest("email is already registered.");
                 }
                 IdentityResult result = await _repository.RegisterUser(userModel);
                 IHttpActionResult errorResult = GetErrorResult(result);
@@ -101,6 +108,7 @@ namespace INEC3.Controllers
                 HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(res.access_token))
                 {
+                    _base.UserCode = res.userid;
                     _base.SaveCookie("inceusername", res.displayname);
                     return Request.CreateResponse<LoginUser>(HttpStatusCode.OK, res);
                 }
@@ -148,6 +156,48 @@ namespace INEC3.Controllers
             return res;
         }
 
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Authorize]
+        [System.Web.Http.Route("PasswordChange")]
+        public JsonResult PasswordChange(PasswordChangeModel obj)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                string UserId = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
+                }
+                obj.UserId = UserId;
+                if (string.IsNullOrEmpty(UserId) || !ModelState.IsValid)
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Invalid request";
+                    return res;
+                }
+                else
+                {
+                    var result = _repository.ChangePassword(obj);
+                    if (result.Succeeded)
+                    {
+                        res.Data = "Password change successfully";
+                    }
+                    else
+                    {
+                        res.ContentType = "fail";
+                        res.Data = result.Errors;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
 
 
         protected override void Dispose(bool disposing)
