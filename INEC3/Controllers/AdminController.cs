@@ -58,8 +58,9 @@ namespace INEC3.Controllers
         {
 
             var userid = _base.UserCode;
-            if (string.IsNullOrEmpty(userid)) { 
-            var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
+            if (string.IsNullOrEmpty(userid))
+            {
+                var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
                 return View(results.ToList());
             }
             else
@@ -68,7 +69,7 @@ namespace INEC3.Controllers
                 return View(results.ToList());
             }
 
-            
+
         }
 
         [AuthenticatUser]
@@ -82,11 +83,12 @@ namespace INEC3.Controllers
         public ActionResult AdminResult(int? id)
         {
             ViewBag.Message = "Artech Consulting";
+            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
             ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
+
             ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
             ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
             ViewBag.Message = "Your application description page.";
-            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
             if (id == null)
             {
                 return View();
@@ -110,16 +112,21 @@ namespace INEC3.Controllers
             return View(accountService.GetUserList());
         }
         [HttpPost]
+        [AuthenticatUser]
         public ActionResult ManageUser(string userid)
         {
-            
             ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
+
             ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
             ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
             ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
-            ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
-            UserDisplay model = new UserDisplay();
-            model.UserId = userid;
+            ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+            UserDisplay model = accountService.FindUserDisplay("Id", userid);
+            if (model == null)
+            {
+                return View();
+            }
+            //model.UserId = userid;
 
             return View(model);
         }

@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-            <h4 class="page-title">Manage @Model.Name User</h4>
+            <h4 class="page-title">Manage<span class="text-info"> @Model.Name </span> User</h4>
         </div>
         <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
             <a href="@Url.Action("Users")" class="btn btn-danger pull-right m-l-20  waves-effect waves-light">User List</a>
@@ -32,42 +32,49 @@
                 <p></p>
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        @Html.AntiForgeryToken()
+                        @using (Html.BeginForm("ManageUser", "Admin", FormMethod.Post, new { id = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
 
-                        <div class="row">
-                            <div class="col-md-12">
-                                @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
+                            <div class="row">
+                                <div class="col-md-12">
+                                    @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
 
-                                <div class="form-group col-md-6">
-                                    @Html.Label("Role")
-                                    @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
-                                </div>
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Role")
+                                        @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
+                                    </div>
 
-                                <div class="form-group col-md-6" id="Province" style="display:none;">
-                                    @Html.Label("Province")
-                                    @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
-                                </div>
-                                <div class="form-group col-md-6" id="Territoire" style="display:none;">
-                                    @Html.Label("Territoire")
-                                    @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
-                                </div>
+                                    <div class="form-group col-md-6" id="Province" style="display:none;">
+                                        @Html.Label("Province")
+                                        @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                    </div>
+                                    <div class="form-group col-md-6" id="Territoire" style="display:none;">
+                                        @Html.Label("Territoire")
+                                        @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
+                                            }, htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
+                                    </div>
 
-                                <div class="form-group col-md-6" id="Commune" style="display:none;">
-                                    @Html.Label("Commune")
-                                    @Html.DropDownList("ID_Commune", new SelectList(ViewBag.Commune, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                    <div class="form-group col-md-6" id="Commune" style="display:none;">
+                                        @Html.Label("Commune")
+                                        @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
+                                            }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
 
+                                    </div>
+                                    <div class="form-group col-md-6" id="PollingStation" style="display:none;">
+                                        @Html.Label("Poling Station")
+                                        @Html.DropDownList("ID_Bureauvote", new List<SelectListItem> { new SelectListItem{Text="Select Polling",Value="" }
+                                            }, htmlAttributes: new { @class = "form-control", @required = true })
+                                        @*@Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })*@
+
+                                    </div>
                                 </div>
-                                <div class="form-group col-md-6" id="PollingStation" style="display:none;">
-                                    @Html.Label("Poling Station")
-                                    @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })
-                                    @*<select id="ID_Bureauvote" name="ID_Bureauvote" class="form-control selectpicker" multiple data-style="form-control"></select>*@
+                                <div class="col-sm-12 col-xs-12">
+                                    <button type="button" id="btnsave" class="btn btn-primary pull-right">Save</button>
                                 </div>
+                                <div class="clearfix"></div>
                             </div>
-                            <div class="col-sm-12 col-xs-12">
-                                <button type="button" id="brnsave" class="btn btn-primary pull-right">Save</button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -76,6 +83,7 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <!--Multiselect JavaScript -->
     <script src="@Url.Content("/Content/plugins/bower_components/bootstrap-select/bootstrap-select.min.js")" type="text/javascript"></script>
     <script type="text/javascript">
@@ -83,7 +91,8 @@
             $(".preloader").fadeOut();
             RoleChange();
             $("#Role option:contains('SuperAdmin')").remove();
-            $('#brnsave').on('click', function () { SaveRole() });
+            $('#btnsave').on('click', function () { if ($("#form").valid()){ SaveRole() }; });
+            $('#ID_Province').append($('<option selected></option>').val('').html("Select Province"));
         });
         function GetTerritoireList() {
             if ($('#ID_Province').val() > 0) {
@@ -110,14 +119,13 @@
             if ($('#ID_Territoire').val() > 0) {
                 $(".preloader").show();
                 $('#ID_Commune').html('');
-                //$('#ID_Commune').append($('<option></option>').val('').html('Select Commune'));
+                $('#ID_Commune').append($('<option></option>').val('').html('Select Commune'));
                 $.ajax({
                     url: '/api/Results/GetCommune',
                     type: 'GET',
                     headers: { Authorization: bearer },
                     data: { ProvinceId: $('#ID_Province').val(), TerritoireId: $('#ID_Territoire').val() },
                     success: function (res) {
-                        //console.log(res);
                         if (res) {
                             $.each(res, function (i, v) {
                                 $('#ID_Commune').append($('<option></option>').val(v.ID_Commune).html(v.Nom));
@@ -136,7 +144,7 @@
             if ($('#ID_Commune').val() > 0) {
                 $(".preloader").show();
                 $('#ID_Bureauvote').html('');
-                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Pooling Station'));
+                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Polling'));
                 $.ajax({
                     url: '/api/Results/GetPoolingStationList',
                     type: 'GET',
@@ -147,7 +155,7 @@
                             $.each(res, function (i, v) {
                                 $('#ID_Bureauvote').append($('<option></option>').val(v.ID_Bureauvote).html(v.Nom));
                             });
-                            $('#ID_Bureauvote').selectpicker('refresh');
+                            //$('#ID_Bureauvote').selectpicker('refresh');
                         }
                         $(".preloader").fadeOut();
                     },
@@ -192,7 +200,7 @@
                 AssignRole: $("#Role option:selected").text(),
                 AssignID: 0
             };
-            
+
             if (data.AssignRole == "Province") { data.AssignID = $('#ID_Province').val(); }
             else if (data.AssignRole == "Territoire") { data.AssignID = $('#ID_Territoire').val(); }
             else if (data.AssignRole == "Commune") { data.AssignID = $('#ID_Commune').val(); }
@@ -221,5 +229,21 @@
                 alert('Please Select Value');
             }
         }
+        $("#form").validate({
+            rules: {
+                ID_Province: { required: true },
+                ID_Territoire: { required: true },
+                ID_Commune: { required: true },
+                ID_Bureauvote: { required: true }
+
+            },
+            messages: {
+                ID_Province: "Please select province",
+                ID_Territoire: "Please select territoire",
+                ID_Commune: { required: "Please select commune"},
+                ID_Bureauvote: "Please select pollingstation",
+            },
+        }
+        );
     </script>
 }

@@ -42,9 +42,7 @@
                                     @Html.DisplayName("Commune")
                                 </th>
                                 <th>
-
                                     @Html.DisplayName("CODE_SV")
-
                                 </th>
                                 <th>
                                     @Html.DisplayName("User")
@@ -61,9 +59,7 @@
                                 <th>
                                     @Html.DisplayName("Pourcentage")
                                 </th>
-                               <!-- Hidding some of the thgs that may not be needed
                                 <th>
-
                                     @Html.DisplayName("Exprimes")
                                 </th>
                                 <th></th>
@@ -73,47 +69,45 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                            <tr>
+                                <tr>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Province)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Territoire)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Commune)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.PolStation)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.FirstName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Candidat)
-                                </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Province)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Territoire)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Commune)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PolStation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.FirstName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Candidat)
+                                    </td>
 
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Party)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Voix)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Pourcentage) %
-                                </td>
-                                <!-- the section needed to be hidden
-                                <td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Party)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Voix)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Pourcentage) %
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Exprimes)
+                                    </td>
+                                    <td>
+                                        @*@Html.ActionLink("Edit", "Result", new { id = item.ID_Result }) |*@
 
-                                    @Html.DisplayFor(modelItem => item.Exprimes)
-                                </td>
-                                <td>
-                                    @*@Html.ActionLink("Edit", "Result", new { id = item.ID_Result }) |*@
-
-                                    @*@Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })*@
-                                </td>
-                            </tr>
+                                        @*@Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })*@
+                                    </td>
+                                </tr>
                             }
                         </tbody>
                     </table>
@@ -134,12 +128,12 @@
     <script src="~/Content/plugins/bower_components/datatables/datatables.min.js"></script>
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-        <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-        <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
     <script type="text/javascript">
         $(document).ready(function () {
@@ -183,17 +177,17 @@
 
             });
         });
-                $('#myTable').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: [
-                        'csv', 'excel',  'print',
-                        {
-                            extend: 'pdfHtml5',
-                            orientation: 'landscape',
-                            pageSize: 'LEGAL'
-                        }
-                    ]
-                });
-                $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
+        $('#myTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'csv', 'excel', 'print',
+                {
+                    extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL'
+                }
+            ]
+        });
+        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
     </script>
 }
