@@ -34,22 +34,15 @@ $(document).ready(function () {
                             window.location.href = resp.returnUrl;
                         }
                         else {
-                            $.toast({
-                                text: 'Something Wrong Try Again',
-                                position: 'top-right',
-                                loaderBg: '#ff6849',
-                                icon: 'error',
-                                hideAfter: 3500,
-                                stack: 6
-                            });
+                            $.toast({ text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                             //alert("Something Wrong Try Again");
                         }
                         $(".preloader").fadeOut();
                     }
-                    else if (resp.message) {
+                    else if (resp.Message) {
                         $(".preloader").fadeOut();
                         $.toast({
-                            text: resp.message,
+                            text: resp.Message,
                             position: 'top-right',
                             loaderBg: '#ff6849',
                             icon: 'warning',
@@ -85,7 +78,7 @@ $(document).ready(function () {
                             hideAfter: 3500,
                             stack: 6
                         });
-                       
+
                     }
                     else if (resp.contentType == 'fail') {
                         $(".preloader").fadeOut();
