@@ -12,6 +12,7 @@ using INEC3.Repository;
 
 namespace INEC3.Controllers
 {
+    //[Authorize]
     public class AdminController : Controller
     {
         private inecDBContext db = new inecDBContext();
@@ -56,7 +57,7 @@ namespace INEC3.Controllers
         [AuthenticatUser]
         public ActionResult Index()
         {
-
+            //var str= User.Identity.Name;
             var userid = _base.UserCode;
             if (string.IsNullOrEmpty(userid))
             {
@@ -115,12 +116,27 @@ namespace INEC3.Controllers
         [AuthenticatUser]
         public ActionResult ManageUser(string userid)
         {
-            ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
+            //ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
+            ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Role", "Role");
 
-            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
-            ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
-            ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
-            ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+            //IEnumerable<SelectListItem> Province = new List<SelectListItem>();
+            UserPolStation userpol = db.UserPolStations.Where(w => w.UserID == userid).FirstOrDefault();
+            if (userpol != null && userpol.AssignRole == UserManageRoles.ProvinceUser)
+                ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", userpol.AssignID);
+            else
+                ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
+            if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
+                ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
+            else
+                ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
+            if (userpol != null && userpol.AssignRole == UserManageRoles.CommuneUser)
+                ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", userpol.AssignID);
+            else
+                ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
+            if (userpol != null && userpol.AssignRole == UserManageRoles.PollingUser)
+                ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", userpol.AssignID);
+            else
+                ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
             UserDisplay model = accountService.FindUserDisplay("Id", userid);
             if (model == null)
             {
@@ -130,8 +146,6 @@ namespace INEC3.Controllers
 
             return View(model);
         }
-
-
 
         [HttpPost]
         public JsonResult UserPolStation(UserPolStation obj)

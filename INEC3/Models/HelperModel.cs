@@ -19,6 +19,7 @@ namespace INEC3.Models
     static class UserManageRoles
     {
         public static string SuperAdmin { get { return "SuperAdmin"; } }
+        public static string User { get { return "User"; } }
         public static string ProvinceUser { get { return "Province"; } }
         public static string TerritoireUser { get { return "Territoire"; } }
         public static string CommuneUser { get { return "Commune"; } }

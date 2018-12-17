@@ -10,26 +10,20 @@ using INEC3.DbConn;
 using System.Data;
 using Newtonsoft.Json;
 using System.IO;
+using INEC3.Helper;
 
 namespace INEC3.Controllers
 {
+    [AuthenticatUser]
     public class HomeController : Controller
     {
         private inecDBContext db = new inecDBContext();
         private Sqldbconn _db = new Sqldbconn();
         public ActionResult Index()
         {
-            
             DataSet dt = new DataSet();
             dt = _db.GetDatatable("proc_GetProvinceResult", "");
             ViewBag.Province = JsonConvert.SerializeObject(dt);
-            
-            //using (StreamReader r = new StreamReader("/Resources/COD_TOPO.json"))
-            //{
-            //    string json = r.ReadToEnd();
-            //    ViewBag.CODJson = json;
-            //}
-
             SqlNotification objRepo = new SqlNotification();
             var res = objRepo.GetAllMessages();
 
@@ -38,7 +32,6 @@ namespace INEC3.Controllers
 
         public ActionResult About()
         {
-
 
             return View();
         }
@@ -52,9 +45,6 @@ namespace INEC3.Controllers
 
         public ActionResult Carte()
         {
-            DataSet dt = new DataSet();
-            dt = _db.GetDatatable("proc_GetProvinceResult", "");
-            ViewBag.Province = JsonConvert.SerializeObject(dt);
             ViewBag.Message = "Your application description page.";
 
             return View();
@@ -67,7 +57,5 @@ namespace INEC3.Controllers
             return View();
         }
 
-
-       
     }
 }

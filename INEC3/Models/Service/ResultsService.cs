@@ -20,6 +20,7 @@ namespace INEC3.Models.Service
         private _Helper _Helper;
         string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
         public SqlCommandText _smodel = new SqlCommandText();
+        public AccountService accountService;
         public ResultsService()
         {
             //_context = new AuthContext();
@@ -27,6 +28,7 @@ namespace INEC3.Models.Service
             _db = new Sqldbconn();
             _Helper = new _Helper();
             _auth = new AuthRepository();
+            accountService = new AccountService();
         }
 
         public dynamic getcandidate()
@@ -47,14 +49,15 @@ namespace INEC3.Models.Service
         {
             return db.Provinces.Select(s => new { Id = s.ID_Province, Value = s.Nom }).ToList();
         }
-        public string PolStationCahngeGet(int polingstationid)
+        public dynamic PolStationCahngeGet(int polingstationid)
         {
             Responce resp = new Responce();
 
-            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles }).FirstOrDefault();//Total Voters
+            var voters = db.BureauVotes.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Commune.Enroles, s.Code_SV }).FirstOrDefault();//Total Voters
             if (voters != null)
             {
                 resp.Total_Voters = voters.Enroles;
+                resp.Code_SV = voters.Code_SV;
             }
             var exprims = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new { s.Abstentions, s.Exprimes, s.Nuls, s.Total_Votes }).FirstOrDefault();
             if (exprims != null)
@@ -63,15 +66,14 @@ namespace INEC3.Models.Service
                 resp.Exprimes = exprims.Exprimes;
                 resp.Nuls = exprims.Nuls;
                 resp.Total_Votes = exprims.Total_Votes;
-
             }
-
             List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix }).ToList();
             if (res1 != null)
             {
                 resp.ResultList = res1;
             }
-            return JsonConvert.SerializeObject(resp);
+            //return JsonConvert.SerializeObject(resp);
+            return resp;
 
 
         }
@@ -123,42 +125,74 @@ namespace INEC3.Models.Service
             var userpol = db.UserPolStations.Where(w => w.UserID == UserId).FirstOrDefault();
             if (userpol != null)
             {
-                if (userpol.AssignRole == UserManageRoles.ProvinceUser)
+                if (userpol.AssignRole == UserManageRoles.SuperAdmin)
                 {
                     ddl.Province = db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
                     ddl.Territoire = db.Territoires.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
                     ddl.Commune = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Commune" } };
                     ddl.PolStation = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Poll Station" } };
+                    //ddl.Territoire.Add(new DropDown { Value = "Select Territoire" });
+                }
+                else if (userpol.AssignRole == UserManageRoles.ProvinceUser)
+                {
+                    ddl.Province = db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
+                    ddl.Territoire = db.Territoires.Where(w => w.ID_Province == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    ddl.Commune = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Commune" } };
+                    ddl.PolStation = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Poll Station" } };
+                    //ddl.Territoire.Insert(0,new DropDown {  Value = "Select Territoire" });
                 }
                 else if (userpol.AssignRole == UserManageRoles.TerritoireUser)
                 {
+
                     ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
                     ddl.Commune = db.Communes.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
                     ddl.PolStation = new List<DropDown>() { new DropDown { Id = 0, Value = "Select Poll Station" } };
+                    ddl.Province = db.Provinces.Where(w => w.ID_Province == db.Territoires.Where(z => z.ID_Territoire == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
                 }
                 else if (userpol.AssignRole == UserManageRoles.CommuneUser)
                 {
                     ddl.Commune = db.Communes.Where(w => w.ID_Commune == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
                     ddl.PolStation = db.BureauVotes.Where(w => w.ID_Commune == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
+                    ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Territoire).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    ddl.Province = db.Provinces.Where(w => w.ID_Province == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
                 }
                 else if (userpol.AssignRole == UserManageRoles.PollingUser)
                 {
                     ddl.PolStation = db.BureauVotes.Where(w => w.ID_Bureauvote == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
+                    ddl.Commune = db.Communes.Where(w => w.ID_Commune == db.BureauVotes.Where(z => z.ID_Bureauvote == userpol.AssignID).Select(s => s.ID_Commune).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
+                    ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Territoire).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    ddl.Province = db.Provinces.Where(w => w.ID_Province == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
                 }
 
             }
             return ddl;
         }
-        public dynamic UserIndexList()
+        public dynamic UserIndexList(string UserId)
         {
-            var results = (from res in db.Results
-                           join ce in db.Communes on res.BureauVote.ID_Commune equals ce.ID_Commune
-                           join te in db.Territoires on ce.ID_Territoire equals te.ID_Territoire
-                           join pr in db.Provinces on te.ID_Province equals pr.ID_Province
-                           join ca in db.Candidats on res.ID_Candidat equals ca.ID_Candidat
-                           join pa in db.Parties on res.ID_Party equals pa.ID_Party
-                           select new { Party = pa.Nom, Candidats = ca.Nom, Provinces = pr.Nom, Territoires = te.Nom, res.Voix, res.Votants, res.Nuls, res.Exprimes, res.Total_Votes });
-            return results;
+            UserDisplay display = accountService.FindUserDisplay("Id", UserId);
+            if (display != null && display.Role == UserManageRoles.SuperAdmin)
+            {
+                var results = (from res in db.Results
+                               join ce in db.Communes on res.BureauVote.ID_Commune equals ce.ID_Commune
+                               join te in db.Territoires on ce.ID_Territoire equals te.ID_Territoire
+                               join pr in db.Provinces on te.ID_Province equals pr.ID_Province
+                               join ca in db.Candidats on res.ID_Candidat equals ca.ID_Candidat
+                               join pa in db.Parties on res.ID_Party equals pa.ID_Party
+                               select new { Party = pa.Nom, Candidats = ca.Nom, Provinces = pr.Nom, Territoires = te.Nom, res.Voix, res.Votants, res.Nuls, res.Exprimes, res.Total_Votes });
+                return results;
+            }
+            else
+            {
+                var results = (from res in db.Results
+                               join ce in db.Communes on res.BureauVote.ID_Commune equals ce.ID_Commune
+                               join te in db.Territoires on ce.ID_Territoire equals te.ID_Territoire
+                               join pr in db.Provinces on te.ID_Province equals pr.ID_Province
+                               join ca in db.Candidats on res.ID_Candidat equals ca.ID_Candidat
+                               join pa in db.Parties on res.ID_Party equals pa.ID_Party
+                               where res.UserId == UserId
+                               select new { Party = pa.Nom, Candidats = ca.Nom, Provinces = pr.Nom, Territoires = te.Nom, res.Voix, res.Votants, res.Nuls, res.Exprimes, res.Total_Votes });
+                return results;
+            }
         }
         public dynamic SaveListRecord(tbl_Results obj)
         {
@@ -241,6 +275,7 @@ namespace INEC3.Models.Service
                     {
                         ResultViewModel r = new ResultViewModel();
                         r.ID_Result = Convert.ToInt32(rdr["ID_Result"]);
+                        r.Code_SV = Convert.ToInt32(rdr["Code_SV"]);
                         r.UserId = Convert.ToString(rdr["UserId"]);
                         r.Candidat = Convert.ToString(rdr["Candidat"]);
                         r.Party = Convert.ToString(rdr["Party"]);
@@ -275,16 +310,10 @@ namespace INEC3.Models.Service
         public int Nuls { get; set; }
         public int Total_Votes { get; set; }
         public int Total_Voters { get; set; }
-        public int ID_Province { get; set; }
-        public int ID_Territoire { get; set; }
+        public int Code_SV { get; set; }
+        //public int ID_Province { get; set; }
+        //public int ID_Territoire { get; set; }
 
-        //public int ID_Party { get; set; }
-        //public int ID_Result { get; set; }
-        //public int ID_Candidat { get; set; }
-        //public int ID_Bureauvote { get; set; }
-        //public int Voix { get; set; }
-        //public double? Pourcentage { get; set; }
-        //public int Votants { get; set; }
     }
     public class Resultt
     {

@@ -8,7 +8,7 @@ namespace INEC3.Models
     public class ResultViewModel
     {
         public int ID_Result { get; set; }
-        //public int ID_Bureauvote { get; set; }
+        public int Code_SV { get; set; }
         public string UserId { get; set; }
         public string Candidat { get; set; }
         public string Party { get; set; }

@@ -50,11 +50,16 @@ namespace INEC3.Providers
                     property = getproperty(user.Id,user.UserName);
                     var identity = new ClaimsIdentity(context.Options.AuthenticationType);
                     identity.AddClaim(new Claim("UserName", context.UserName));
+                    identity.AddClaim(new Claim(ClaimTypes.Name, context.UserName));
+                    identity.AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, context.UserName));
                     identity.AddClaim(new Claim("Email", user.Email));
                     identity.AddClaim(new Claim("UserId", user.Id));
                     var props = new AuthenticationProperties(property);
                     var ticket = new AuthenticationTicket(identity, props);
+                    
                     context.Validated(ticket);
+                    context.Request.Context.Authentication.SignIn(identity);
+                    
                 }
 
             }
@@ -88,6 +93,10 @@ namespace INEC3.Providers
                 if (role ==UserManageRoles.SuperAdmin)
                 {
                     d.Add("returnUrl", "/Admin/AdminIndex");
+                }
+                else if (role == UserManageRoles.User)
+                {
+                    d.Add("returnUrl", "../");
                 }
                 else
                 {

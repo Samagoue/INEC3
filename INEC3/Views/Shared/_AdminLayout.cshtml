@@ -1,13 +1,19 @@
 ﻿@using INEC3.Helper
 @using INEC3.Controllers;
+@using INEC3.Models;
+@using INEC3.Models.Service;
 @{
     Base _base = new Base();
     AccountApiController accapi = new AccountApiController();
+    UserDisplay display = new UserDisplay();
+    AccountService accountService = new AccountService();
     string username = "";
     username = _base.GetCookie("inceusername");
-    //var name = User.Identity.Name;
+    if (!string.IsNullOrEmpty(username))
+    {
+        display = accountService.FindUserDisplay("UserName", username);
+    }
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,41 +150,53 @@
                     <h3><span class="fa-fw open-close"><i class="ti-menu hidden-xs"></i><i class="ti-close visible-xs"></i></span> <span class="hide-menu">Navigation</span></h3>
                 </div>
                 <ul class="nav" id="side-menu">
-                    <li class="user-pro">
-                        <a href="#" class="waves-effect">
-                            @*<img src="~/Content/plugins/images/users/varun.jpg" alt="user-img" class="img-circle">*@<i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">  @username<span class="fa arrow"></span></span>
-                        </a>
-                        <ul class="nav nav-second-level collapse in" aria-expanded="true">
-                            @*<li><a href="javascript:void(0)"><i class="ti-user"></i> <span class="hide-menu">My Profile</span></a></li>
-                                <li><a href="javascript:void(0)"><i class="ti-wallet"></i> <span class="hide-menu">My Balance</span></a></li>*@
-                            <li><a href="#" id="linkchangepass"><i class="ti-unlock"></i> <span class="hide-menu">Password Change</span></a></li>
-                            <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
-                            <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="tables.html" class="waves-effect">
-                            <i class="mdi mdi-table fa-fw"></i>
-                            <span class="hide-menu">
-                                Forms<span class="fa arrow"></span>
-                                @*<span class="label label-rouded label-danger pull-right">9</span>*@
-                            </span>
-                        </a>
-                        <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                    @if (!string.IsNullOrEmpty(username))
+                    {
+                        <li class="user-pro">
+                            <a href="#" class="waves-effect">
+                                <i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu">@display.Name<span class="fa arrow"></span></span>
+                            </a>
+                            <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                                <li><a href="#" id="linkchangepass"><i class="ti-unlock"></i> <span class="hide-menu">Password Change</span></a></li>
+                                <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
+                                <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
+                            </ul>
+                        </li>
 
-                            @if (accapi.IsInRole(username, "SuperAdmin"))
-                            {
-                                <li><a href="@Url.Action("Users","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Manage User</span></a></li>
-                                <li><a href="@Url.Action("AdminResult","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Admin Result List</span></a></li>
-                            }
-                            else
-                            {
-                                <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
-                            }
-                            @*<li><a href="table-layouts.html"><i class="fa-fw">A</i><span class="hide-menu">Add New</span></a></li>*@
-                        </ul>
-                    </li>
+                        if (accapi.IsInRole(username, "SuperAdmin"))
+                        {
+                            <li>
+                                <a href="tables.html" class="waves-effect">
+                                    <i class="mdi mdi-table fa-fw"></i><span class="hide-menu">Forms<span class="fa arrow"></span></span>
+                                </a>
+                                <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                                    <li><a href="@Url.Action("Users","Admin")"><i class="fa-fw">M</i><span class="hide-menu">Manage User</span></a></li>
+                                    <li><a href="@Url.Action("AdminIndex","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Admin Result List</span></a></li>
+                                </ul>
+                            </li>
+                        }
+                        else if (accapi.IsInRole(username, "User")) { }
+                        else
+                        {
+                            <li>
+                                <a href="tables.html" class="waves-effect">
+                                    <i class="mdi mdi-table fa-fw"></i><span class="hide-menu">Forms<span class="fa arrow"></span></span>
+                                </a>
+                                <ul class="nav nav-second-level collapse in" aria-expanded="true">
+                                    <li><a href="@Url.Action("Index","Admin")"><i class="fa-fw">R</i><span class="hide-menu">Result List</span></a></li>
+                                </ul>
+                            </li>
+                        }
 
+                    }
+                    else
+                    {
+                        <li class="user-pro">
+                            <a href="@Url.Action("Login","Account")" class="waves-effect">
+                                <i class="icon-people text-info" style="font-size: 25px;"></i> <span class="hide-menu"> Login<span class="fa arrow"></span></span>
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

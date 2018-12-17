@@ -134,7 +134,8 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                res.Data = JsonConvert.DeserializeObject(resultsService.PolStationCahngeGet(polingstationid));
+                res.Data = resultsService.PolStationCahngeGet(polingstationid);
+                //res.Data = JsonConvert.DeserializeObject(resultsService.PolStationCahngeGet(polingstationid));
             }
             catch (Exception ex)
             {
@@ -339,7 +340,13 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                res.Data = (resultsService.UserIndexList());
+                string UserId = "";
+                var claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null)
+                {
+                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
+                }
+                res.Data = (resultsService.UserIndexList(UserId));
             }
             catch (Exception ex)
             {

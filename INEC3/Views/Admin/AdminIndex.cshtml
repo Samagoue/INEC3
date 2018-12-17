@@ -1,8 +1,10 @@
 @model IEnumerable<INEC3.Models.ResultViewModel>
-
 @{
     ViewBag.Title = "Result List";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    var Province = "";
+    var Territoire = "";
+    var Commune = "";
 }
 @Scripts.Render("~/bundles/jquery")
 
@@ -28,10 +30,9 @@
             <div class="white-box">
                 <h3 class="box-title m-b-0">Result List</h3>
                 <div class="table-responsive">
-                    <table id="myTable" class="table table-striped">
+                    <table id="myTable" class="table display">
                         <thead>
                             <tr>
-
                                 <th>
                                     @Html.DisplayName("Province")
                                 </th>
@@ -40,6 +41,9 @@
                                 </th>
                                 <th>
                                     @Html.DisplayName("Commune")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Polling Station")
                                 </th>
                                 <th>
                                     @Html.DisplayName("CODE_SV")
@@ -62,15 +66,28 @@
                                 <th>
                                     @Html.DisplayName("Exprimes")
                                 </th>
-                                <th></th>
                             </tr>
                         </thead>
 
                         <tbody>
                             @foreach (var item in Model)
                             {
+                                @*if (item.Province != Province)
+                                    {
+                                        <tr class="group"><td>@item.Province</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                        Province = item.Province;
+                                    }
+                                    if (item.Territoire != Territoire)
+                                    {
+                                        <tr class="group"><td></td><td>@item.Territoire</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                        Territoire = item.Territoire;
+                                    }
+                                    if (item.Commune != Commune)
+                                    {
+                                        <tr class="group"><td></td><td></td><td>@item.Commune</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                        Commune = item.Commune;
+                                    }*@
                                 <tr>
-
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Province)
                                     </td>
@@ -82,6 +99,9 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.PolStation)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Code_SV)
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.FirstName)
@@ -101,11 +121,6 @@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Exprimes)
-                                    </td>
-                                    <td>
-                                        @*@Html.ActionLink("Edit", "Result", new { id = item.ID_Result }) |*@
-
-                                        @*@Html.ActionLink("Delete", "Delete", new { id = item.ID_Result })*@
                                     </td>
                                 </tr>
                             }
@@ -138,56 +153,71 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".preloader").fadeOut();
-            $('#myTable').DataTable();
-
             $(document).ready(function () {
-                var table = $('#example').DataTable({
-                    "columnDefs": [{
-                        "visible": false,
-                        "targets": 2
+                $('#myTable').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: ['copy', 'csv', 'excel', 'print', {
+                        extend: 'pdfHtml5',
+                        orientation: 'landscape',
+                        pageSize: 'LEGAL'
                     }],
-                    "order": [
-                        [2, 'asc']
+                    columnDefs: [
+                        {
+                            targets: [0],
+                            visible: false,
+                            searchable: false
+                        },
+                        {
+                            targets: [1],
+                            visible: false,
+                            searchable: false
+                        },
+                        {
+                            targets: [2],
+                            visible: false
+                        }
                     ],
-                    "displayLength": 25,
-                    "drawCallback": function (settings) {
+                    displayLength: 25,
+                    drawCallback: function (settings) {
                         var api = this.api();
-                        var rows = api.rows({ page: 'current' }).nodes();
-                        var last = null;
-                        api.column(2, {
+                        var rows = api.rows({
                             page: 'current'
-                        }).data().each(function (group, i) {
+                        }).nodes();
+                        var last = null;
+                        api.column(0, { page: 'current' }).data().each(function (group, i) {
                             if (last !== group) {
-                                $(rows).eq(i).before('<tr class="group"><td colspan="5">' + group + '</td></tr>');
+                                $(rows).eq(i).before('<tr><td colspan="8" style="background: #d5d9e0;">Province : ' + group + '</td></tr>');
                                 last = group;
                             }
                         });
-                    }
+                        api.column(1, { page: 'current' }).data().each(function (group, i) {
+                            if (last !== group) {
+                                $(rows).eq(i).before('<tr style="background: #f8f5fb;"><td colspan="8">Territoire : ' + group + '</td></tr>');
+                                last = group;
+                            }
+                        });
+                        api.column(2, { page: 'current' }).data().each(function (group, i) {
+                            if (last !== group) {
+                                $(rows).eq(i).before('<tr class="group" style="background:#d5d9e0;" ><td colspan="8">Commune : ' + group + '</td></tr>');
+                                last = group;
+                            }
+                        });
+                    },
+                    order: false
                 });
 
                 // Order by the grouping
-                $('#example tbody').on('click', 'tr.group', function () {
+                $('#myTable tbody').on('click', 'tr.group', function () {
                     var currentOrder = table.order()[0];
                     if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-                        table.order([2, 'desc']).draw();
+                        table.order([3, 'desc']).draw();
                     } else {
-                        table.order([2, 'asc']).draw();
+                        table.order([3, 'asc']).draw();
                     }
                 });
-
+                $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
             });
+
         });
-        $('#myTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'csv', 'excel', 'print',
-                {
-                    extend: 'pdfHtml5',
-                    orientation: 'landscape',
-                    pageSize: 'LEGAL'
-                }
-            ]
-        });
-        $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
     </script>
 }

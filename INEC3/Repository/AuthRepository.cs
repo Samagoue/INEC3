@@ -35,7 +35,7 @@ namespace INEC3.Repository
 
             var result = await _userManager.CreateAsync(user, userModel.Password);
 
-            var roleresult = _userManager.AddToRole(user.Id, UserManageRoles.PollingUser);
+            var roleresult = _userManager.AddToRole(user.Id, UserManageRoles.User);
 
             if (result.Succeeded)
             {

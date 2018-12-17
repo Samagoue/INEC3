@@ -3,18 +3,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using INEC3.Models.Service;
-
+using INEC3.Helper;
 namespace INEC3.Controllers
 {
     public class AccountController : Controller
     {
+        Base _base= new Base();
         AccountService accountService = new AccountService();
 
-        // GET: Account
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
         public ActionResult Login()
         {
             return View();
@@ -46,6 +42,11 @@ namespace INEC3.Controllers
                 HttpCookie myCookie = new HttpCookie("inecbearer");
                 myCookie.Expires = DateTime.Now.AddDays(-1d);
                 Response.Cookies.Add(myCookie);
+
+                HttpCookie myCookie1 = new HttpCookie("inceusername");
+                myCookie1.Expires = DateTime.Now.AddDays(-1d);
+                Response.Cookies.Add(myCookie1);
+                
 
             }
             return (RedirectToAction("Index", "Home"));
