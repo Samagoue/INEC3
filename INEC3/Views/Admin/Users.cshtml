@@ -46,6 +46,7 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+
                                 <tr>
                                     <td></td>
                                     <td>
@@ -54,10 +55,15 @@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Name)
                                     </td>
-                                    <td>  @Html.DisplayFor(modelItem => item.Role)</td>
-                                    @*<td>@Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", item.Role), htmlAttributes: new { @class = "form-control" } )</td>*@
-
-
+                                    @if (item.Role == "SuperAdmin")
+                                    {
+                                        <td><span class="label label-info">@Html.DisplayFor(modelItem => item.Role)</span></td>}
+                                    else if (item.Role == "User")
+                                    {
+                                        <td><span class="label label-inverse">@Html.DisplayFor(modelItem => item.Role)</span></td>}
+                                    else
+                                    {
+                                        <td>@Html.DisplayFor(modelItem => item.Role)</td>}
                                     @if (item.Isactive)
                                     {
                                         <td><button type="button" class="btn btn-info btn-circle"><i class="fa fa-check"></i> </button></td>
@@ -78,6 +84,7 @@
                                         <button class="btn btn-primary  waves-effect waves-light" onclick="Manage('@item.UserId')" type="submit" formmethod="post" formaction="@Url.Action("ManageUser")">Assign Role</button>
                                     </td>
                                 </tr>
+
                                 }
                             </tbody>
                         </table>

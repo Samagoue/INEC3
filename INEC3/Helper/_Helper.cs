@@ -92,6 +92,12 @@ namespace INEC3.Helper
                     _context.Roles.Add(roleToChoose);
                     _context.SaveChanges();
                 }
+                if (!roleManager.RoleExists(UserManageRoles.User))
+                {
+                    var roleToChoose = new IdentityRole(UserManageRoles.User);
+                    _context.Roles.Add(roleToChoose);
+                    _context.SaveChanges();
+                }
                 if (!roleManager.RoleExists(UserManageRoles.ProvinceUser))
                 {
                     var roleToChoose = new IdentityRole(UserManageRoles.ProvinceUser);

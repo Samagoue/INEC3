@@ -67,7 +67,6 @@ $(document).ready(function () {
                 url: "/api/Account/ForgotPassword",
                 data: "email=" + $('#txtresetemail').val(),
                 success: function (resp) {
-                    debugger
                     if (resp.contentType == 'error') {
                         $(".preloader").fadeOut();
                         $.toast({
@@ -140,6 +139,11 @@ $(document).ready(function () {
             return false;
         }
     });
+    var Urlparameter = getUrlVars()["email"];
+    if (Urlparameter != undefined) {
+        $('#alerttop').show();
+        $('#paraemail').text(Urlparameter);
+    }
 });
 
 $("#loginform").validate({
@@ -153,3 +157,13 @@ $("#loginform").validate({
     },
 }
 );
+function getUrlVars() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}

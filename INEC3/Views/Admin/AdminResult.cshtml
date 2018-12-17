@@ -3,10 +3,7 @@
     ViewBag.Title = "Result";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
 @Scripts.Render("~/bundles/jquery")
-@*<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />*@
-
 <style>
     input, select, textarea {
         max-width: 480px;
@@ -70,6 +67,10 @@
                                         @Html.ValidationMessageFor(model => model.ID_Bureauvote, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group col-md-6">
+                                        @Html.Label("Code_SV")
+                                        @Html.Editor("Code_SV", new { htmlAttributes = new { @class = "form-control", @id = "Code_SV" } })
+                                    </div>
+                                    <div class="form-group col-md-6">
                                         @Html.LabelFor(model => model.Votants)
                                         @Html.EditorFor(model => model.Votants, new { htmlAttributes = new { @class = "form-control" } })
                                         @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
@@ -129,11 +130,11 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $(".preloader").fadeOut();
+            $("#Code_SV").prop("disabled", true);
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
@@ -195,6 +196,7 @@
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);
                     $('#Total_Votes').val(0);
+                    $('#Code_SV').val(0);
                     if (result.ContentType != 'error') {
                         var resp = result.Data
                         if (resp) {
@@ -203,6 +205,7 @@
                             $('#Exprimes').val(resp.Exprimes);
                             $('#Nuls').val(resp.Nuls);
                             $('#Total_Votes').val(resp.Total_Votes);
+                            $('#Code_SV').val(resp.Code_SV);
                         }
                         var table = $('#tbllist tbody');
                         if (resp.ResultList) {

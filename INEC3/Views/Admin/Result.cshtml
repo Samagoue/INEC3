@@ -6,16 +6,13 @@
 }
 
 @Scripts.Render("~/bundles/jquery")
-@*<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />*@
-
-@*<h2>Upload Election Result</h2>*@
 <style>
     input, select, textarea {
         max-width: 480px;
     }
 </style>
 @if (@ViewBag.Province == null && @ViewBag.Territoire == null && @ViewBag.Commune == null && @ViewBag.ID_Bureauvote == null)
-{ 
+{
     <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><b> Please Contact Admin.</b> You Don't have assign any Area.
     </div>
@@ -50,35 +47,36 @@
                                     @Html.HiddenFor(model => model.Role, new { @id = "Role" })
                                     @if (@ViewBag.Province != null)
                                     {
-                                        <div class="form-group col-md-6" id="Province" style="display:none;">
+                                        <div class="form-group col-md-6" id="Province">
                                             @Html.Label("Province")
-                                            @*@Html.LabelFor(model => model.ID_Candidat, "Province")*@
                                             @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
                                         </div>
                                     }
                                     @if (@ViewBag.Territoire != null)
                                     {
-                                        <div class="form-group col-md-6" id="Territoire" style="display:none;">
-                                            @*@Html.LabelFor(model => model.ID_Party, "Territoire")*@
+                                        <div class="form-group col-md-6" id="Territoire">
                                             @Html.Label("Territoire")
                                             @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
                                         </div>
                                     }
                                     @if (@ViewBag.Commune != null)
                                     {
-                                        <div class="form-group col-md-6" id="Commune" style="display:none;">
+                                        <div class="form-group col-md-6" id="Commune">
                                             @Html.Label("Commune")
-                                            @*@Html.LabelFor(model => model.ID_Bureauvote, "Commune")*@
                                             @Html.DropDownList("ID_Commune", new SelectList(ViewBag.Commune, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
                                         </div>
                                     }
                                     @if (@ViewBag.ID_Bureauvote != null)
                                     {
-                                        <div class="form-group col-md-6" id="PollingStation" style="display:none;">
+                                        <div class="form-group col-md-6" id="PollingStation">
                                             @Html.Label("Pooling Station")
                                             @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.ID_Bureauvote, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "PolStationCahngeGet()", @required = true })
                                         </div>
                                     }
+                                    <div class="form-group col-md-6">
+                                        @Html.Label("Code_SV")
+                                        @Html.Editor("Code_SV", new { htmlAttributes = new { @class = "form-control", @id = "Code_SV" } })
+                                    </div>
                                     <div class="form-group col-md-6">
                                         @Html.Label("Votants")
                                         @Html.Editor("Votants", new { htmlAttributes = new { @class = "form-control", @id = "Votants" } })
@@ -135,27 +133,17 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>*@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             ShowUserView();
+            $("#Code_SV").prop("disabled", true);
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
+            $('#ID_Candidat').prepend($('<option selected></option>').val('').html("Select Candidate"));
+            $('#ID_Party').prepend($('<option selected></option>').val('').html("Select Party"));
 
-            if ($('#ID_Result').val() == "") {
-                $('#Votants').val(0);
-                $('#Total_Votes').val(0);
-                $('#ID_Candidat').append($('<option selected></option>').val('').html("Select Candidate"));
-                $('#ID_Party').append($('<option selected></option>').val('').html("Select Party"));
-                $('#ID_Bureauvote').append($('<option selected></option>').val('').html("Select Pooling Station"));
-                $('#ID_Province').append($('<option selected></option>').val('').html("Select Province"));
-            }
-            else {
-                SelectParty();
-                PolStationCahngeGet();
-            }
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
             $(".preloader").fadeOut();
             var success = @((TempData["success"] != null).ToString().ToLower());
@@ -192,6 +180,7 @@
             }
         }
         function PolStationCahngeGet() {
+            debugger
             $(".preloader").fadeOut();
             $.ajax({
                 url: '/api/Results/PolStationCahngeGet',
@@ -205,6 +194,7 @@
                     $('#Nuls').val(0);
                     $('#Exprimes').val(0);
                     $('#Total_Votes').val(0);
+                    $('#Code_SV').val(0);
                     if (result.ContentType != 'error') {
                         var resp = result.Data
                         if (resp) {
@@ -213,7 +203,7 @@
                             $('#Exprimes').val(resp.Exprimes);
                             $('#Nuls').val(resp.Nuls);
                             $('#Total_Votes').val(resp.Total_Votes);
-                            //}
+                            $('#Code_SV').val(resp.Code_SV);
                         }
                         var table = $('#tbllist tbody');
                         if (resp.ResultList) {
@@ -287,7 +277,7 @@
         function GetPoolingStation() {
             if ($('#ID_Commune').val() > 0) {
                 $('#ID_Bureauvote').html('');
-                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Pooling Station'));
+                $('#ID_Bureauvote').append($('<option></option>').val('').html('Select Polling Station'));
                 $(".preloader").show();
                 $.ajax({
                     url: '/api/Results/GetPoolingStationList',
@@ -446,29 +436,30 @@
         }
         function ShowUserView() {
             var select = $("#Role").val();
-            if (select == "Province") {
-                $("#Province").show()
-                $("#Territoire").show()
-                $("#Commune").show()
-                $("#PollingStation").show()
+
+            if (select == "SuperAdmin") {
+                $('#ID_Province').prepend($('<option selected></option>').val('').html("Select Province"));
+                $('#ID_Territoire').prepend($('<option selected></option>').val('').html("Select Territoire"));
+                $('#ID_Commune').prepend($('<option selected></option>').val('').html("Select Commune"));
+                $('#ID_Bureauvote').prepend($('<option selected></option>').val('').html("Select Polling Station"));
+            }
+            else if (select == "User") {
+                $("#Province").hide()
+                $("#Territoire").hide()
+                $("#Commune").hide()
+                $("#PollingStation").hide()
+            }
+            else if (select == "Province") {
+                $('#ID_Territoire').prepend($('<option selected></option>').val('').html("Select Territoire"));
             }
             else if (select == "Territoire") {
-                $("#Province").hide()
-                $("#Territoire").show()
-                $("#Commune").show()
-                $("#PollingStation").show()
+                $('#ID_Commune').prepend($('<option selected></option>').val('').html("Select Commune"));
             }
             else if (select == "Commune") {
-                $('#Province').hide()
-                $('#Territoire').hide()
-                $('#Commune').show()
-                $('#PollingStation').show()
+                $('#ID_Bureauvote').prepend($('<option selected></option>').val('').html("Select Polling Station"));
             }
             else if (select == "PollingStation") {
-                $('#Province').hide()
-                $('#Territoire').hide()
-                $('#Commune').hide()
-                $('#PollingStation').show()
+                PolStationCahngeGet()
             }
         }
     </script>

@@ -16,11 +16,10 @@ $(document).ready(function () {
                 url: "/api/Account/Register",
                 data: UserModel,
                 success: function (data) {
-                    debugger
                     $(".preloader").fadeOut();
                     if (data.Succeeded) {
                         $.toast({ heading: 'Welcome to shadow', text: 'Check your email and confirm.', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
-                        window.location.href = '/Account/Login';
+                        window.location.href = '/Account/Login?email=' + $('#Email').val()
                     }
                 },
                 error: function (ex) {

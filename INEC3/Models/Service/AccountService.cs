@@ -91,6 +91,7 @@ namespace INEC3.Models.Service
                         UserDisplay u = new UserDisplay();
                         u.UserId = Convert.ToString(rdr["Id"]);
                         u.Email = Convert.ToString(rdr["Email"]);
+                        u.UserName = Convert.ToString(rdr["UserName"]);
                         u.Name = Convert.ToString(rdr["FirstName"]);
                         u.Role = Convert.ToString(rdr["RoleName"]);
                         u.EmailConfirmed = Convert.ToBoolean(rdr["EmailConfirmed"]);
@@ -118,6 +119,7 @@ namespace INEC3.Models.Service
                     while (rdr.Read())
                     {
                         user.UserId = Convert.ToString(rdr["Id"]);
+                        user.UserName = Convert.ToString(rdr["UserName"]);
                         user.Email = Convert.ToString(rdr["Email"]);
                         user.Name = Convert.ToString(rdr["FirstName"]);
                         user.Role = Convert.ToString(rdr["RoleName"]);
