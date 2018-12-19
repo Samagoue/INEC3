@@ -2,7 +2,7 @@
 @{
 
     ViewBag.Title = "Result";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 @Scripts.Render("~/bundles/jquery")
@@ -337,7 +337,7 @@
                                         $('#Exprimes').val(v.Exprimes)
                                         $('#Total_Votes').val(v.Total_Votes)
                                     }
-                                    table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
+                                    table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Candidate + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Votes + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                                 });
                             }
                             else {
@@ -366,6 +366,7 @@
             $('#tbllist tbody>tr').remove();
         }
         function addToListAndDataBase() {
+            debugger
             if ($('#ID_Candidat').val() != '' && $('#Voix').val() > 0) {
                 var votes = parseInt($('#Voix').val());
                 $('#Total_Votes').val(parseInt($('#Voix').val()) + parseInt($('#Total_Votes').val()));
@@ -404,7 +405,7 @@
                                     $('#Exprimes').val(v.Exprimes)
                                     $('#Total_Votes').val(v.Total_Votes)
                                 }
-                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Voix + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
+                                table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Candidate + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Votes + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                             });
                             $.toast({headers:'Success!', text: 'Record save successfully', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
                             resetList()

@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using INEC3.Models.Service;
 using INEC3.Helper;
+using INEC3.Models;
 namespace INEC3.Controllers
 {
     public class AccountController : Controller
@@ -39,6 +40,7 @@ namespace INEC3.Controllers
         {
             if (Request.Cookies["inecbearer"] != null)
             {
+                FormsAuthentication.SignOut();
                 HttpCookie myCookie = new HttpCookie("inecbearer");
                 myCookie.Expires = DateTime.Now.AddDays(-1d);
                 Response.Cookies.Add(myCookie);
@@ -56,6 +58,7 @@ namespace INEC3.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult Vefiryemail(string securitycode)
         {
             if (accountService.activateaccount(securitycode))
@@ -66,10 +69,19 @@ namespace INEC3.Controllers
             return RedirectToAction("Index","error",new { id = "emailfail",ret="returnurl='abc'" });
         }
 
+        [AllowAnonymous]
         public ActionResult ForgotPassword(string userId, string code)
         {
+            ForgotPasswordModel model = new ForgotPasswordModel();
+            model.UserId =Guid.Parse(userId);
+            model.SecurityCode = code;
+            return View(model);
+        }
 
-            return View();
+        public void Index(string access_token,string token_type,string redirecturl)
+        {
+            Session["Token"] = access_token;
+            Session["TokenType"] = token_type;
         }
     }
 }

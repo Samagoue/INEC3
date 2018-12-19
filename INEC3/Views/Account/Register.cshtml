@@ -1,52 +1,8 @@
 ﻿@model INEC3.Models.UserModel
-
 @{
     ViewBag.Title = "Register";
-    Layout = null;
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
 }
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/image/logo.png">
-    <title>Shadow</title>
-    <!-- Bootstrap Core CSS -->
-    <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- animation CSS -->
-    <link href="~/Content/css/animate.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="~/Content/css/style.css" rel="stylesheet">
-    <!-- color CSS -->
-    <link href="~/Content/css/colors/blue-dark.css" id="theme" rel="stylesheet">
-    <!-- toast CSS -->
-    <link href="~/Content/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-    @Scripts.Render("~/bundles/jquery")
-    @*<h2>Register</h2>*@
-</head>
-
-<style>
-    .login-register {
-        background: url(../Content/plugins/images/login-register.jpg) no-repeat center center / cover !important;
-    }
-
-    label.error {
-        color: red;
-    }
-</style>
-<div class="preloader" id="preloader">
-    <svg class="circular" viewBox="25 25 50 50">
-        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
-    </svg>
-</div>
-<section id="wrapper" class="login-register">
     <div class="login-box login-sidebar">
         <div class="white-box">
             @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal form-material", @id = "frmsignup", role = "form" }))
@@ -98,27 +54,8 @@
             }
         </div>
     </div>
-</section>
-
-
-
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryval")
 @section Scripts {
-    <!-- jQuery -->
-    <!-- Bootstrap Core JavaScript -->
-    <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Menu Plugin JavaScript -->
-    <script src="../plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-    <!--slimscroll JavaScript -->
-    <script src="~/Content/js/jquery.slimscroll.js"></script>
-    <!--Wave Effects -->
-    <script src="~/Content/js/waves.js"></script>
-    <!-- Custom Theme JavaScript -->
-    <script src="~/Content/js/custom.min.js"></script>
-    <!--Style Switcher -->
-    <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
-}
-<!-- toast JS -->
-<script src="~/Content/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
 <script src="~/Scripts/Custome/Register.js"></script>
+}

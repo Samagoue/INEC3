@@ -29,8 +29,10 @@ namespace INEC3.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        public UserProfile UserProfile { get; set; }
-        //public HttpPostedFile UserImage { get; set; }
+        [Required]
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        //public UserProfile UserProfile { get; set; }
     }
 
     [Table("UserProfile")]
@@ -90,21 +92,15 @@ namespace INEC3.Models
         public string Createdate { get; set; }
         public int AssignID { get; set; }//One Of Province/Territoire/Commune/BureauVote
         public string AssignRole { get; set; }
-
-        //public string Province { get; set; }
-        //public string Territoire { get; set; }
-        //public string CommuneName { get; set; }
-        //public int ID_Bureauvote { get; set; }
-        //public string PolStationName { get; set; }
-        //public int ID_Province { get; set; }
-        //public int ID_Territoire { get; set; }
     }
 
     public class ForgotPasswordModel
     {
         public Guid UserId { get; set; }
         public string SecurityCode { get; set; }
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
 

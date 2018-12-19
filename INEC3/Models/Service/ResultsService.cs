@@ -247,7 +247,7 @@ namespace INEC3.Models.Service
                     }
                 }
             }
-            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
+            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate= s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes= s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes ,s.ID_Bureauvote}).ToList();
             //DataSet dt = new DataSet();
             //dt = _db.GetDatatable("proc_GetProvinceResult", "");
             _Helper.SendNotification();

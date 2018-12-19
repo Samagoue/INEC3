@@ -5,8 +5,6 @@ using System.Data;
 using System.Data.SqlClient;
 using INEC3.DbConn;
 using INEC3.Helper;
-using INEC3.IdentityClass;
-using INEC3.Repository;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using INEC3.Models;
@@ -134,14 +132,14 @@ namespace INEC3.Models.Service
             return user;
         }
 
-        public bool ForgotPassword(string resttoken, string email)
+        public bool RestPasswordsendmail(string resttoken, string email)
         {
             try
             {
                 
                 string msg = Email.GetTemplateString((int)Email.EmailTemplates.ForgotPassword);
                 msg = msg.Replace("{Name}", email);
-                string SiteLink = System.Web.HttpContext.Current.Request.Url.Scheme + "://" + System.Web.HttpContext.Current.Request.Url.Authority + "/Account/ForgotPassword?action=forgotpassword" + resttoken;
+                string SiteLink = System.Web.HttpContext.Current.Request.Url.Scheme + "://" + System.Web.HttpContext.Current.Request.Url.Authority + "/Account/ForgotPassword?action=resetpassword" + resttoken;
 
                 msg = msg.Replace("{ResetLink}", SiteLink);
                 if (Email.SendMail(email, "Shadow Email Verify", msg))

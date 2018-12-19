@@ -3,7 +3,6 @@ using INEC3.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
-using INEC3.IdentityClass;
 using INEC3.Models.Service;
 using System.Linq;
 
@@ -12,14 +11,14 @@ namespace INEC3.Repository
     public class AuthRepository : IDisposable
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly AccountService _accountService;
         private readonly inecDBContext _inecDBContext;
 
         public AuthRepository()
         {
             _context = new ApplicationDbContext();
-            _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
             _accountService = new AccountService();
             _inecDBContext = new inecDBContext();
 
@@ -27,7 +26,7 @@ namespace INEC3.Repository
 
         public async Task<IdentityResult> RegisterUser(UserModel userModel)
         {
-            IdentityUser user = new IdentityUser
+            ApplicationUser user = new ApplicationUser
             {
                 UserName = userModel.UserName,
                 Email = userModel.Email
@@ -39,21 +38,24 @@ namespace INEC3.Repository
 
             if (result.Succeeded)
             {
-                if (userModel.UserProfile == null)
-                {
-                    UserProfile userProfile = new UserProfile();
-                    userProfile.AspNetUsersId = Guid.Parse(user.Id);
-                    IdentityResult res = _accountService.RegisterUserProfile(userProfile);
-                    if (!res.Succeeded)
-                        return res;
-                }
-                else
-                {
-                    userModel.UserProfile.AspNetUsersId = Guid.Parse(user.Id);
-                    IdentityResult res = _accountService.RegisterUserProfile(userModel.UserProfile);
-                    if (!res.Succeeded)
-                        return res;
-                }
+                //if (userModel.UserProfile == null)
+                //{
+                //    UserProfile userProfile = new UserProfile();
+                //    userProfile.AspNetUsersId = Guid.Parse(user.Id);
+                //    IdentityResult res = _accountService.RegisterUserProfile(userProfile);
+                //    if (!res.Succeeded)
+                //        return res;
+                //}
+                //else
+                //{
+                UserProfile upf = new UserProfile();
+                upf.FirstName = userModel.FirstName;
+                upf.LastName = userModel.LastName;
+                upf.AspNetUsersId = Guid.Parse(user.Id);
+                IdentityResult res = _accountService.RegisterUserProfile(upf);
+                if (!res.Succeeded)
+                    return res;
+                //}
             }
             return result;
         }
@@ -65,21 +67,28 @@ namespace INEC3.Repository
             return user;
         }
 
-        public IdentityUser FindUserDetailByEmail(string email)
+        public ApplicationUser FindUserDetailByEmail(string email)
         {
-            IdentityUser user = _userManager.FindByEmail(email);
+            ApplicationUser user = _userManager.FindByEmail(email);
             return user;
         }
 
-        public IdentityUser FindUserDetailByUserName(string username)
+        public ApplicationUser FindUserDetailByUserName(string username)
         {
-            IdentityUser user = _userManager.FindByName(username);
-            return user;
+            using (var context = new ApplicationDbContext())
+            {
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+                ApplicationUser user = userManager.FindByName(username);
+                //IdentityUser user = _userManager.FindByName(username);
+                return user;
+            }
+
         }
 
         public bool IsInRole(string UserName, string role)
         {
-            IdentityUser user = FindUserDetailByUserName(UserName);
+            ApplicationUser user = FindUserDetailByUserName(UserName);
             if (user != null)
             {
                 return _userManager.IsInRole(user.Id, role);
@@ -87,22 +96,25 @@ namespace INEC3.Repository
             return false;
         }
 
-        public string GeneratePasswordResetToken(string email)
+        public string ResetPassword(string email)
         {
             string url = null;
-            IdentityUser user = FindUserDetailByEmail(email);
+            ApplicationUser user = FindUserDetailByEmail(email);
             if (user != null)
             {
-                //var provider = new DpapiDataProtectionProvider("SampleAppName");
-                //var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>());
-                //userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(provider.Create("ASP.NET Identity"));
-                //string code=_userManager.GeneratePasswordResetToken(user.Id);
-                url = "&userId=" + user.Id + "&code=" + user.SecurityStamp;
+                var randomNumber = Convert.ToBase64String(Guid.NewGuid().ToByteArray()) + DateTime.Now.Ticks;
+                randomNumber = System.Text.RegularExpressions.Regex.Replace(randomNumber, "[^a-z0-9]+", "");
+                if (randomNumber.Length > 15)
+                    randomNumber = randomNumber.Substring(0, 15);
+                user.PasswordHash = EncryptDecrypt.EncodePassword(randomNumber);
+                var removsss=_userManager.RemovePassword(user.Id);
+                var resss=_userManager.AddPassword(user.Id,randomNumber);
+                url = "&userId=" + user.Id + "&code=" + randomNumber;
             }
             return url;
         }
 
-        public IdentityResult CreateDefaultUser(IdentityUser user)
+        public IdentityResult CreateDefaultUser(ApplicationUser user)
         {
             var result = _userManager.Create(user, user.PasswordHash);
             return result;
@@ -116,7 +128,7 @@ namespace INEC3.Repository
         {
             IdentityResult res = new IdentityResult();
             var oldrole = _userManager.GetRoles(userid).FirstOrDefault();
-            if (!string.Equals(oldrole,updatedrole))
+            if (!string.Equals(oldrole, updatedrole))
             {
                 res = _userManager.RemoveFromRole(userid, oldrole);
                 if (res.Succeeded)
@@ -131,22 +143,27 @@ namespace INEC3.Repository
         {
             return _userManager.ChangePassword(model.UserId, model.CurrentPassword, model.NewPassword);
         }
+
+        public IdentityResult LockUnlockUser(string userid,bool enable)
+        {
+            return _userManager.SetLockoutEnabled(userid, enable);
+        }
         public string GetUserRole(string userid)
         {
             return _userManager.GetRoles(userid).FirstOrDefault();
         }
 
-    public void GetRolesList()
-    {
-        var result = _context.Roles.GetEnumerator();
-        var c = result;
-    }
+        public void GetRolesList()
+        {
+            var result = _context.Roles.GetEnumerator();
+            var c = result;
+        }
 
-    public void Dispose()
-    {
-        _context.Dispose();
-        _userManager.Dispose();
-        _inecDBContext.Dispose();
+        public void Dispose()
+        {
+            _context.Dispose();
+            _userManager.Dispose();
+            _inecDBContext.Dispose();
+        }
     }
-}
 }

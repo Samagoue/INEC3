@@ -14,9 +14,6 @@ using System.Web.Http;
 using INEC3.Helper;
 using System.Web.Security;
 using System.Web.Mvc;
-using INEC3.IdentityClass;
-using Microsoft.Owin.Security.DataProtection;
-using Microsoft.AspNet.Identity.Owin;
 using System.Security.Claims;
 
 namespace INEC3.Controllers
@@ -108,6 +105,7 @@ namespace INEC3.Controllers
                 HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(res.access_token))
                 {
+                    FormsAuthentication.SetAuthCookie(res.userid, false);
                     _base.UserCode = res.userid;
                     _base.SaveCookie("inceusername", res.displayname);
                     return Request.CreateResponse<LoginUser>(HttpStatusCode.OK, res);
@@ -131,11 +129,11 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                string resttoken = _repository.GeneratePasswordResetToken(email);
+                string resttoken = _repository.ResetPassword(email);
 
                 if (!string.IsNullOrEmpty(resttoken))
                 {
-                    if (_accountService.ForgotPassword(resttoken, email))
+                    if (_accountService.RestPasswordsendmail(resttoken, email))
                     {
                         res.Data = "Check your email and verify";
                         return res;
@@ -199,7 +197,42 @@ namespace INEC3.Controllers
             return res;
         }
 
-
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.AllowAnonymous]
+        [System.Web.Http.Route("ResetPasswordChange")]
+        public JsonResult ResetPasswordChange(PasswordChangeModel obj)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                
+                if (string.IsNullOrEmpty(obj.UserId) || !ModelState.IsValid)
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Invalid request";
+                    return res;
+                }
+                else
+                {
+                    var result = _repository.ChangePassword(obj);
+                    if (result.Succeeded)
+                    {
+                        res.Data = "Password change successfully";
+                    }
+                    else
+                    {
+                        res.ContentType = "fail";
+                        res.Data = result.Errors;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

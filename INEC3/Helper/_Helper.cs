@@ -3,10 +3,9 @@ using Microsoft.AspNet.SignalR;
 using System.Data;
 using Newtonsoft.Json;
 using INEC3.DbConn;
-using INEC3.IdentityClass;
+using INEC3.Models;
 using Microsoft.AspNet.Identity;
 using INEC3.Models.Service;
-using INEC3.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using INEC3.Repository;
 
@@ -123,7 +122,7 @@ namespace INEC3.Helper
                     _context.SaveChanges();
                 }
 
-                IdentityUser user = new IdentityUser
+                ApplicationUser user = new ApplicationUser
                 {
                     UserName = "Admin@shadow.com",
                     Email = "Admin@shadow.com",

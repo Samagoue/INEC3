@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Result List";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @Scripts.Render("~/bundles/jquery")
 
@@ -123,7 +123,6 @@
 @section Scripts {
 
     <!-- Custom Theme JavaScript -->
-    @*<script src="~/Content/js/custom.min.js"></script>*@
     <script src="~/Content/plugins/bower_components/datatables/datatables.min.js"></script>
     <!-- start - This is for export functionality only -->
     @*<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
@@ -176,17 +175,6 @@
 
             });
         });
-                //$('#myTable').DataTable({
-                //    dom: 'Bfrtip',
-                //    buttons: [
-                //        'copy', 'csv', 'excel',  'print',
-                //        {
-                //            extend: 'pdfHtml5',
-                //            orientation: 'landscape',
-                //            pageSize: 'LEGAL'
-                //        }
-                //    ]
-                //});
-                //$('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
+               
     </script>
 }

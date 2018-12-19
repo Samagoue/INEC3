@@ -3,15 +3,25 @@
 @using INEC3.Models;
 @using INEC3.Models.Service;
 @{
+    string userid = "";
+    if (User.Identity.IsAuthenticated == false)
+    {
+        Response.Redirect("/Account/Login");
+    }
+    else
+    {
+        userid = User.Identity.Name;
+        //string usernamee = User.Identity.Name;
+    }
     Base _base = new Base();
     AccountApiController accapi = new AccountApiController();
     UserDisplay display = new UserDisplay();
     AccountService accountService = new AccountService();
-    string username = "";
-    username = _base.GetCookie("inceusername");
-    if (!string.IsNullOrEmpty(username))
+
+    //username = _base.GetCookie("inceusername");
+    if (!string.IsNullOrEmpty(userid))
     {
-        display = accountService.FindUserDisplay("UserName", username);
+        display = accountService.FindUserDisplay("Id", userid);
     }
 }
 <!DOCTYPE html>
@@ -150,7 +160,7 @@
                     <h3><span class="fa-fw open-close"><i class="ti-menu hidden-xs"></i><i class="ti-close visible-xs"></i></span> <span class="hide-menu">Navigation</span></h3>
                 </div>
                 <ul class="nav" id="side-menu">
-                    @if (!string.IsNullOrEmpty(username))
+                    @if (!string.IsNullOrEmpty(userid))
                     {
                         <li class="user-pro">
                             <a href="#" class="waves-effect">
@@ -165,10 +175,10 @@
                             </ul>
                         </li>
 
-                        if (accapi.IsInRole(username, "SuperAdmin"))
+                        if (accapi.IsInRole(userid, "SuperAdmin"))
                         {
                             <li>
-                                <a href="tables.html" class="waves-effect">
+                                <a href="#" class="waves-effect">
                                     <i class="mdi mdi-table fa-fw"></i><span class="hide-menu">Forms<span class="fa arrow"></span></span>
                                 </a>
                                 <ul class="nav nav-second-level collapse in" aria-expanded="true">
@@ -177,7 +187,7 @@
                                 </ul>
                             </li>
                         }
-                        else if (accapi.IsInRole(username, "User")) { }
+                        else if (accapi.IsInRole(userid, "User")) { }
                         else
                         {
                             <li>
@@ -316,7 +326,6 @@
                             }
                         },
                         error: function (ex) {
-                            debugger
                             if (ex.status >= 400 && ex.status <= 503) {
                                 $.toast({ heading: 'Unauthorized', text: 'Authorization has been denied for this request..', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 2 });
                             }
