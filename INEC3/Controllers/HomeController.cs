@@ -14,7 +14,7 @@ using INEC3.Helper;
 
 namespace INEC3.Controllers
 {
-    [AuthenticatUser]
+    [AuthFilter]
     public class HomeController : Controller
     {
         private inecDBContext db = new inecDBContext();

@@ -221,6 +221,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountApiController.cs" />
     <Compile Include="Controllers\Commune_ChefferieController.cs" />
@@ -241,10 +242,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Helper\AuthenticatUser.cs" />
+    <Compile Include="Helper\AuthFilter.cs" />
     <Compile Include="Helper\Base.cs" />
     <Compile Include="Helper\Email.cs" />
     <Compile Include="Helper\EncryptDecrypt.cs" />
+    <Compile Include="Helper\SiteRoles.cs" />
     <Compile Include="Helper\_Helper.cs" />
     <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Migrations\201810030140544_initialcreate.cs" />
@@ -3304,6 +3306,7 @@
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Admin\Result.cshtml" />
     <Content Include="Views\Admin\AdminIndex.cshtml" />
+    <Content Include="Views\Shared\_AccountLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

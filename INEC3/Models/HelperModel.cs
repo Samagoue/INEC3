@@ -16,7 +16,7 @@ namespace INEC3.Models
         public string SelectRoleList = "select Id, [Name] from  AspNetRoles";
         public string vw_resultlist = "select * from vw_resultlist";
     }
-    static class UserManageRoles
+    public static class UserManageRoles
     {
         public static string SuperAdmin { get { return "SuperAdmin"; } }
         public static string User { get { return "User"; } }

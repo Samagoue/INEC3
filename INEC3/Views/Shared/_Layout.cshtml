@@ -3,15 +3,25 @@
 @using INEC3.Models;
 @using INEC3.Models.Service;
 @{
-    Base _base = new Base();
-    AccountApiController accapi = new AccountApiController();
+    string userid = "";
+    if (User.Identity.IsAuthenticated == false)
+    {
+        Response.Redirect("/Account/Login");
+    }
+    else
+    {
+        userid = User.Identity.Name;
+        //string usernamee = User.Identity.Name;
+    }
+    //Base _base = new Base();
+    //AccountApiController accapi = new AccountApiController();
     UserDisplay display = new UserDisplay();
     AccountService accountService = new AccountService();
-    string username = "";
-    username = _base.GetCookie("inceusername");
-    if (!string.IsNullOrEmpty(username))
+
+    //username = _base.GetCookie("inceusername");
+    if (!string.IsNullOrEmpty(userid))
     {
-        display = accountService.FindUserDisplay("UserName", username);
+        display = accountService.FindUserDisplay("Id", userid);
     }
 }
 
@@ -27,6 +37,7 @@
     <title>Shadow</title>
     <!-- Bootstrap Core CSS -->
     <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/plugins/bower_components/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
     <!-- Menu CSS -->
     <link href="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
     <!-- chartist CSS -->
@@ -96,8 +107,10 @@
             background: #e7e5e4;
         }
     </style>
+
 </head>
 <body class="fix-header">
+    <input type="hidden" name="Authorization" id="Authorization" />
     <!-- ============================================================== -->
     <!-- Preloader -->
     <!-- ============================================================== -->
@@ -147,7 +160,7 @@
                     <h3><span class="fa-fw open-close"><i class="ti-menu hidden-xs"></i><i class="ti-close visible-xs"></i></span> <span class="hide-menu">Navigation</span></h3>
                 </div>
                 <ul class="nav" id="side-menu">
-                    @if (!string.IsNullOrEmpty(username))
+                    @if (!string.IsNullOrEmpty(userid))
                     {
                         <li class="user-pro">
                             <a href="#" class="waves-effect">
@@ -155,15 +168,15 @@
                             </a>
                             <ul class="nav nav-second-level collapse in" aria-expanded="true">
                                 <li><a href="#" id="linkchangepass"><i class="ti-unlock"></i> <span class="hide-menu">Password Change</span></a></li>
-                                <li><a href="javascript:void(0)"><i class="ti-settings"></i> <span class="hide-menu">Account Setting</span></a></li>
                                 <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
                             </ul>
                         </li>
 
-                        if (accapi.IsInRole(username, "SuperAdmin"))
+                        if (display.Role== UserManageRoles.SuperAdmin)
+                        //if (accapi.IsInRole(userid, "SuperAdmin"))
                         {
                             <li>
-                                <a href="tables.html" class="waves-effect">
+                                <a href="#" class="waves-effect">
                                     <i class="mdi mdi-table fa-fw"></i><span class="hide-menu">Forms<span class="fa arrow"></span></span>
                                 </a>
                                 <ul class="nav nav-second-level collapse in" aria-expanded="true">
@@ -172,7 +185,8 @@
                                 </ul>
                             </li>
                         }
-                        else if (accapi.IsInRole(username, "User")) { }
+                        //else if (accapi.IsInRole(userid, "User")) { }
+                        else if (display.Role == UserManageRoles.User) { }
                         else
                         {
                             <li>
@@ -216,18 +230,50 @@
         </div>
         <!-- /#page-wrapper -->
     </div>
+    <!-- Password Change Model -->
+    <div class="modal fade" id="mdchangepassword" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel1">Change password</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="passchnageform">
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">Old Password:</label>
+                            <input type="password" name="OldPassword" class="form-control" id="OldPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">New Password:</label>
+                            <input type="password" name="Password" class="form-control" id="Password" />
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">Confirm New Password:</label>
+                            <input type="password" class="form-control" name="ConfirmPassword" id="ConfirmPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="btnchangepass">Change password</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- /#wrapper -->
     <!-- jQuery -->
-    @*<script src="~/Content/plugins/bower_components/jquery/dist/jquery.min.js"></script>*@
     <!-- Bootstrap Core JavaScript -->
     <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
     <!-- Menu Plugin JavaScript -->
     <script src="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+
     <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
     <!--Wave Effects -->
     <script src="~/Content/js/waves.js"></script>
-    <!-- Vector map JavaScript -->
+
     <!-- chartist chart -->
     <script src="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
     <script src="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
@@ -236,11 +282,76 @@
     <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.charts-sparkline.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="~/Content/js/custom.min.js"></script>
-    @*<script src="~/Content/js/dashboard3.js"></script>*@
     <!--Style Switcher -->
     <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
+    <!--Cookiess JavaScript -->
+    <script src="~/Scripts/js.cookie.js"></script>
+    <!-- toast JS -->
+    <script src="~/Content/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        var bearer = '';
+        $(function () {
+            if (Cookies.get('inecbearer')) {
+                bearer = Cookies.get('inecbearer');
+            }
+            $('#linkchangepass').on('click', function () { $("#mdchangepassword").modal('show'); $("#passchnageform")[0].reset(); });
+            $('#btnchangepass').on('click', function () {
+                $('.preloader').show();
+                if ($("#passchnageform").valid()) {
+                    var Model = { CurrentPassword: $('#OldPassword').val(), NewPassword: $('#Password').val() };
+                    $.ajax({
+                        type: "POST",
+                        headers: { Authorization: bearer },
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        url: "/api/Account/PasswordChange",
+                        data: JSON.stringify(Model),
+                        success: function (data) {
+                            debugger
+                            $(".preloader").fadeOut();
+                            if (data.ContentType == null) {
+                                $("#mdchangepassword").modal('hide');
+                                $.toast({ heading: 'Success', text: data.Data, position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
+                            }
+                            else if (data.ContentType == "fail") {
+                                $.toast({ heading: 'Invalid!', text: data.Data[0], position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 2 });
+
+                            }
+                            else {
+                                alert('Invalid request');
+                            }
+                        },
+                        error: function (ex) {
+                            if (ex.status >= 400 && ex.status <= 503) {
+                                $.toast({ heading: 'Unauthorized', text: 'Authorization has been denied for this request..', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 2 });
+                            }
+                            $(".preloader").fadeOut();
+                            $("#mdchangepassword").modal('hide');
+                        }
+                    });
+                }
+            });
+        });
+
+        //Form Validation
+        $("#passchnageform").validate({
+            rules: {
+                OldPassword: { required: true },
+                Password: { required: true, minlength: 5 },
+                ConfirmPassword: { minlength: 5, equalTo: "#Password" }
+
+            },
+            messages: {
+                OldPassword: "Please Enter Old Password",
+                Password: { required: "Please Enter New Password", minlength: "Enter at least {0} characters" },
+                ConfirmPassword: "Enter Valid Confirm Password",
+            },
+        });
+    </script>s
+    @RenderSection("scripts", required: false)
 </body>
 </html>
-@RenderSection("scripts", required: false)

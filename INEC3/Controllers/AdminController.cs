@@ -12,7 +12,7 @@ using INEC3.Repository;
 
 namespace INEC3.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class AdminController : Controller
     {
         private inecDBContext db = new inecDBContext();
@@ -22,7 +22,6 @@ namespace INEC3.Controllers
         private AuthRepository authRepository = new AuthRepository();
         private Base _base = new Base();
         //============User Area
-        [AuthenticatUser]
         public ActionResult Result(int? id)
         {
             string username = "";
@@ -54,7 +53,6 @@ namespace INEC3.Controllers
         }
         //User Area End 
 
-        [AuthenticatUser]
         public ActionResult Index()
         {
             //var str= User.Identity.Name;
@@ -73,14 +71,13 @@ namespace INEC3.Controllers
 
         }
 
-        [AuthenticatUser]
+        //[AuthFilter(Roles = "SuperAdmin,User")]
         public ActionResult AdminIndex()
         {
-
+            var name = User.Identity.Name;
             //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
             return View(resultsService.ResultViewList());
         }
-        [AuthenticatUser]
         public ActionResult AdminResult(int? id)
         {
             ViewBag.Message = "Artech Consulting";
@@ -113,7 +110,6 @@ namespace INEC3.Controllers
             return View(accountService.GetUserList());
         }
         [HttpPost]
-        [AuthenticatUser]
         public ActionResult ManageUser(string userid)
         {
             //ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");

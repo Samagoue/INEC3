@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $(".preloader").fadeOut();
     $("#btnsignup").click(function () {
         $('.preloader').show();
@@ -9,7 +8,8 @@ $(document).ready(function () {
                 Email: $('#Email').val(),
                 Password: $('#Password').val(),
                 ConfirmPassword: $('#ConfirmPassword').val(),
-                UserProfile: { FirstName: $('#Name').val(), LastName: '' }
+                FirstName: $('#Name').val()
+                //UserProfile: { FirstName: $('#Name').val(), LastName: '' }
             };
             $.ajax({
                 type: "POST",

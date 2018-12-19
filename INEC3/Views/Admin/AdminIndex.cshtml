@@ -1,15 +1,16 @@
 @model IEnumerable<INEC3.Models.ResultViewModel>
 @{
     ViewBag.Title = "Result List";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
     var Province = "";
     var Territoire = "";
     var Commune = "";
 }
 @Scripts.Render("~/bundles/jquery")
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
-
+<style>
+    tr.Province.group {
+        background:white !important;
+    }
+</style>
 <div class="container-fluid">
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -33,15 +34,15 @@
                     <table id="myTable" class="table display">
                         <thead>
                             <tr>
-                                <th>
-                                    @Html.DisplayName("Province")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Territoire")
-                                </th>
-                                <th>
-                                    @Html.DisplayName("Commune")
-                                </th>
+                                @*<th>
+                                        @Html.DisplayName("Province")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Territoire")
+                                    </th>
+                                    <th>
+                                        @Html.DisplayName("Commune")
+                                    </th>*@
                                 <th>
                                     @Html.DisplayName("Polling Station")
                                 </th>
@@ -72,31 +73,31 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-                                @*if (item.Province != Province)
-                                    {
-                                        <tr class="group"><td>@item.Province</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                                        Province = item.Province;
-                                    }
-                                    if (item.Territoire != Territoire)
-                                    {
-                                        <tr class="group"><td></td><td>@item.Territoire</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                                        Territoire = item.Territoire;
-                                    }
-                                    if (item.Commune != Commune)
-                                    {
-                                        <tr class="group"><td></td><td></td><td>@item.Commune</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
-                                        Commune = item.Commune;
-                                    }*@
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Province)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Territoire)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Commune)
-                                    </td>
+                                if (item.Province != Province)
+                                {
+                                    <tr class="Province group" style="background:white !important;"><td>@item.Province</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    Province = item.Province;
+                                }
+                                if (item.Territoire != Territoire)
+                                {
+                                    <tr class="Territoire group"><td>@item.Territoire</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    Territoire = item.Territoire;
+                                }
+                                if (item.Commune != Commune)
+                                {
+                                    <tr class="Commune group"><td>@item.Commune</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    Commune = item.Commune;
+                                }
+                                <tr role="row">
+                                    @*<td>
+                                            @Html.DisplayFor(modelItem => item.Province)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Territoire)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Commune)
+                                        </td>*@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.PolStation)
                                     </td>
@@ -135,11 +136,8 @@
 <footer class="footer text-center">
     Copyright © 2018 <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
 </footer>
-
 @section Scripts {
-
     <!-- Custom Theme JavaScript -->
-    @*<script src="~/Content/js/custom.min.js"></script>*@
     <script src="~/Content/plugins/bower_components/datatables/datatables.min.js"></script>
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
@@ -153,71 +151,22 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $(".preloader").fadeOut();
-            $(document).ready(function () {
-                $('#myTable').DataTable({
-                    dom: 'Bfrtip',
-                    buttons: ['copy', 'csv', 'excel', 'print', {
-                        extend: 'pdfHtml5',
-                        orientation: 'landscape',
-                        pageSize: 'LEGAL'
-                    }],
-                    columnDefs: [
-                        {
-                            targets: [0],
-                            visible: false,
-                            searchable: false
-                        },
-                        {
-                            targets: [1],
-                            visible: false,
-                            searchable: false
-                        },
-                        {
-                            targets: [2],
-                            visible: false
-                        }
-                    ],
-                    displayLength: 25,
-                    drawCallback: function (settings) {
-                        var api = this.api();
-                        var rows = api.rows({
-                            page: 'current'
-                        }).nodes();
-                        var last = null;
-                        api.column(0, { page: 'current' }).data().each(function (group, i) {
-                            if (last !== group) {
-                                $(rows).eq(i).before('<tr><td colspan="8" style="background: #d5d9e0;">Province : ' + group + '</td></tr>');
-                                last = group;
-                            }
-                        });
-                        api.column(1, { page: 'current' }).data().each(function (group, i) {
-                            if (last !== group) {
-                                $(rows).eq(i).before('<tr style="background: #f8f5fb;"><td colspan="8">Territoire : ' + group + '</td></tr>');
-                                last = group;
-                            }
-                        });
-                        api.column(2, { page: 'current' }).data().each(function (group, i) {
-                            if (last !== group) {
-                                $(rows).eq(i).before('<tr class="group" style="background:#d5d9e0;" ><td colspan="8">Commune : ' + group + '</td></tr>');
-                                last = group;
-                            }
-                        });
-                    },
-                    order: false
-                });
-
-                // Order by the grouping
-                $('#myTable tbody').on('click', 'tr.group', function () {
-                    var currentOrder = table.order()[0];
-                    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-                        table.order([3, 'desc']).draw();
-                    } else {
-                        table.order([3, 'asc']).draw();
-                    }
-                });
-                $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
+            $('#myTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['copy', 'csv', 'excel', 'print', { extend: 'pdfHtml5', orientation: 'landscape', pageSize: 'LEGAL' }],
+                displayLength: 25,
+                order: false
             });
-
+            // Order by the grouping
+            //$('#myTable tbody').on('click', 'tr.group', function () {
+            //    var currentOrder = table.order()[0];
+            //    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
+            //        table.order([3, 'desc']).draw();
+            //    } else {
+            //        table.order([3, 'asc']).draw();
+            //    }
+            //});
+            $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
         });
     </script>
 }

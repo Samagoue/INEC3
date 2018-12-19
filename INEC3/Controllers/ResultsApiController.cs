@@ -8,11 +8,9 @@ using Newtonsoft.Json;
 using INEC3.DbConn;
 using INEC3.Helper;
 using INEC3.Models.Service;
-using INEC3.IdentityClass;
-
 using System.Web.Mvc;
 using System.Security.Claims;
-
+using Microsoft.AspNet.Identity;
 namespace INEC3.Controllers
 {
     [System.Web.Http.RoutePrefix("api/Results")]
@@ -41,6 +39,7 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
+                var name = User.Identity.Name;
                 res.Data = resultsService.getcandidate();
             }
             catch (Exception ex)
@@ -58,11 +57,6 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                //var claimsIdentity = User.Identity as ClaimsIdentity;
-                //if (claimsIdentity != null)
-                //{
-                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
-                //}
                 var resp = resultsService.GetParty(candidateid);
                 if (resp != null)
                     res.Data = resp;
@@ -87,11 +81,6 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                //var claimsIdentity = User.Identity as ClaimsIdentity;
-                //if (claimsIdentity != null)
-                //{
-                //    string UserName = claimsIdentity?.FindFirst(c => c.Type == "UserName")?.Value;
-                //}
                 var resp = resultsService.GetPartyList(candidateid);
                 if (resp != null)
                     res.Data = resp;
@@ -135,7 +124,6 @@ namespace INEC3.Controllers
             try
             {
                 res.Data = resultsService.PolStationCahngeGet(polingstationid);
-                //res.Data = JsonConvert.DeserializeObject(resultsService.PolStationCahngeGet(polingstationid));
             }
             catch (Exception ex)
             {
@@ -153,11 +141,9 @@ namespace INEC3.Controllers
             try
             {
                 string UserId = "";
-                var claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null)
-                {
-                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
-                }
+                //UserId = User.Identity.Name;
+                UserId= System.Web.HttpContext.Current.User.Identity.GetUserId();
+                
                 if (string.IsNullOrEmpty(UserId))
                 {
                     res.ContentType = "fail";
@@ -203,7 +189,7 @@ namespace INEC3.Controllers
                         db.SaveChanges();
                     }
                 }
-                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
+                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate= s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes= s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes }).ToList();
                 _Helper.SendNotification();
 
                 //_Helper.ActiveSqlNotification();
@@ -299,11 +285,7 @@ namespace INEC3.Controllers
 
             {
                 string UserId = "";
-                var claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null)
-                {
-                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
-                }
+                UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
                 res.Data = (resultsService.GetUserDDL(UserId));
             }
             catch (Exception ex)
@@ -341,11 +323,7 @@ namespace INEC3.Controllers
             try
             {
                 string UserId = "";
-                var claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null)
-                {
-                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
-                }
+                UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
                 res.Data = (resultsService.UserIndexList(UserId));
             }
             catch (Exception ex)

@@ -10,16 +10,16 @@ using System.Web.Routing;
 using INEC3.App_Start;
 using INEC3.Providers;
 
-[assembly: OwinStartup(typeof(Startup))]
+[assembly: OwinStartup(typeof(INEC3.Startup))]
 namespace INEC3
 {
-    public class Startup
+    public partial class Startup
     {
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
 
-            ConfigureOAuth(app);
+            ConfigureAuth(app);
 
             WebApiConfig.Register(config);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -31,19 +31,21 @@ namespace INEC3
             app.MapSignalR();
         }
 
-        private void ConfigureOAuth(IAppBuilder app)
-        {
-            OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
-            {
-                AllowInsecureHttp = true,
-                TokenEndpointPath = new PathString("/token"),
-                AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                Provider = new AuthorizationServerProvider()
-            };
+        
 
-            // Token Generation
-            app.UseOAuthAuthorizationServer(OAuthServerOptions);
-            app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-        }
+        //private void ConfigureOAuth(IAppBuilder app)
+        //{
+        //    OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
+        //    {
+        //        AllowInsecureHttp = true,
+        //        TokenEndpointPath = new PathString("/token"),
+        //        AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
+        //        Provider = new AuthorizationServerProvider()
+        //    };
+
+        //    // Token Generation
+        //    app.UseOAuthAuthorizationServer(OAuthServerOptions);
+        //    app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
+        //}
     }
 }

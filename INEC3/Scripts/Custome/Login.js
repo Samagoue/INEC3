@@ -19,19 +19,21 @@ $(document).ready(function () {
                     var resp = JSON.parse(data.responseText);
                     if (data.status >= 200 && data.status < 400) {
                         if (resp.access_token) {
-                            $.toast({
-                                heading: 'Welcome to shadow',
-                                text: 'Successfully login. redirecting to homepage',
-                                position: 'top-right',
-                                loaderBg: '#ff6849',
-                                icon: 'success',
-                                hideAfter: 3500,
-                                stack: 6
+                            $.toast({ heading: 'Welcome to shadow', text: 'Successfully login. redirecting to homepage', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
+
+                            $.ajax({
+                                type: "GET", url: "/Account/Index",
+                                data: "access_token=" + resp.access_token + "&token_type=" + resp.token_type + "&redirecturl=",
+                                success: function () {
+                                    var res = 'Bearer ' + resp.access_token;
+                                    Cookies.set('inecbearer', res, { expires: 1 });
+                                    window.location.href = resp.returnUrl;
+                                },
+                                error: function () {
+                                    $.toast({ heading: 'Error', text: 'Something wrong please try again.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+                                }
                             });
-                            var res = 'Bearer ' + resp.access_token;
-                            Cookies.set('inecbearer', res, { expires: 1 });
-                            //window.location.href = '/Admin';
-                            window.location.href = resp.returnUrl;
+
                         }
                         else {
                             $.toast({ text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
@@ -139,10 +141,9 @@ $(document).ready(function () {
             return false;
         }
     });
-    var Urlparameter = getUrlVars()["email"];
-    if (Urlparameter != undefined) {
+    if ($('#email').val() != "") {
         $('#alerttop').show();
-        $('#paraemail').text(Urlparameter);
+        $('#paraemail').html('<b>Email Verification Pending. </b>Check your email : '+$('#email').val());
     }
 });
 
@@ -157,13 +158,3 @@ $("#loginform").validate({
     },
 }
 );
-function getUrlVars() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-    }
-    return vars;
-}
