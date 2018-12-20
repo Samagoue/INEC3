@@ -67,7 +67,7 @@ namespace INEC3.Models.Service
                 resp.Nuls = exprims.Nuls;
                 resp.Total_Votes = exprims.Total_Votes;
             }
-            List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix, ID_Bureauvote=s.ID_Bureauvote }).ToList();
+            List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix, ID_Bureauvote = s.ID_Bureauvote }).ToList();
             if (res1 != null)
             {
                 resp.ResultList = res1;
@@ -158,11 +158,32 @@ namespace INEC3.Models.Service
                 else if (userpol.AssignRole == UserManageRoles.PollingUser)
                 {
                     ddl.PolStation = db.BureauVotes.Where(w => w.ID_Bureauvote == userpol.AssignID).Select(s => new DropDown { Id = s.ID_Bureauvote, Value = s.Nom }).ToList();
-                    ddl.Commune = db.Communes.Where(w => w.ID_Commune == db.BureauVotes.Where(z => z.ID_Bureauvote == userpol.AssignID).Select(s => s.ID_Commune).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
-                    ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Territoire).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
-                    ddl.Province = db.Provinces.Where(w => w.ID_Province == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
-                }
+                    //ddl.Commune = db.Communes.Where(w => w.ID_Commune == db.BureauVotes.Where(z => z.ID_Bureauvote == userpol.AssignID).Select(s => s.ID_Commune).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Commune, Value = s.Nom }).ToList();
+                    //ddl.Territoire = db.Territoires.Where(w => w.ID_Territoire == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Territoire).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Territoire, Value = s.Nom }).ToList();
+                    //ddl.Province = db.Provinces.Where(w => w.ID_Province == db.Communes.Where(z => z.ID_Commune == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault()).Select(s => new DropDown { Id = s.ID_Province, Value = s.Nom }).ToList();
+                    var pol = (from br in db.BureauVotes
+                               join com in db.Communes on br.ID_Commune equals com.ID_Commune
+                               join te in db.Territoires on com.ID_Territoire equals te.ID_Territoire
+                               join pr in db.Provinces on te.ID_Province equals pr.ID_Province
+                               where br.ID_Bureauvote == userpol.AssignID
+                               select new
+                               {
+                                   com.ID_Commune,
+                                   Va_Commune = com.Nom,
+                                   ID_Territoires = te.ID_Territoire,
+                                   Va_Territoire = te.Nom,
+                                   ID_Provinces = pr.ID_Province,
+                                   Va_Provinces = pr.Nom
+                               }).FirstOrDefault();
+                    //ddl.Commune.Add(new DropDown { Id = pol.ID_Commune, Value=pol.Va_Commune });
+                    //ddl.Territoire.Add(new DropDown { Id = pol.ID_Territoires, Value = pol.Va_Territoire });
+                    //ddl.Province.Add(new DropDown { Id = pol.ID_Provinces, Value = pol.Va_Provinces });
+                    //var Commune = new List<DropDown>() { new DropDown { Id = pol.ID_Commune, Value = pol.Va_Commune } };
+                    ddl.Commune = new List<DropDown>() { new DropDown { Id = pol.ID_Commune, Value = pol.Va_Commune } };
+                    ddl.Territoire = new List<DropDown>() { new DropDown { Id = pol.ID_Territoires, Value = pol.Va_Territoire } };
+                    ddl.Province = new List<DropDown>() { new DropDown { Id = pol.ID_Provinces, Value = pol.Va_Provinces } };
 
+                }
             }
             return ddl;
         }
@@ -246,7 +267,7 @@ namespace INEC3.Models.Service
                     }
                 }
             }
-            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate= s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes= s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes ,s.ID_Bureauvote}).ToList();
+            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate = s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes = s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes, s.ID_Bureauvote }).ToList();
             //DataSet dt = new DataSet();
             //dt = _db.GetDatatable("proc_GetProvinceResult", "");
             _Helper.SendNotification();
@@ -299,12 +320,12 @@ namespace INEC3.Models.Service
             }
             return res;
         }
-        public List<ResultViewModel> ResultViewListBykey(string key,string value)
+        public List<ResultViewModel> ResultViewListBykey(string key, string value)
         {
             List<ResultViewModel> res = new List<ResultViewModel>();
             using (SqlConnection con = new SqlConnection(constring))
             {
-                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlist+" where "+key+"='"+value+"'", con))
+                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlist + " where " + key + "='" + value + "'", con))
                 {
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = con;
