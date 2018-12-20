@@ -38,16 +38,6 @@ namespace INEC3.Repository
 
             if (result.Succeeded)
             {
-                //if (userModel.UserProfile == null)
-                //{
-                //    UserProfile userProfile = new UserProfile();
-                //    userProfile.AspNetUsersId = Guid.Parse(user.Id);
-                //    IdentityResult res = _accountService.RegisterUserProfile(userProfile);
-                //    if (!res.Succeeded)
-                //        return res;
-                //}
-                //else
-                //{
                 UserProfile upf = new UserProfile();
                 upf.FirstName = userModel.FirstName;
                 upf.LastName = userModel.LastName;
@@ -55,7 +45,6 @@ namespace INEC3.Repository
                 IdentityResult res = _accountService.RegisterUserProfile(upf);
                 if (!res.Succeeded)
                     return res;
-                //}
             }
             return result;
         }
@@ -107,8 +96,8 @@ namespace INEC3.Repository
                 if (randomNumber.Length > 15)
                     randomNumber = randomNumber.Substring(0, 15);
                 user.PasswordHash = EncryptDecrypt.EncodePassword(randomNumber);
-                var removsss=_userManager.RemovePassword(user.Id);
-                var resss=_userManager.AddPassword(user.Id,randomNumber);
+                var removsss = _userManager.RemovePassword(user.Id);
+                var resss = _userManager.AddPassword(user.Id, randomNumber);
                 url = "&userId=" + user.Id + "&code=" + randomNumber;
             }
             return url;
@@ -144,7 +133,7 @@ namespace INEC3.Repository
             return _userManager.ChangePassword(model.UserId, model.CurrentPassword, model.NewPassword);
         }
 
-        public IdentityResult LockUnlockUser(string userid,bool enable)
+        public IdentityResult LockUnlockUser(string userid, bool enable)
         {
             return _userManager.SetLockoutEnabled(userid, enable);
         }

@@ -105,9 +105,6 @@ namespace INEC3.Controllers
                 HttpResponseMessage response = new HttpResponseMessage();
                 if (!string.IsNullOrEmpty(res.access_token))
                 {
-                    FormsAuthentication.SetAuthCookie(res.userid, false);
-                    _base.UserCode = res.userid;
-                    _base.SaveCookie("inceusername", res.displayname);
                     return Request.CreateResponse<LoginUser>(HttpStatusCode.OK, res);
                 }
                 else if (!string.IsNullOrEmpty(res.error_description))
@@ -233,14 +230,6 @@ namespace INEC3.Controllers
             }
             return res;
         }
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _repository.Dispose();
-            }
-            base.Dispose(disposing);
-        }
 
         private IHttpActionResult GetErrorResult(IdentityResult result)
         {
@@ -282,6 +271,16 @@ namespace INEC3.Controllers
                 return null;
 
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _repository.Dispose();
+                _accountService.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

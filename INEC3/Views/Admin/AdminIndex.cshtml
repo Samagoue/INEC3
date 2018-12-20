@@ -8,9 +8,15 @@
 @Scripts.Render("~/bundles/jquery")
 <style>
     tr.Province.group {
-        background:white !important;
+        background: white !important;
     }
 </style>
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><b>Error </b>@ViewBag.Message
+    </div>
+}
 <div class="container-fluid">
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -75,17 +81,17 @@
                             {
                                 if (item.Province != Province)
                                 {
-                                    <tr class="Province group" style="background:white !important;"><td>@item.Province</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr class="Province group" style="background:#004b96 !important;"><td><b>Province : @item.Province</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                                     Province = item.Province;
                                 }
                                 if (item.Territoire != Territoire)
                                 {
-                                    <tr class="Territoire group"><td>@item.Territoire</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr class="Territoire group" style="background:#0b5d0e !important;"><td><b>Territoire : @item.Territoire</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                                     Territoire = item.Territoire;
                                 }
                                 if (item.Commune != Commune)
                                 {
-                                    <tr class="Commune group"><td>@item.Commune</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr class="Commune group" style="background:#9a8521 !important;"><td><b>Commune : @item.Commune</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                                     Commune = item.Commune;
                                 }
                                 <tr role="row">
@@ -157,15 +163,6 @@
                 displayLength: 25,
                 order: false
             });
-            // Order by the grouping
-            //$('#myTable tbody').on('click', 'tr.group', function () {
-            //    var currentOrder = table.order()[0];
-            //    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-            //        table.order([3, 'desc']).draw();
-            //    } else {
-            //        table.order([3, 'asc']).draw();
-            //    }
-            //});
             $('.buttons-copy, .buttons-csv, .buttons-print, .buttons-pdf, .buttons-excel').addClass('btn btn-primary m-r-10');
         });
     </script>
