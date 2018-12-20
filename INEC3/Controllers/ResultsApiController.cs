@@ -334,5 +334,14 @@ namespace INEC3.Controllers
             }
             return res;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+               // _repository.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

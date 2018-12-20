@@ -13,7 +13,7 @@
         userid = User.Identity.Name;
         //string usernamee = User.Identity.Name;
     }
-    //Base _base = new Base();
+    Base _base = new Base();
     //AccountApiController accapi = new AccountApiController();
     UserDisplay display = new UserDisplay();
     AccountService accountService = new AccountService();
@@ -172,7 +172,7 @@
                             </ul>
                         </li>
 
-                        if (display.Role== UserManageRoles.SuperAdmin)
+                        if (display.Role == UserManageRoles.SuperAdmin)
                         //if (accapi.IsInRole(userid, "SuperAdmin"))
                         {
                             <li>
@@ -261,7 +261,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- /#wrapper -->
     <!-- jQuery -->
     <!-- Bootstrap Core JavaScript -->
@@ -286,18 +286,13 @@
     <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
     <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
-    <!--Cookiess JavaScript -->
-    <script src="~/Scripts/js.cookie.js"></script>
     <!-- toast JS -->
     <script src="~/Content/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
-
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         var bearer = '';
         $(function () {
-            if (Cookies.get('inecbearer')) {
-                bearer = Cookies.get('inecbearer');
-            }
+                bearer = '@_base.access_token';
             $('#linkchangepass').on('click', function () { $("#mdchangepassword").modal('show'); $("#passchnageform")[0].reset(); });
             $('#btnchangepass').on('click', function () {
                 $('.preloader').show();
@@ -351,7 +346,7 @@
                 ConfirmPassword: "Enter Valid Confirm Password",
             },
         });
-    </script>s
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

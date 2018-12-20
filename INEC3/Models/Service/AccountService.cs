@@ -3,26 +3,25 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using INEC3.DbConn;
 using INEC3.Helper;
 using Microsoft.AspNet.Identity;
+using INEC3.Repository;
 using Microsoft.AspNet.Identity.EntityFramework;
-using INEC3.Models;
+
 namespace INEC3.Models.Service
 {
-    public class AccountService
+    public class AccountService : IDisposable
     {
-        private inecDBContext db = new inecDBContext();
-        private ApplicationDbContext _context;
-        private UserManager<IdentityUser> _userManager;
-        private Sqldbconn _sqldb = new Sqldbconn();
+        private inecDBContext db;//= new inecDBContext();
         string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
         public SqlCommandText _smodel = new SqlCommandText();
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         public AccountService()
         {
+            db = new inecDBContext();
             _context = new ApplicationDbContext();
-            _userManager = new UserManager<IdentityUser>(new UserStore<IdentityUser>(_context));
-
+            _userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(_context));
         }
 
         public bool SendEmailVerification(string email, string securitycode)
@@ -48,7 +47,7 @@ namespace INEC3.Models.Service
 
         public bool activateaccount(string securitycode)
         {
-            IdentityUser user = _userManager.FindById(securitycode);
+            ApplicationUser user = _userManager.FindById(securitycode);
             if (user != null)
             {
                 user.EmailConfirmed = true;
@@ -136,7 +135,7 @@ namespace INEC3.Models.Service
         {
             try
             {
-                
+
                 string msg = Email.GetTemplateString((int)Email.EmailTemplates.ForgotPassword);
                 msg = msg.Replace("{Name}", email);
                 string SiteLink = System.Web.HttpContext.Current.Request.Url.Scheme + "://" + System.Web.HttpContext.Current.Request.Url.Authority + "/Account/ForgotPassword?action=resetpassword" + resttoken;
@@ -154,6 +153,12 @@ namespace INEC3.Models.Service
             }
         }
 
+        public void Dispose()
+        {
+            db.Dispose();
+            _context.Dispose();
+            _userManager.Dispose();
+        }
     }
 
 }

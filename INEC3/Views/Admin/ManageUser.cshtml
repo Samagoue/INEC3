@@ -1,17 +1,21 @@
 ﻿@model INEC3.Models.UserDisplay
 @{
     ViewBag.Title = "ManageUser";
-    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 @Scripts.Render("~/bundles/jquery")
 <!-- Select CSS -->
-<link href="@Url.Content("/Content/plugins/bower_components/bootstrap-select/bootstrap-select.min.css")" rel="stylesheet" />
+<link href="@Url.Content("/Content/plugins/bower_components/switchery/dist/switchery.min.css")" rel="stylesheet" />
 <style>
     input, select, textarea {
         max-width: 480px;
     }
 </style>
-
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button><b>Error </b>@ViewBag.Message
+    </div>
+}
 <div class="container-fluid">
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -24,19 +28,16 @@
                 <li class="active">Manage</li>
             </ol>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
-    @*<div class="white-box"> Super Admin Can manage all The Role </div>*@
-
-
-
     @using (Html.BeginForm("ManageUser", "Admin", FormMethod.Post, new { id = "form" }))
     {
         @Html.AntiForgeryToken()
-
         <div class="row">
             <div class="panel panel-default">
-                <div class="panel-heading"><i class="ti-settings"></i> Role</div>
+                <div class="panel-heading">
+                    <i class="ti-settings"></i> Role
+                    <div class="pull-right"><input type="checkbox" id="userstatus" checked class="js-switch" data-color="#f96262" /></div>
+                </div>
                 <div class="panel-wrapper collapse in">
                     <div class="panel-body">
                         <div class="col-md-12">
@@ -80,16 +81,16 @@
 
         </div>
     }
-
-
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <!--Multiselect JavaScript -->
-    <script src="@Url.Content("/Content/plugins/bower_components/bootstrap-select/bootstrap-select.min.js")" type="text/javascript"></script>
+    <!--Switch JavaScript -->
+    <script src="@Url.Content("/Content/plugins/bower_components/switchery/dist/switchery.min.js")" type="text/javascript"></script>
     <script type="text/javascript">
         $(function () {
+            $('.js-switch').each(function () {
+                new Switchery($(this)[0], $(this).data());
+            });
             $(".preloader").fadeOut();
             RoleChange();
             //$("#Role option:contains('SuperAdmin')").remove();

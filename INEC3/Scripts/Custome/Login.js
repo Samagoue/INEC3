@@ -5,11 +5,11 @@
 };
 $(document).ready(function () {
     $(".preloader").fadeOut();
+    var ReturnUrl = getUrlParameter('ReturnUrl');
 
     $("#btnlogin").click(function () {
         $('.preloader').show();
         if ($('#loginform').valid()) {
-            //Ref>https://medium.com/@manivannan_data/create-update-and-delete-cookies-using-jquery-5235b110d384
             $.ajax({
                 type: "POST",
                 url: "/api/Account/Login",
@@ -20,14 +20,14 @@ $(document).ready(function () {
                     if (data.status >= 200 && data.status < 400) {
                         if (resp.access_token) {
                             $.toast({ heading: 'Welcome to shadow', text: 'Successfully login. redirecting to homepage', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 6 });
-
                             $.ajax({
                                 type: "GET", url: "/Account/Index",
-                                data: "access_token=" + resp.access_token + "&token_type=" + resp.token_type + "&redirecturl=",
+                                data: "userid=" + resp.userid + "&access_token=" + resp.access_token + "&token_type=" + resp.token_type,
                                 success: function () {
-                                    var res = 'Bearer ' + resp.access_token;
-                                    Cookies.set('inecbearer', res, { expires: 1 });
-                                    window.location.href = resp.returnUrl;
+                                    if (ReturnUrl)
+                                        window.location.href = ReturnUrl;
+                                    else
+                                        window.location.href = '/'
                                 },
                                 error: function () {
                                     $.toast({ heading: 'Error', text: 'Something wrong please try again.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
@@ -37,7 +37,6 @@ $(document).ready(function () {
                         }
                         else {
                             $.toast({ text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
-                            //alert("Something Wrong Try Again");
                         }
                         $(".preloader").fadeOut();
                     }
@@ -79,7 +78,7 @@ $(document).ready(function () {
                             hideAfter: 3500,
                             stack: 6
                         });
-
+                        
                     }
                     else if (resp.contentType == 'fail') {
                         $(".preloader").fadeOut();
@@ -94,6 +93,8 @@ $(document).ready(function () {
                     }
                     else {
                         $(".preloader").fadeOut();
+                        $('#alerttop').show();
+                        $('#paraemail').html('<b>Success </b> account reset password sent to :' + $('#txtresetemail').val());
                         $.toast({
                             text: 'Reset password send to your email.',
                             position: 'top-right',
@@ -143,10 +144,9 @@ $(document).ready(function () {
     });
     if ($('#email').val() != "") {
         $('#alerttop').show();
-        $('#paraemail').html('<b>Email Verification Pending. </b>Check your email : '+$('#email').val());
+        $('#paraemail').html('<b>Email Verification Pending. </b>Check your email : ' + $('#email').val());
     }
 });
-
 $("#loginform").validate({
     rules: {
         username: "required",
@@ -158,3 +158,17 @@ $("#loginform").validate({
     },
 }
 );
+function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};

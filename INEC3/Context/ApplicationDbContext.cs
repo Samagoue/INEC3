@@ -17,7 +17,7 @@ namespace INEC3.Models
     }
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
+        public ApplicationDbContext() : base("inecConn", throwIfV1Schema: false)
         {
         }
         public static ApplicationDbContext Create()

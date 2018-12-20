@@ -24,30 +24,37 @@ namespace INEC3.Controllers
         //============User Area
         public ActionResult Result(int? id)
         {
-            string username = "";
-            username = _base.GetCookie("inceusername");
-            UserDisplay user = accountService.FindUserDisplay("UserName", username);
-            ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
-            ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
-            if (user == null)
+            UserDisplay user = new UserDisplay();
+            try
             {
-                return View();
-            }
-            else
-            {
-                if (user.Role == UserManageRoles.SuperAdmin)
+                string username = "";
+                username = User.Identity.Name;
+                if (string.IsNullOrEmpty(username))
+                    return RedirectToAction("Index", "Home");
+                user = accountService.FindUserDisplay("Id", username);
+                ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
+                ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
+                if (user == null)
+                    return View();
+                else
                 {
-                    return RedirectToAction("AdminResult");
+                    if (user.Role == UserManageRoles.SuperAdmin)
+                        return RedirectToAction("AdminResult");
+                    UserDropDown ddl = resultsService.GetUserDDL(user.UserId);
+                    if (ddl.Province != null)
+                        ViewBag.Province = new SelectList(ddl.Province, "Id", "Value", 0);
+                    if (ddl.Territoire != null)
+                        ViewBag.Territoire = new SelectList(ddl.Territoire, "Id", "Value", 0);
+                    if (ddl.Commune != null)
+                        ViewBag.Commune = new SelectList(ddl.Commune, "Id", "Value", 0);
+                    if (ddl.PolStation != null)
+                        ViewBag.ID_Bureauvote = new SelectList(ddl.PolStation, "Id", "Value");
+                    return View(user);
                 }
-                UserDropDown ddl = resultsService.GetUserDDL(user.UserId);
-                if (ddl.Province != null)
-                    ViewBag.Province = new SelectList(ddl.Province, "Id", "Value", 0);
-                if (ddl.Territoire != null)
-                    ViewBag.Territoire = new SelectList(ddl.Territoire, "Id", "Value", 0);
-                if (ddl.Commune != null)
-                    ViewBag.Commune = new SelectList(ddl.Commune, "Id", "Value", 0);
-                if (ddl.PolStation != null)
-                    ViewBag.ID_Bureauvote = new SelectList(ddl.PolStation, "Id", "Value");
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return View(user);
             }
         }
@@ -55,49 +62,54 @@ namespace INEC3.Controllers
 
         public ActionResult Index()
         {
-            //var str= User.Identity.Name;
-            var userid = _base.UserCode;
-            if (string.IsNullOrEmpty(userid))
+            List<ResultViewModel> model = new List<ResultViewModel>();
+            try
             {
-                var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
-                return View(results.ToList());
+                var userid = User.Identity.Name;
+                if (string.IsNullOrEmpty(userid))
+                    return View(model);
+
+                ViewBag.Message = "Erro Found in view";
+                //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party).Where(w => w.UserId == userid);
+                return View(resultsService.ResultViewListBykey("UserId", userid));
             }
-            else
+            catch (Exception ex)
             {
-                var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party).Where(w => w.UserId == userid);
-                return View(results.ToList());
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return View(model);
             }
-
-
         }
 
         //[AuthFilter(Roles = "SuperAdmin,User")]
         public ActionResult AdminIndex()
         {
-            var name = User.Identity.Name;
-            //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party);
-            return View(resultsService.ResultViewList());
+            List<ResultViewModel> model = new List<ResultViewModel>();
+            try
+            {
+                return View(resultsService.ResultViewList());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return View(model);
+            }
         }
         public ActionResult AdminResult(int? id)
         {
-            ViewBag.Message = "Artech Consulting";
-            ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
-            ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
+            tbl_Results tbl_Results = new tbl_Results();
+            try
+            {
+                ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
+                ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
+                ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
+                ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
 
-            ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
-            ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
-            ViewBag.Message = "Your application description page.";
-            if (id == null)
-            {
-                return View();
+                tbl_Results = db.Results.Find(id);
+                return View(tbl_Results);
             }
-            else
+            catch (Exception ex)
             {
-                tbl_Results tbl_Results = db.Results.Find(id);
-                if (tbl_Results == null)
-                {
-                    return HttpNotFound();
-                }
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return View(tbl_Results);
             }
 
@@ -105,42 +117,55 @@ namespace INEC3.Controllers
 
         public ActionResult Users()
         {
-
             List<UserDisplay> model = new List<UserDisplay>();
-            return View(accountService.GetUserList());
+            try
+            {
+                return View(accountService.GetUserList());
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return View(model);
+            }
+
         }
         [HttpPost]
         public ActionResult ManageUser(string userid)
         {
-            //ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Id", "Role");
-            ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Role", "Role");
-
-            //IEnumerable<SelectListItem> Province = new List<SelectListItem>();
-            UserPolStation userpol = db.UserPolStations.Where(w => w.UserID == userid).FirstOrDefault();
-            if (userpol != null && userpol.AssignRole == UserManageRoles.ProvinceUser)
-                ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", userpol.AssignID);
-            else
-                ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
-            if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
-                ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
-            else
-                ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
-            if (userpol != null && userpol.AssignRole == UserManageRoles.CommuneUser)
-                ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", userpol.AssignID);
-            else
-                ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
-            if (userpol != null && userpol.AssignRole == UserManageRoles.PollingUser)
-                ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", userpol.AssignID);
-            else
-                ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
-            UserDisplay model = accountService.FindUserDisplay("Id", userid);
-            if (model == null)
+            UserDisplay model = new UserDisplay();
+            try
             {
-                return View();
-            }
-            //model.UserId = userid;
+                ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Role", "Role");
 
-            return View(model);
+                UserPolStation userpol = db.UserPolStations.Where(w => w.UserID == userid).FirstOrDefault();
+                if (userpol != null && userpol.AssignRole == UserManageRoles.ProvinceUser)
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", userpol.AssignID);
+                else
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
+                if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
+                else
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
+                if (userpol != null && userpol.AssignRole == UserManageRoles.CommuneUser)
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", userpol.AssignID);
+                else
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
+                if (userpol != null && userpol.AssignRole == UserManageRoles.PollingUser)
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", userpol.AssignID);
+                else
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+                model = accountService.FindUserDisplay("Id", userid);
+                if (model == null)
+                {
+                    return View();
+                }
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+                return View(model);
+            }
         }
 
         [HttpPost]

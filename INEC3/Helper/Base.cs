@@ -7,6 +7,11 @@ namespace INEC3.Helper
 {
     public class Base
     {
+        public string access_token
+        {
+            get { return EncryptDecrypt.Decrypt(GetCookie(EncryptDecrypt.Encrypt("access_token"))); }
+            set { SaveCookie(EncryptDecrypt.Encrypt("access_token"), EncryptDecrypt.Encrypt(value)); }
+        }
         public string EmailAddress
         {
             get { return EncryptDecrypt.Decrypt(GetCookie(EncryptDecrypt.Encrypt("EmailAddress"))); }

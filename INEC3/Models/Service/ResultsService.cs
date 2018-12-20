@@ -67,12 +67,11 @@ namespace INEC3.Models.Service
                 resp.Nuls = exprims.Nuls;
                 resp.Total_Votes = exprims.Total_Votes;
             }
-            List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix }).ToList();
+            List<Resultt> res1 = db.Results.Where(w => w.ID_Bureauvote == polingstationid).Select(s => new Resultt { ID_Result = s.ID_Result, ID_Candidat = s.ID_Candidat, Candidate = s.Candidat.Nom, ID_Party = s.ID_Party, Party = s.Party.Sigle, Pourcentage = s.Pourcentage, Votes = s.Voix, ID_Bureauvote=s.ID_Bureauvote }).ToList();
             if (res1 != null)
             {
                 resp.ResultList = res1;
             }
-            //return JsonConvert.SerializeObject(resp);
             return resp;
 
 
@@ -300,6 +299,46 @@ namespace INEC3.Models.Service
             }
             return res;
         }
+        public List<ResultViewModel> ResultViewListBykey(string key,string value)
+        {
+            List<ResultViewModel> res = new List<ResultViewModel>();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlist+" where "+key+"='"+value+"'", con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        ResultViewModel r = new ResultViewModel();
+                        r.ID_Result = Convert.ToInt32(rdr["ID_Result"]);
+                        r.Code_SV = Convert.ToInt32(rdr["Code_SV"]);
+                        r.UserId = Convert.ToString(rdr["UserId"]);
+                        r.Candidat = Convert.ToString(rdr["Candidat"]);
+                        r.Party = Convert.ToString(rdr["Party"]);
+                        r.Voix = Convert.ToInt32(rdr["Voix"]);
+                        r.Pourcentage = Convert.ToDouble(rdr["Pourcentage"]);
+                        r.Votants = Convert.ToInt32(rdr["Votants"]);
+                        r.Abstentions = Convert.ToInt32(rdr["Abstentions"]);
+                        r.Nuls = Convert.ToInt32(rdr["Nuls"]);
+                        r.Exprimes = Convert.ToInt32(rdr["Exprimes"]);
+                        r.Total_Votes = Convert.ToInt32(rdr["Total_Votes"]);
+                        r.FirstName = Convert.ToString(rdr["FirstName"]);
+                        r.Province = Convert.ToString(rdr["Province"]);
+                        r.Territoire = Convert.ToString(rdr["Territoire"]);
+                        r.Commune = Convert.ToString(rdr["Commune"]);
+                        r.PolStation = Convert.ToString(rdr["PolStation"]);
+                        res.Add(r);
+                    }
+                    con.Close();
+
+                }
+
+            }
+            return res;
+        }
     }
     public class Responce
     {
@@ -324,6 +363,7 @@ namespace INEC3.Models.Service
         public string Party { get; set; }//Sigle
         public double? Pourcentage { get; set; }//
         public int Votes { get; set; }//Voix
+        public int ID_Bureauvote { get; set; }//Pollingstation
     }
     public class UserDropDown
     {
