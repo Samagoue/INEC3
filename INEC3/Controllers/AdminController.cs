@@ -32,6 +32,10 @@ namespace INEC3.Controllers
                 if (string.IsNullOrEmpty(username))
                     return RedirectToAction("Index", "Home");
                 user = accountService.FindUserDisplay("Id", username);
+                if (user.Role == UserManageRoles.User)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
                 ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
                 ViewBag.ID_Party = new SelectList(db.Parties, "ID_Party", "Sigle");
                 if (user == null)
@@ -68,8 +72,11 @@ namespace INEC3.Controllers
                 var userid = User.Identity.Name;
                 if (string.IsNullOrEmpty(userid))
                     return View(model);
-
-                ViewBag.Message = "Erro Found in view";
+                UserDisplay display = accountService.FindUserDisplay("Id", userid);
+                if (display.Role == UserManageRoles.User)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
                 //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party).Where(w => w.UserId == userid);
                 return View(resultsService.ResultViewListBykey("UserId", userid));
             }
@@ -86,6 +93,12 @@ namespace INEC3.Controllers
             List<ResultViewModel> model = new List<ResultViewModel>();
             try
             {
+                UserDisplay display = accountService.FindUserDisplay("Id", User.Identity.Name);
+                if (display.Role != UserManageRoles.SuperAdmin)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
+
                 return View(resultsService.ResultViewList());
             }
             catch (Exception ex)
@@ -99,6 +112,11 @@ namespace INEC3.Controllers
             tbl_Results tbl_Results = new tbl_Results();
             try
             {
+                UserDisplay display = accountService.FindUserDisplay("Id", User.Identity.Name);
+                if (display.Role != UserManageRoles.SuperAdmin)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
                 ViewBag.Province = new SelectList(db.Provinces.Select(s => new { ID_Province = s.ID_Province, Nom = s.Nom }).ToList(), "ID_Province", "Nom", 0);
                 ViewBag.ID_Bureauvote = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom");
                 ViewBag.ID_Candidat = new SelectList(db.Candidats, "ID_Candidat", "Nom");
@@ -120,6 +138,11 @@ namespace INEC3.Controllers
             List<UserDisplay> model = new List<UserDisplay>();
             try
             {
+                UserDisplay display = accountService.FindUserDisplay("Id", User.Identity.Name);
+                if (display.Role != UserManageRoles.SuperAdmin)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
                 return View(accountService.GetUserList());
             }
             catch (Exception ex)
@@ -135,6 +158,11 @@ namespace INEC3.Controllers
             UserDisplay model = new UserDisplay();
             try
             {
+                UserDisplay display = accountService.FindUserDisplay("Id", User.Identity.Name);
+                if (display.Role != UserManageRoles.SuperAdmin)
+                {
+                    return RedirectToAction("Index", "error", new { id = "401" });
+                }
                 ViewBag.Roles = new SelectList(resultsService.GetRoleList(), "Role", "Role");
 
                 UserPolStation userpol = db.UserPolStations.Where(w => w.UserID == userid).FirstOrDefault();

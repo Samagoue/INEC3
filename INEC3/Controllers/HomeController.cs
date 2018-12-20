@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿
 using System.Web.Mvc;
 using INEC3.Models;
-using Microsoft.AspNet.SignalR;
 using INEC3.DbConn;
 using System.Data;
 using Newtonsoft.Json;
-using System.IO;
-using INEC3.Helper;
-
 namespace INEC3.Controllers
 {
-    [AuthFilter]
+    [System.Web.Http.Authorize]
     public class HomeController : Controller
     {
         private inecDBContext db = new inecDBContext();
