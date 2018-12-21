@@ -14,7 +14,7 @@ namespace INEC3.Models
         public string vw_UserProfile = "Select * from vw_UserProfile";
         public string vw_UserProfileWhere = "Select top(1) * from vw_UserProfile where ";
         public string SelectRoleList = "select Id, [Name] from  AspNetRoles";
-        public string vw_resultlist = "select * from vw_resultlist";
+        public string vw_resultlist = "select * from vw_resultlist ORDER BY Province,Territoire,Commune,PolStation";
     }
     public static class UserManageRoles
     {
