@@ -281,7 +281,7 @@ namespace INEC3.Models.Service
             List<ResultViewModel> res = new List<ResultViewModel>();
             using (SqlConnection con = new SqlConnection(constring))
             {
-                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlist, con))
+                using (SqlCommand cmd = new SqlCommand(_smodel.vw_resultlistOrderBy, con))
                 {
                     cmd.CommandType = CommandType.Text;
                     cmd.Connection = con;
