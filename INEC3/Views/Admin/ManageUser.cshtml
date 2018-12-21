@@ -69,24 +69,24 @@
                             {
                                 <div class="form-group col-md-6">
                                     @Html.Label("Role")
-                                    @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
+                                    @Html.DropDownList("Role", new SelectList(@ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
                                 </div>
                                 <div class="form-group col-md-6" id="Province" style="display:none;">
                                     @Html.Label("Province")
-                                    @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                    @Html.DropDownList("ID_Province", (SelectList)@ViewBag.Province, new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
                                 </div>
                                 <div class="form-group col-md-6" id="Territoire" style="display:none;">
                                     @Html.Label("Territoire")
-                                    @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
+                                    @Html.DropDownList("ID_Territoire", (SelectList)@ViewBag.Territoire, new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
                                 </div>
                                 <div class="form-group col-md-6" id="Commune" style="display:none;">
                                     @Html.Label("Commune")
-                                    @Html.DropDownList("ID_Commune", new SelectList(ViewBag.Commune, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                    @Html.DropDownList("ID_Commune", (SelectList)@ViewBag.Commune, new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
 
                                 </div>
                                 <div class="form-group col-md-6" id="PollingStation" style="display:none;">
                                     @Html.Label("Poling Station")
-                                    @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })
+                                    @Html.DropDownList("ID_Bureauvote", (SelectList)@ViewBag.Polingstation, new { @class = "form-control", @required = true })
                                 </div>
                             }
                         </div>
