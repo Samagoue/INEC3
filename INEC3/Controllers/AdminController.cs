@@ -175,7 +175,7 @@ namespace INEC3.Controllers
                 }
                 else if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
                 {
-                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault());
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", db.Territoires.Where(w => w.ID_Territoire == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault());
                     ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
                     ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
                     ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
