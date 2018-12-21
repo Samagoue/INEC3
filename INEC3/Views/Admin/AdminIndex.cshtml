@@ -10,7 +10,6 @@
 <style>
     tr.Province.group {
         background: white !important;
-        color: black;
     }
 </style>
 @if (ViewBag.Message != null)
@@ -93,7 +92,7 @@
                                 }
                                 if (item.Commune != Commune)
                                 {
-                                    <tr class="Commune group" style="background:#7B9BA6 !important; color:black;"><td><b>Commune : @item.Commune</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+                                    <tr class="Commune group" style="background:#7B9BA6 !important; color:#333;"><td><b>Commune : @item.Commune</b></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
                                     Commune = item.Commune;
                                 }
                                 <tr role="row">
