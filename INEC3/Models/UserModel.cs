@@ -9,7 +9,7 @@ namespace INEC3.Models
 {
     public class UserModel
     {
-        [Required]
+        //[Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
@@ -38,7 +38,6 @@ namespace INEC3.Models
     [Table("UserProfile")]
     public class UserProfile
     {
-
         public int UserProfileId { get; set; }
         public Guid AspNetUsersId { get; set; }
         public string FirstName { get; set; }
@@ -106,7 +105,6 @@ namespace INEC3.Models
 
     public class PasswordChangeModel
     {
-        //[Required]
         public string UserId { get; set; }
         [Required]
         public string CurrentPassword { get; set; }

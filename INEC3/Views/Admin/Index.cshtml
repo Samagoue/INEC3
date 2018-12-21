@@ -1,9 +1,8 @@
 @model IEnumerable<INEC3.Models.ResultViewModel>
-
 @{
     ViewBag.Title = "Result List";
-    //Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+<link href="@Url.Content("~/Content/plugins/bower_components/datatables/media/css/dataTables.bootstrap.css")" rel="stylesheet" type="text/css" />
 @Scripts.Render("~/bundles/jquery")
 @if (ViewBag.Message != null)
 {

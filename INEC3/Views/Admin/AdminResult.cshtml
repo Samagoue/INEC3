@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Result";
 }
+<link href="@Url.Content("~/Content/plugins/bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.css")" rel="stylesheet" type="text/css" />
 @Scripts.Render("~/bundles/jquery")
 <style>
     input, select, textarea {
@@ -33,10 +34,10 @@
                 <p></p>
                 <div class="row">
                     <div class="col-sm-12 col-xs-12">
-                        @using (Html.BeginForm("CreateResult", "Home", FormMethod.Post, new { id = "form" }))
+                        @using (Html.BeginForm("CreateResult", "Admin", FormMethod.Post, new { id = "form" }))
                         {
                             @Html.AntiForgeryToken()
-                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            //@Html.ValidationSummary(true, "", new { @class = "text-danger" })
                             <div class="row">
                                 <div class="col-md-12">
                                     @Html.HiddenFor(model => model.ID_Result, new { @id = "ID_Result" })
@@ -48,7 +49,7 @@
                                     <div class="form-group col-md-6">
                                         @Html.LabelFor(model => model.ID_Party, "Territoire")
                                         @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
-                                        }, htmlAttributes: new { @class = "form-control disable",@onchange= "GetCommune()", @required = true })
+                                        }, htmlAttributes: new { @class = "form-control",@onchange= "GetCommune()", @required = true })
                                         @Html.ValidationMessageFor(model => model.ID_Party, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group col-md-6">
@@ -72,23 +73,20 @@
                                         @Html.ValidationMessageFor(model => model.Votants, "", new { @class = "text-danger" })
                                     </div>
                                     <div class="form-group col-md-6">
-                                        @Html.LabelFor(model => model.Abstentions)
-                                        @Html.EditorFor(model => model.Abstentions, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
-                                        @Html.ValidationMessageFor(model => model.Abstentions, "", new { @class = "text-danger" })
+                                        @Html.Label("Abstentions")
+                                        @Html.Editor("Abstentions", new { htmlAttributes = new { @class = "form-control tch3_22 Notnegativnum", @onchange = "CountExprimes()",  @id = "Abstentions" } })
                                     </div>
                                     <div class="form-group col-md-6">
-                                        @Html.LabelFor(model => model.Nuls)
-                                        @Html.EditorFor(model => model.Nuls, new { htmlAttributes = new { @class = "form-control", @onchange = "CountExprimes()", @Value = "0" } })
-                                        @Html.ValidationMessageFor(model => model.Nuls, "", new { @class = "text-danger" })
+                                        @Html.Label("Nuls")
+                                        @Html.Editor("Nuls", new { htmlAttributes = new { @class = "form-control tch3_22 Notnegativnum", @onchange = "CountExprimes()", @id = "Nuls" } })
                                     </div>
                                     <div class="form-group col-md-6">
-                                        @Html.LabelFor(model => model.Exprimes)
-                                        @Html.EditorFor(model => model.Exprimes, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })
-                                        @Html.ValidationMessageFor(model => model.Exprimes, "", new { @class = "text-danger" })
+                                        @Html.Label("Exprimes")
+                                        @Html.Editor("Exprimes", new { htmlAttributes = new { @class = "form-control tch3_22 Notnegativnum", @id = "Exprimes" } })
                                     </div>
                                     <div class="form-group col-md-6">
                                         @Html.Label("Total Votes")
-                                        @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.Editor("Total_Votes", new { htmlAttributes = new { @class = "form-control", @id= "Total_Votes" } })
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -97,7 +95,7 @@
                                             <tr>
                                                 <th>@Html.DropDownList("ID_Candidat", null, htmlAttributes: new { @class = "form-control", @onchange = "SelectParty()" })</th>
                                                 <th>@Html.DropDownList("ID_Party", null, htmlAttributes: new { @class = "form-control disable" })</th>
-                                                <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control", @Value = "0" } })</th>
+                                                <th> @Html.EditorFor(model => model.Voix, new { htmlAttributes = new { @class = "form-control tch3_22 Notnegativnum", @Value = "0" } })</th>
                                                 <th colspan="2"><button type="button" onclick="addToListAndDataBase()" class="btn btn-primary pull-right">Add</button></th>
                                             </tr>
                                             <tr>
@@ -124,26 +122,25 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+    <script src="@Url.Content("~/Content/plugins/bower_components/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js")" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".tch3_22").TouchSpin({ initval: 0, min: 0, max: 10000000000000000, stepinterval: 10, maxboostedstep: 100000000000 });
+            $('.bootstrap-touchspin-down').removeClass('btn-primary').addClass('btn-default');
+            $('.bootstrap-touchspin-up').removeClass('btn-primary').addClass('btn-default');
+            $('.Notnegativnum').removeAttr('type');
             $(".preloader").fadeOut();
             $("#Code_SV").prop("disabled", true);
             $("#ID_Party").prop("disabled", true);
             $("#Votants").prop("disabled", true);
             $("#Total_Votes").prop("disabled", true);
-
-            if ($('#ID_Result').val() == "") {
-                $('#Votants').val(0);
-                $('#Total_Votes').val(0);
-                $('#ID_Candidat').append($('<option selected></option>').val('').html("Select Candidate"));
-                $('#ID_Party').append($('<option selected></option>').val('').html("Select Party"));
-                $('#ID_Bureauvote').append($('<option selected></option>').val('').html("Select Pooling Station"));
-                $('#ID_Province').append($('<option selected></option>').val('').html("Select Province"));
-            }
-            else {
-                SelectParty();
-                PolStationCahngeGet();
-            }
+            //if ($('#ID_Result').val() == "") {
+            $('#Votants').val(0);
+            $('#Total_Votes').val(0);
+            $('#ID_Candidat').prepend($('<option selected></option>').val('').html("Select Candidate"));
+            $('#ID_Party').prepend($('<option selected></option>').val('').html("Select Party"));
+            $('#ID_Bureauvote').prepend($('<option selected></option>').val('').html("Select Pooling Station"));
+            $('#ID_Province').prepend($('<option selected></option>').val('').html("Select Province"));
             $('#ID_Bureauvote').change(function () { $('#tbllist tbody>tr').remove(); });
         });
     </script>
