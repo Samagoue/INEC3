@@ -339,6 +339,7 @@
     <Content Include="Content\bootstrap\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\css\animate.css" />
     <Content Include="Content\css\colors\blue-dark.css" />
+    <Content Include="Content\css\colors\blue-dark.min.css" />
     <Content Include="Content\css\icons\font-awesome\css\fa-brands.css" />
     <Content Include="Content\css\icons\font-awesome\css\fa-brands.min.css" />
     <Content Include="Content\css\icons\font-awesome\css\fa-regular.css" />
@@ -2336,6 +2337,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\Custome\DashBoard.min.js" />
     <Content Include="Scripts\Custome\Login.js" />
     <Content Include="Scripts\Custome\Register.js" />
     <Content Include="Scripts\Custome\ResultAdminResultComman.js" />

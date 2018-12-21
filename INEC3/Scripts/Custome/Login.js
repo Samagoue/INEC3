@@ -36,13 +36,14 @@ $(document).ready(function () {
 
                         }
                         else {
-                            $.toast({ text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+                            $.toast({ heading: 'Error !', text: 'Something Wrong Try Again', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                         }
                         $(".preloader").fadeOut();
                     }
                     else if (resp.Message) {
                         $(".preloader").fadeOut();
                         $.toast({
+                            heading: 'Warning',
                             text: resp.Message,
                             position: 'top-right',
                             loaderBg: '#ff6849',
@@ -61,16 +62,18 @@ $(document).ready(function () {
 
     });
     $("#btnreset").click(function () {
-        $('.preloader').show();
-        if ($('#loginform').valid()) {
+        if ($('#recoverform').valid()) {
+            $('.preloader').show();
             $.ajax({
                 type: "GET",
                 url: "/api/Account/ForgotPassword",
                 data: "email=" + $('#txtresetemail').val(),
                 success: function (resp) {
-                    if (resp.contentType == 'error') {
+                    debugger
+                    if (resp.ContentType == 'error') {
                         $(".preloader").fadeOut();
                         $.toast({
+                            heading: 'Error !',
                             text: 'Something Wrong Try Again',
                             position: 'top-right',
                             loaderBg: '#ff6849',
@@ -80,10 +83,11 @@ $(document).ready(function () {
                         });
                         
                     }
-                    else if (resp.contentType == 'fail') {
+                    else if (resp.ContentType == 'fail') {
                         $(".preloader").fadeOut();
                         $.toast({
-                            text: resp.data,
+                            heading: 'Fail !',
+                            text: resp.Data,
                             position: 'top-right',
                             loaderBg: '#ff6849',
                             icon: 'warning',
@@ -96,6 +100,7 @@ $(document).ready(function () {
                         $('#alerttop').show();
                         $('#paraemail').html('<b>Success </b> account reset password sent to :' + $('#txtresetemail').val());
                         $.toast({
+                            heading: 'Success !',
                             text: 'Reset password send to your email.',
                             position: 'top-right',
                             loaderBg: '#ff6849',
@@ -110,8 +115,6 @@ $(document).ready(function () {
                 }
             });
         }
-
-
     });
 
     $("#to-recover").click(function () {
@@ -156,8 +159,15 @@ $("#loginform").validate({
         username: "Please Enter Email",
         password: "Please Enter password",
     },
-}
-);
+});
+$("#recoverform").validate({
+    rules: {
+        txtresetemail: { required: true, email: true }
+    },
+    messages: {
+        txtresetemail: "Please Enter Valid Email"
+    },
+});
 function getUrlParameter(sParam) {
     var sPageURL = window.location.search.substring(1),
         sURLVariables = sPageURL.split('&'),

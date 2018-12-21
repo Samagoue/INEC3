@@ -175,10 +175,6 @@ namespace INEC3.Models.Service
                                    ID_Provinces = pr.ID_Province,
                                    Va_Provinces = pr.Nom
                                }).FirstOrDefault();
-                    //ddl.Commune.Add(new DropDown { Id = pol.ID_Commune, Value=pol.Va_Commune });
-                    //ddl.Territoire.Add(new DropDown { Id = pol.ID_Territoires, Value = pol.Va_Territoire });
-                    //ddl.Province.Add(new DropDown { Id = pol.ID_Provinces, Value = pol.Va_Provinces });
-                    //var Commune = new List<DropDown>() { new DropDown { Id = pol.ID_Commune, Value = pol.Va_Commune } };
                     ddl.Commune = new List<DropDown>() { new DropDown { Id = pol.ID_Commune, Value = pol.Va_Commune } };
                     ddl.Territoire = new List<DropDown>() { new DropDown { Id = pol.ID_Territoires, Value = pol.Va_Territoire } };
                     ddl.Province = new List<DropDown>() { new DropDown { Id = pol.ID_Provinces, Value = pol.Va_Provinces } };

@@ -36,41 +36,59 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="ti-settings"></i> Role
-                    <div class="pull-right"><input type="checkbox" id="userstatus" checked class="js-switch" data-color="#f96262" /></div>
+                    @*<div class="pull-right"><input type="checkbox" id="userstatus" checked class="js-switch" data-color="#f96262" /></div>*@
                 </div>
                 <div class="panel-wrapper collapse in">
                     <div class="panel-body">
                         <div class="col-md-12">
                             @Html.HiddenFor(model => model.UserId, new { @id = "UserId" })
+                            @if (Model.Role == "User")
+                            {
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Role")
+                                    @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Province" style="display:none;">
+                                    @Html.Label("Province")
+                                    @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Territoire" style="display:none;">
+                                    @Html.Label("Territoire")
+                                    @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem { Text = "Select Territoire", Value = "" } }, htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Commune" style="display:none;">
+                                    @Html.Label("Commune")
+                                    @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem { Text = "Select Commune", Value = "" } }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="PollingStation" style="display:none;">
+                                    @Html.Label("Poling Station")
+                                    @Html.DropDownList("ID_Bureauvote", new List<SelectListItem> { new SelectListItem { Text = "Select Polling", Value = "" } }, htmlAttributes: new { @class = "form-control", @required = true })
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="form-group col-md-6">
+                                    @Html.Label("Role")
+                                    @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Province" style="display:none;">
+                                    @Html.Label("Province")
+                                    @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Territoire" style="display:none;">
+                                    @Html.Label("Territoire")
+                                    @Html.DropDownList("ID_Territoire", new SelectList(ViewBag.Territoire, "Value", "Text"), htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
+                                </div>
+                                <div class="form-group col-md-6" id="Commune" style="display:none;">
+                                    @Html.Label("Commune")
+                                    @Html.DropDownList("ID_Commune", new SelectList(ViewBag.Commune, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
 
-                            <div class="form-group col-md-6">
-                                @Html.Label("Role")
-                                @Html.DropDownList("Role", new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role), htmlAttributes: new { @class = "form-control", @onchange = "RoleChange()", @required = true })
-                            </div>
-
-                            <div class="form-group col-md-6" id="Province" style="display:none;">
-                                @Html.Label("Province")
-                                @Html.DropDownList("ID_Province", new SelectList(ViewBag.Province, "Value", "Text"), htmlAttributes: new { @class = "form-control", @onchange = "GetTerritoireList()", @required = true })
-                            </div>
-                            <div class="form-group col-md-6" id="Territoire" style="display:none;">
-                                @Html.Label("Territoire")
-                                @Html.DropDownList("ID_Territoire", new List<SelectListItem> { new SelectListItem{Text="Select Territoire",Value="" }
-                                    }, htmlAttributes: new { @class = "form-control disable", @onchange = "GetCommune()", @required = true })
-                            </div>
-
-                            <div class="form-group col-md-6" id="Commune" style="display:none;">
-                                @Html.Label("Commune")
-                                @Html.DropDownList("ID_Commune", new List<SelectListItem> { new SelectListItem{Text="Select Commune",Value="" }
-                                    }, htmlAttributes: new { @class = "form-control", @onchange = "GetPoolingStation()", @required = true })
-
-                            </div>
-                            <div class="form-group col-md-6" id="PollingStation" style="display:none;">
-                                @Html.Label("Poling Station")
-                                @Html.DropDownList("ID_Bureauvote", new List<SelectListItem> { new SelectListItem{Text="Select Polling",Value="" }
-                                    }, htmlAttributes: new { @class = "form-control", @required = true })
-                                @*@Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })*@
-
-                            </div>
+                                </div>
+                                <div class="form-group col-md-6" id="PollingStation" style="display:none;">
+                                    @Html.Label("Poling Station")
+                                    @Html.DropDownList("ID_Bureauvote", new SelectList(ViewBag.Polingstation, "Value", "Text"), htmlAttributes: new { @class = "form-control", @required = true })
+                                </div>
+                            }
                         </div>
                         <div class="col-sm-12 col-xs-12">
                             <button type="button" id="btnsave" class="btn btn-primary pull-right">Save</button>
@@ -84,6 +102,7 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
     <!--Switch JavaScript -->
     <script src="@Url.Content("/Content/plugins/bower_components/switchery/dist/switchery.min.js")" type="text/javascript"></script>
     <script type="text/javascript">
@@ -93,9 +112,10 @@
             });
             $(".preloader").fadeOut();
             RoleChange();
-            //$("#Role option:contains('SuperAdmin')").remove();
             $('#btnsave').on('click', function () { if ($("#form").valid()) { SaveRole() }; });
-            $('#ID_Province').prepend($('<option selected></option>').val('').html("Select Province"));
+            if ('User' == '@Model.Role') {
+                $('#ID_Province').prepend($('<option selected></option>').val('').html("Select Province"));
+            }
         });
         function GetTerritoireList() {
             if ($('#ID_Province').val() > 0) {
@@ -232,11 +252,13 @@
                     data: JSON.stringify(data),
                     success: function (res) {
                         if (res) {
-                            alert(res);
+                            $.toast({ heading: 'Success !', text: res,position: 'top-right',loaderBg: '#ff6849',icon: 'success',hideAfter: 3500,stack: 6});
+                            //alert(res);
                         }
                         $(".preloader").fadeOut();
                     },
                     error: function (err) {
+                        $.toast({ heading: 'error !', text: 'something going wrong', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
                         alert(err);
                         $(".preloader").fadeOut();
                     }
@@ -246,6 +268,41 @@
                 alert('Please Select Value');
             }
         }
+        //function LockUnlockUser() {
+        //    swal({
+        //        title: "Are you sure?",
+        //        text: "Once change, you will not be able to recover this record!",
+        //        icon: "warning",
+        //        buttons: true,
+        //        dangerMode: true,
+        //    }).then((willDelete) => {
+        //        if (willDelete) {
+        //            $(".preloader").show();
+        //            $.ajax({
+        //                url: '/api/Account/LockUnlockUser',
+        //                type: 'GET',
+        //                headers: { Authorization: bearer },
+        //                data: { userid: $('#'), status:$('#') },
+        //                success: function (resp) {
+        //                    if (resp) {
+        //                        swal("Success! User Status Change!", { icon: "success", });
+        //                    }
+        //                    else {
+        //                        swal("Oops! something wrong please try again!", { icon: "error", });
+        //                    }
+        //                    $(".preloader").fadeOut();
+        //                },
+        //                error: function () {
+        //                    $(".preloader").fadeOut();
+        //                }
+        //            });
+
+        //        } else {
+        //            swal("Your record is safe!");
+        //        }
+        //    });
+        //}
+
         $("#form").validate({
             rules: {
                 ID_Province: { required: true },

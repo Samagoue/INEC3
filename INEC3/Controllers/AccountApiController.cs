@@ -126,7 +126,13 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                string resttoken = _repository.ResetPassword(email);
+                if (string.IsNullOrEmpty(email))
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Email not found";
+                    return res;
+                }
+                    string resttoken = _repository.ResetPassword(email);
 
                 if (!string.IsNullOrEmpty(resttoken))
                 {
@@ -159,12 +165,7 @@ namespace INEC3.Controllers
             JsonResult res = new JsonResult();
             try
             {
-                string UserId = "";
-                var claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null)
-                {
-                    UserId = claimsIdentity?.FindFirst(c => c.Type == "UserId")?.Value;
-                }
+                string UserId = HttpContext.Current.User.Identity.GetUserId();
                 obj.UserId = UserId;
                 if (string.IsNullOrEmpty(UserId) || !ModelState.IsValid)
                 {
@@ -178,6 +179,43 @@ namespace INEC3.Controllers
                     if (result.Succeeded)
                     {
                         res.Data = "Password change successfully";
+                    }
+                    else
+                    {
+                        res.ContentType = "fail";
+                        res.Data = result.Errors;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
+
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Authorize]
+        [System.Web.Http.Route("LockUnlockUser")]
+        public JsonResult LockUnlockUser(string userid,bool status)
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                
+                if (string.IsNullOrEmpty(userid) )
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Invalid request";
+                    return res;
+                }
+                else
+                {
+                    var result = _repository.LockUnlockUser(userid, status);
+                    if (result.Succeeded)
+                    {
+                        res.Data = "success";
                     }
                     else
                     {

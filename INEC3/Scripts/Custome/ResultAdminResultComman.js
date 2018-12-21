@@ -34,7 +34,6 @@ function PolStationCahngeGet() {
         headers: { Authorization: bearer },
         data: { polingstationid: $('#ID_Bureauvote').val() },
         success: function (result) {
-
             $('#Abstentions').val(0);
             $('#Nuls').val(0);
             $('#Exprimes').val(0);
@@ -213,7 +212,7 @@ function resettable() {
 }
 
 function addToListAndDataBase() {
-    if ($('#ID_Candidat').val() != '' && $('#Voix').val() > 0) {
+    if ($('#ID_Candidat').val() != '' && $('#Voix').val() > 0 && $('#ID_Bureauvote').val() != '' && $('#ID_Bureauvote').val() != 0) {
         var votes = parseInt($('#Voix').val());
         $('#Total_Votes').val(parseInt($('#Voix').val()) + parseInt($('#Total_Votes').val()));
         $('#Exprimes').val(parseInt($('#Total_Votes').val()) + parseInt($('#Abstentions').val()) + parseInt($('#Nuls').val()))
@@ -251,19 +250,19 @@ function addToListAndDataBase() {
                             $('#Exprimes').val(v.Exprimes)
                             $('#Total_Votes').val(v.Total_Votes)
                         }
-                        table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Nom + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Votes + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
+                        table.append('<tr><td><input type="hidden" class="ResultId" value="' + v.ID_Result + '" /><input type="hidden" class="CandidateId" value="' + v.ID_Candidat + '" />' + v.Candidate + '</td><td><input type="hidden" class="PartyId" value="' + v.ID_Party + '" />' + v.Party + '</td><td class="votes">' + v.Votes + '</td><td class="percen">' + v.Pourcentage + '</td><td><button type="button" onClick="removerecord($(this))" class="btn btn-sm btn-danger"> X </button></td></tr>')
                     });
-                    //$.toast({ text: 'Record save successfully', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 2 });
-                    swal("Record save successfully!", "", "success")
+                    $.toast({ heading: 'Success !', text: 'Record save successfully', position: 'top-right', loaderBg: '#ff6849', icon: 'success', hideAfter: 3500, stack: 5 });
+                    //swal("Record save successfully!", "", "success")
                     resetList()
                 }
                 else {
                     if (resp.ContentType == 'fail')
-                        swal("Oops!", resp.Data, "error")
-                        //$.toast({ text: resp.Data, position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 2 });
+                        //swal("Oops!", resp.Data, "error")
+                        $.toast({ heading: 'Invalid Request !', text: resp.Data, position: 'top-right', loaderBg: '#ff6849', icon: 'warning', hideAfter: 3500, stack: 5 });
                     else
-                        swal("Oops! something wrong please try again!", { icon: "error", });
-                        //$.toast({ text: 'Oops something wrong try after sometime', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 2 });
+                        //swal("Oops! something wrong please try again!", { icon: "error", });
+                    $.toast({ heading: 'Error !', text: 'Oops something wrong try after sometime', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 5 });
                 }
                 $(".preloader").fadeOut();
             },
@@ -277,38 +276,16 @@ function addToListAndDataBase() {
     }
     else {
         if ($('#Voix').val() == 0) {
-            swal('Enter votes more than zero.')
-            //$.toast({ heading: 'Invalid Value', text: 'Enter votes more than zero.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+            //swal('Enter votes more than zero.')
+            $.toast({ heading: 'Invalid Value', text: 'Enter votes more than zero.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
         }
         if ($('#ID_Candidat').val() == '') {
-            swal('Select Candidate.')
-            //$.toast({ heading: 'Invalid Candidate', text: 'Select Candidate.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+            //swal('Select Candidate.')
+            $.toast({ heading: 'Invalid Candidate', text: 'Select candidate.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
+        }
+        if ($('#ID_Bureauvote').val() == '') {
+            //swal('Select Candidate.')
+            $.toast({ heading: 'Invalid Polstation', text: 'Select valid polstation.', position: 'top-right', loaderBg: '#ff6849', icon: 'error', hideAfter: 3500, stack: 6 });
         }
     }
 }
-
-$("#form").validate({
-    rules: {
-        ID_Province: { required: true },
-        ID_Territoire: { required: true },
-        ID_Commune: { required: true},
-        ID_Bureauvote: { required: true},
-        Abstentions: { required: true},
-        Nuls: { required: true},
-        Exprimes: { required: true},
-        ID_Candidat: { required: true},
-        Voix: { required: true}
-
-    },
-    messages: {
-        ID_Province: "This field is required",
-        ID_Territoire: "This field is required",
-        ID_Commune: "This field is required",
-        ID_Bureauvote: "This field is required",
-        Abstentions: "This field is required",
-        Nuls: "This field is required",
-        Exprimes: "This field is required",
-        ID_Candidat: "This field is required",
-        Voix: "This field is required"
-    },
-});

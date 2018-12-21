@@ -167,21 +167,43 @@ namespace INEC3.Controllers
 
                 UserPolStation userpol = db.UserPolStations.Where(w => w.UserID == userid).FirstOrDefault();
                 if (userpol != null && userpol.AssignRole == UserManageRoles.ProvinceUser)
+                {
                     ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", userpol.AssignID);
-                else
-                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
-                if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
-                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
-                else
                     ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
-                if (userpol != null && userpol.AssignRole == UserManageRoles.CommuneUser)
-                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", userpol.AssignID);
-                else
                     ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
-                if (userpol != null && userpol.AssignRole == UserManageRoles.PollingUser)
-                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", userpol.AssignID);
-                else
                     ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+                }
+                else if (userpol != null && userpol.AssignRole == UserManageRoles.TerritoireUser)
+                {
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", db.Provinces.Where(w => w.ID_Province == userpol.AssignID).Select(s => s.ID_Province).FirstOrDefault());
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", userpol.AssignID);
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+                }
+                else if (userpol != null && userpol.AssignRole == UserManageRoles.CommuneUser)
+                {
+                    var selecter = db.Communes.Where(w => w.ID_Commune == userpol.AssignID).Select(s => new { s.ID_Territoire, s.ID_Province }).FirstOrDefault();
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", selecter.ID_Province);
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", selecter.ID_Territoire);
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", userpol.AssignID);
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+                }
+                else if (userpol != null && userpol.AssignRole == UserManageRoles.PollingUser)
+                {
+                    var selecter = (from co in db.Communes join po in db.BureauVotes on co.ID_Commune equals po.ID_Commune where po.ID_Bureauvote == userpol.AssignID select new {co.ID_Province,co.ID_Territoire,co.ID_Commune }).FirstOrDefault();
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", selecter.ID_Province);
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", selecter.ID_Territoire);
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", selecter.ID_Commune);
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", userpol.AssignID);
+                }
+                else
+                {
+                    ViewBag.Province = new SelectList(db.Provinces.Select(s => new { s.ID_Province, s.Nom }).ToList(), "ID_Province", "Nom", 0);
+                    ViewBag.Territoire = new SelectList(db.Territoires.Select(s => new { s.ID_Territoire, s.Nom }).ToList(), "ID_Territoire", "Nom", 0);
+                    ViewBag.Commune = new SelectList(db.Communes.Select(s => new { s.ID_Commune, s.Nom }).ToList(), "ID_Commune", "Nom", 0);
+                    ViewBag.Polingstation = new SelectList(db.BureauVotes, "ID_Bureauvote", "Nom", 0);
+                }
+
                 model = accountService.FindUserDisplay("Id", userid);
                 if (model == null)
                 {

@@ -3,11 +3,7 @@
 }
 @Styles.Render("~/Content/zoomMap.css")
 @Scripts.Render("~/bundles/jquery")
-<link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css" rel="stylesheet" />
-
 <style>
-
-
     .deactive {
         fill: #444 !important;
     }
@@ -196,11 +192,6 @@
         padding-right: 0px !important;
     }
 </style>
-
-@*Moved In>Content/zoomMap.css <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.css" />*@
-<!-- ============================================================== -->
-<!-- D3 Js Custom -->
-<!-- ============================================================== -->
 <div class="container-fluid">
     <div class="row bg-title">
         <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -212,12 +203,7 @@
                 <li class="active">Index</li>
             </ol>
         </div>
-        <!-- /.col-lg-12 -->
     </div>
-    <!-- ============================================================== -->
-    <!-- Other sales widgets -->
-    <!-- ============================================================== -->
-    <!-- .row -->
     <div class="row">
         <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
             <div class="white-box responsive">
@@ -268,10 +254,6 @@
             </div>
         </div>
     </div>
-    <!-- /.row -->
-    <!-- ============================================================== -->
-    <!-- Extra-component -->
-    <!-- ============================================================== -->
     <div class="row">
         <div class="col-lg-8 col-md-12">
             <div id="mapcontainer" class="white-box">
@@ -294,16 +276,11 @@
         </div>
     </div>
 </div>
-
-
-
-
 <div id="nvtable" class="eln-popup" hidden>
     <div class="eln-title  eln-results-row-president" style="margin-top:10px;margin-left:5px;"><label id="header"> Alabama </label><span id="lblreporting" class="eln-default-subtitle" style="color:#6f6d6d !important;float: right; margin-right: 2%;"> 0% Reporting </span></div>
     <table class="eln-table eln-results-table">
         <thead>
             <tr style="border-bottom: 1px solid #181819;">
-               
                 <th class="eln-header eln-name" colspan="3" style="color:#383636 !important;"><strong>Candidate</strong></th>
                 <th style="color:#383636 !important;"><strong>Party</strong></th>
                 <th style="color:#383636 !important;"><strong>Votes</strong></th>
@@ -311,32 +288,21 @@
             </tr>
         </thead>
         <tbody>
-            
         </tbody>
     </table>
 </div>
 <footer class="footer text-center">
     Copyright © 2018 <a href="http://www.artechconsulting.us">Artech Consulting</a>. All Rights Reserved.
 </footer>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqud3mapHome")
     @Scripts.Render("~/bundles/HomeCustomjs")
-    @*<script src="https://d3js.org/d3.v4.min.js"></script>*@
-    @*<script src="https://unpkg.com/topojson-client@3"></script>*@
-    @*<script src="~/Scripts/d3/d3.v4.min.js"></script>
-        <script src="~/Scripts/d3/topojson-client.js"></script>
-        <script src="~/Scripts/jquery.signalR-2.3.0.min.js"></script>
-        <script src="~/signalr/hubs"></script>
-        <script src="~/Scripts/mainMap.js"></script>*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.js"></script>
     <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.signalR-2.3.0.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script>
-
+        $(function () { $(".preloader").fadeOut();});
         var rs =@Html.Raw(ViewBag.Province);
         var ProvinceResult = rs.Table, TerritoiresResult = rs.Table1, TopCandidate = rs.Table2, ReportPolStation = rs.Table3,LastUpdatedPoolstn=rs.Table4;
-
         $('#TooltipChart').slimScroll({
             height: '370px'
         });

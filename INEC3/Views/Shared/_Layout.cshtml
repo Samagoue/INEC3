@@ -11,20 +11,15 @@
     else
     {
         userid = User.Identity.Name;
-        //string usernamee = User.Identity.Name;
     }
     Base _base = new Base();
-    //AccountApiController accapi = new AccountApiController();
     UserDisplay display = new UserDisplay();
     AccountService accountService = new AccountService();
-
-    //username = _base.GetCookie("inceusername");
     if (!string.IsNullOrEmpty(userid))
     {
         display = accountService.FindUserDisplay("Id", userid);
     }
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,22 +30,15 @@
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="~/Content/image/logo.png">
     <title>Shadow</title>
-    <!-- Bootstrap Core CSS -->
     <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="~/Content/plugins/bower_components/datatables/media/css/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
     <!-- Menu CSS -->
     <link href="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
-    <!-- chartist CSS -->
-    <link href="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.css" rel="stylesheet">
-    <link href="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css" rel="stylesheet">
-    <!-- Vector CSS -->
-    <link href="~/Content/plugins/bower_components/vectormap/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
-    <!-- animation CSS -->
     <link href="~/Content/css/animate.css" rel="stylesheet">
     <!-- Custom CSS -->
     <link href="~/Content/css/style.css" rel="stylesheet">
     <!-- color CSS -->
-    <link href="~/Content/css/colors/blue-dark.css" id="theme" rel="stylesheet">
+    <link href="~/Content/css/colors/blue-dark.min.css" id="theme" rel="stylesheet">
+    <link href="~/Content/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -107,53 +95,38 @@
             background: #e7e5e4;
         }
     </style>
-
 </head>
 <body class="fix-header">
-    <input type="hidden" name="Authorization" id="Authorization" />
-    <!-- ============================================================== -->
     <!-- Preloader -->
-    <!-- ============================================================== -->
     <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
         </svg>
     </div>
-    <!-- ============================================================== -->
     <!-- Wrapper -->
-    <!-- ============================================================== -->
     <div id="wrapper">
-        <!-- ============================================================== -->
         <!-- Topbar header - style you can find in pages.scss -->
-        <!-- ============================================================== -->
         <nav class="navbar navbar-default navbar-static-top m-b-0">
             <div class="navbar-header">
+                <div class="top-left-part visible-xs">
+                    <a href="javascript:void(0)" class="open-close waves-effect waves-light visible-xs" style="padding-left: 20px;"><i class="ti-close ti-menu"></i></a>
+                </div>
                 <div class="top-left logo-container" style="margin-bottom: -31px;">
-                    <!-- Logo -->
-                    <a class="logo" href="@Url.Action("Index","Home")">
-                        <!--This is dark logo icon--><img src="~/Content/image/logo.png" alt="home" class="dark-logo" />
-                    </a>
+                    <a class="logo" href="@Url.Action("Index","Home")"><img src="~/Content/image/logo.png" alt="home" class="dark-logo" /></a>
                     <div style="display: inline;position: absolute;margin: 0px 2%; ">
                         <h2 style="color:white;color: #f7f1f1;text-shadow: 1px -1px 0 #afa7a7, -1px 2px 1px #111010, -2px 4px 1px #767474, -3px 6px 1px #787777,-4px 6px 1px #787777, 4px -13px 12px rgba(28,110,164,0);">
                             Election Results
                         </h2>
                     </div>
                 </div>
-
             </div>
             <div class="flag-border">
                 <div style="background-color: #007fff !important;"></div>
                 <div style="background-color: #f7d618 !important;"></div>
                 <div style="background-color: #ce1021 !important;"></div>
             </div>
-            <!-- /.navbar-header -->
-            <!-- /.navbar-top-links -->
-            <!-- /.navbar-static-side -->
         </nav>
-        <!-- End Top Navigation -->
-        <!-- ============================================================== -->
         <!-- Left Sidebar - style you can find in sidebar.scss  -->
-        <!-- ============================================================== -->
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav slimscrollsidebar">
                 <div class="sidebar-head">
@@ -171,9 +144,7 @@
                                 <li><a href="@Url.Action("Logoff","Account")"><i class="fa fa-power-off"></i> <span class="hide-menu">Logout</span></a></li>
                             </ul>
                         </li>
-
                         if (display.Role == UserManageRoles.SuperAdmin)
-                        //if (accapi.IsInRole(userid, "SuperAdmin"))
                         {
                             <li>
                                 <a href="#" class="waves-effect">
@@ -185,7 +156,6 @@
                                 </ul>
                             </li>
                         }
-                        //else if (accapi.IsInRole(userid, "User")) { }
                         else if (display.Role == UserManageRoles.User) { }
                         else
                         {
@@ -212,20 +182,11 @@
                 </ul>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Left Sidebar -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
         <!-- Page Content -->
-        <!-- ============================================================== -->
         <div id="page-wrapper">
             @RenderBody()
-
-            <!-- /.container-fluid -->
-            @*<footer class="footer text-center"> 2017 &copy; Ampleadmin brought to you by themedesigner.in </footer>*@
-
             <footer class="footer text-center">
-                Copyright © 2018 <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
+                Copyright © @DateTime.Now.Year <a href="http://www.artechconsulting.us" target="blank">Artech Consulting</a>. All Rights Reserved.
             </footer>
         </div>
         <!-- /#page-wrapper -->
@@ -261,38 +222,19 @@
             </div>
         </div>
     </div>
-
-    <!-- /#wrapper -->
     <!-- jQuery -->
-    <!-- Bootstrap Core JavaScript -->
     <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Menu Plugin JavaScript -->
     <script src="~/Content/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-
-    <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
-    <!--Wave Effects -->
     <script src="~/Content/js/waves.js"></script>
-
-    <!-- chartist chart -->
-    <script src="~/Content/plugins/bower_components/chartist-js/dist/chartist.min.js"></script>
-    <script src="~/Content/plugins/bower_components/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js"></script>
-    <!-- sparkline chart JavaScript -->
-    <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.sparkline.min.js"></script>
-    <script src="~/Content/plugins/bower_components/jquery-sparkline/jquery.charts-sparkline.js"></script>
-    <!-- Custom Theme JavaScript -->
     <script src="~/Content/js/custom.min.js"></script>
-    <!--Style Switcher -->
-    <script src="~/Content/plugins/bower_components/styleswitcher/jQuery.style.switcher.js"></script>
-    <!--slimscroll JavaScript -->
     <script src="~/Content/js/jquery.slimscroll.js"></script>
-    <!-- toast JS -->
     <script src="~/Content/plugins/bower_components/toast-master/js/jquery.toast.js"></script>
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
         var bearer = '';
         $(function () {
-                bearer = '@_base.access_token';
+            bearer = '@_base.access_token';
             $('#linkchangepass').on('click', function () { $("#mdchangepassword").modal('show'); $("#passchnageform")[0].reset(); });
             $('#btnchangepass').on('click', function () {
                 $('.preloader').show();
@@ -331,7 +273,6 @@
                 }
             });
         });
-
         //Form Validation
         $("#passchnageform").validate({
             rules: {

@@ -1,6 +1,4 @@
-﻿
-var swidth = 0, sheight = 0, scale = 0;
-
+﻿var swidth = 0, sheight = 0, scale = 0;
 var width = $('#mapcontainer').width(),
     height = $('#mapcontainer').height()
 var iscancel = false;
@@ -42,7 +40,6 @@ var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
 var svg = d3.select("#map").append("svg")
     .attr("width", width)
     .attr("height", height)
-    //.style("background", "#5d5959")
     .call(zoom)
     .on("click", stopped, true);
 
