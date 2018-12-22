@@ -224,13 +224,11 @@ namespace INEC3.Models.Service
                 }
                 else
                 {
-
-                    tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat).FirstOrDefault();
+                    tbl_Results isdublicate = isExist.Where(w => w.ID_Candidat == obj.ID_Candidat && w.ID_Bureauvote==obj.ID_Bureauvote).FirstOrDefault();
                     if (isdublicate != null)
                     {
                         db.Results.RemoveRange(db.Results.Where(w => w.ID_Result == isdublicate.ID_Result).ToList());
                         db.SaveChanges();
-                        //Total_Votes = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Sum(s => s.Voix);
                     }
 
                     int Total_Votes = 0;
@@ -248,6 +246,7 @@ namespace INEC3.Models.Service
                     db.SaveChanges();
                     Total_Votes = Total_Votes + obj.Voix;
 
+                    isExist = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).ToList();
                     foreach (var it in isExist)
                     {
                         tbl_Results re = new tbl_Results();

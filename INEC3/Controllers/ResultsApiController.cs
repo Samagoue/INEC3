@@ -141,13 +141,19 @@ namespace INEC3.Controllers
             try
             {
                 string UserId = "";
-                //UserId = User.Identity.Name;
-                UserId= System.Web.HttpContext.Current.User.Identity.GetUserId();
+                UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
-                if (obj.ID_Bureauvote == 0)
+                if (obj.ID_Bureauvote == 0 || obj.ID_Party == 0 || obj.ID_Candidat == 0 ||obj.Voix==0)
                 {
                     res.ContentType = "fail";
-                    res.Data = "ID_Bureauvote require";
+                    if (obj.ID_Bureauvote == 0)
+                        res.Data = "ID_Bureauvote require";
+                    else if (obj.ID_Candidat == 0)
+                        res.Data = "ID_Candidat require";
+                    else if (obj.ID_Party == 0)
+                        res.Data = "ID_Party require";
+                    else
+                        res.Data = "Voix require";
                     return res;
                 }
 
@@ -196,7 +202,7 @@ namespace INEC3.Controllers
                         db.SaveChanges();
                     }
                 }
-                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate= s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes= s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes,s.ID_Bureauvote }).ToList();
+                var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate = s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes = s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes, s.ID_Bureauvote }).ToList();
                 _Helper.SendNotification();
 
                 //_Helper.ActiveSqlNotification();
@@ -346,7 +352,7 @@ namespace INEC3.Controllers
         {
             if (disposing)
             {
-               // _repository.Dispose();
+                // _repository.Dispose();
             }
             base.Dispose(disposing);
         }
