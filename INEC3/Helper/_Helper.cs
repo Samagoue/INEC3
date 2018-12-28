@@ -8,12 +8,17 @@ using Microsoft.AspNet.Identity;
 using INEC3.Models.Service;
 using Microsoft.AspNet.Identity.EntityFramework;
 using INEC3.Repository;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Web;
+using System.Threading.Tasks;
 
 namespace INEC3.Helper
 {
-    public class _Helper
+    public class _Helper : System.Web.HttpApplication
     {
         private ApplicationDbContext _context;
+        string constring = ConfigurationManager.ConnectionStrings["inecConn"].ToString();
         private AuthRepository _authRepository;
         private AccountService _accountService;
         private inecDBContext _inecDBContext;
@@ -129,7 +134,7 @@ namespace INEC3.Helper
                     PasswordHash = "Admin@1234",
                     EmailConfirmed = true
                 };
-               // var result = _userManager.Create(user, user.PasswordHash);
+                // var result = _userManager.Create(user, user.PasswordHash);
                 var result = _authRepository.CreateDefaultUser(user);
                 if (result.Succeeded)
                 {
@@ -149,7 +154,65 @@ namespace INEC3.Helper
             }
         }
 
-        
+        public async Task<int> CheckAndSendSqlChange(int version)
+        {
+            Tbl_Sqlnotification u = new Tbl_Sqlnotification();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                using (SqlCommand cmd = new SqlCommand(_smodel.Select_tbl_Sqlnotification, con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            u.VersionId = Convert.ToInt32(rdr["VersionId"]);
+                        }
+                    }
+                    con.Close();
+                }
+                if (version < u.VersionId)
+                {
+                    SendNotification();
+                    return u.VersionId;
+                }
+                else
+                    return version;
+            }
+        }
 
+        public int GetLatestSqlNotificationVer()
+        {
+            Tbl_Sqlnotification u = new Tbl_Sqlnotification();
+            using (SqlConnection con = new SqlConnection(constring))
+            {
+                using (SqlCommand cmd = new SqlCommand(_smodel.Select_tbl_Sqlnotification, con))
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.Connection = con;
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.HasRows)
+                    {
+                        while (rdr.Read())
+                        {
+                            u.VersionId = Convert.ToInt32(rdr["VersionId"]);
+                        }
+                    }
+                    con.Close();
+                }
+                return u.VersionId;
+            }
+        }
+    }
+    public class Tbl_Sqlnotification
+    {
+        public int Id;
+        public int VersionId;
+        public string Action;
+        public string Updatetime;
     }
 }

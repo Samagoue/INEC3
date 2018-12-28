@@ -85,6 +85,11 @@ namespace INEC3.Repository
             return false;
         }
 
+        public bool IsInRoleById(string userid, string role)
+        {
+
+            return _userManager.IsInRole(userid, role);
+        }
         public string ResetPassword(string email)
         {
             string url = null;

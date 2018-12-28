@@ -30,22 +30,5 @@ namespace INEC3
 
             app.MapSignalR();
         }
-
-        
-
-        //private void ConfigureOAuth(IAppBuilder app)
-        //{
-        //    OAuthAuthorizationServerOptions OAuthServerOptions = new OAuthAuthorizationServerOptions()
-        //    {
-        //        AllowInsecureHttp = true,
-        //        TokenEndpointPath = new PathString("/token"),
-        //        AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-        //        Provider = new AuthorizationServerProvider()
-        //    };
-
-        //    // Token Generation
-        //    app.UseOAuthAuthorizationServer(OAuthServerOptions);
-        //    app.UseOAuthBearerAuthentication(new OAuthBearerAuthenticationOptions());
-        //}
     }
 }

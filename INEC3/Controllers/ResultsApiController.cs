@@ -9,7 +9,7 @@ using INEC3.DbConn;
 using INEC3.Helper;
 using INEC3.Models.Service;
 using System.Web.Mvc;
-using System.Security.Claims;
+using INEC3.Repository;
 using Microsoft.AspNet.Identity;
 namespace INEC3.Controllers
 {
@@ -22,7 +22,6 @@ namespace INEC3.Controllers
         private _Helper _Helper;
         private ApplicationDbContext _context;
         private ResultsService resultsService;
-
         public ResultsApiController()
         {
             _context = new ApplicationDbContext();
@@ -143,7 +142,7 @@ namespace INEC3.Controllers
                 string UserId = "";
                 UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
 
-                if (obj.ID_Bureauvote == 0 || obj.ID_Party == 0 || obj.ID_Candidat == 0 ||obj.Voix==0)
+                if (obj.ID_Bureauvote == 0 || obj.ID_Party == 0 || obj.ID_Candidat == 0 || obj.Voix == 0)
                 {
                     res.ContentType = "fail";
                     if (obj.ID_Bureauvote == 0)
@@ -175,6 +174,7 @@ namespace INEC3.Controllers
                 res.ContentType = "error";
                 res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
+            System.Web.HttpContext.Current.Application["SqlVersion"] = _Helper.GetLatestSqlNotificationVer();
             return res;
         }
 
@@ -204,12 +204,9 @@ namespace INEC3.Controllers
                 }
                 var res = db.Results.Where(w => w.ID_Bureauvote == ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate = s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes = s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes, s.ID_Bureauvote }).ToList();
                 _Helper.SendNotification();
-
-                //_Helper.ActiveSqlNotification();
-
-                SqlNotification objRepo = new SqlNotification();
-                objRepo.GetAllMessages();
-
+                //SqlNotification objRepo = new SqlNotification();
+                //objRepo.GetAllMessages();
+                System.Web.HttpContext.Current.Application["SqlVersion"] = _Helper.GetLatestSqlNotificationVer();
                 return Json(res);
             }
             catch (Exception ex) { return Json(new { Result = false, ErrorMessage = ex.Message }); }
@@ -337,7 +334,19 @@ namespace INEC3.Controllers
             {
                 string UserId = "";
                 UserId = System.Web.HttpContext.Current.User.Identity.GetUserId();
-                res.Data = (resultsService.UserIndexList(UserId));
+                if (string.IsNullOrEmpty(UserId))
+                {
+                    res.ContentType = "fail";
+                    res.Data = "Invalid request";
+                    return res;
+                }
+                using (AuthRepository resp = new AuthRepository())
+                {
+                    if (resp.IsInRoleById(UserId, UserManageRoles.SuperAdmin))
+                        res.Data = (resultsService.ResultViewList());
+                    else
+                        res.Data = (resultsService.ResultViewListBykey("UserId", UserId));
+                }
             }
             catch (Exception ex)
             {

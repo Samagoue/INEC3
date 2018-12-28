@@ -51,6 +51,7 @@ namespace INEC3.Controllers
 
         public void Index(string userid, string access_token, string token_type)
         {
+
             FormsAuthentication.SetAuthCookie(userid, false);
             _base.access_token = token_type + " " + access_token;
         }

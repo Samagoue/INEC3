@@ -77,7 +77,6 @@ namespace INEC3.Controllers
                 {
                     return RedirectToAction("Index", "error", new { id = "401" });
                 }
-                //var results = db.Results.Include(t => t.BureauVote).Include(t => t.Candidat).Include(t => t.Party).Where(w => w.UserId == userid);
                 return View(resultsService.ResultViewListBykey("UserId", userid));
             }
             catch (Exception ex)
