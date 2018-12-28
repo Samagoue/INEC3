@@ -332,14 +332,6 @@ function FillTopCandidate() {
         //);
         FillToolTipChart();
     }
-    //else {
-    //    for (var i = 0; i < 2; i++) {
-    //        $("#lblcandidate" + i).html('');
-    //        $("#lblcandidatePer" + i).html('0 %');
-    //        $("#lblcandidateVote" + i).html('0');
-    //        $("#imgcandidate" + i).attr("src", "/Content/image/logo.png");
-    //    }
-    //}
     if (ReportPolStation) {
         if (ReportPolStation[0]) {
             $('#ReportPolstation').html(ReportPolStation[0].Reportstation);
@@ -350,13 +342,7 @@ function FillTopCandidate() {
             $('#PersPolstation').html('0 %');
         }
     }
-    //else {
-    //    $('#ReportPolstation').html('');
-    //    $('#PersPolstation').html('0 %');
-    //}
     if (LastUpdatedPoolstn) {
-        //$('#lbllstpolingstation').html(LastUpdatedPoolstn[0].Polingstation);
-        //$('#lbllastupdatedvotes').html(LastUpdatedPoolstn[0].Votants + '(' + LastUpdatedPoolstn[0].Party+')');
         if (LastUpdatedPoolstn[0]) {
             $('#lbllastupdatedProvinceName').html(LastUpdatedPoolstn[0].ProvinceName);
             $('#lbllastupdatedProvince').html(LastUpdatedPoolstn[0].Province);
@@ -370,13 +356,6 @@ function FillTopCandidate() {
             $('#lbllastupdatedVotantsName').html('Poling Stat..');
         }
     }
-    //else {
-    //    $('#lbllastupdatedProvinceName').html('');
-    //    $('#lbllastupdatedProvince').html('');
-    //    $('#lbllastupdatedVotants').html('');
-    //    $('#lbllastupdatedVotantsName').html('');
-    //}
-
 }
 function FillToolTipChart() {
     $('#LblToltiptitle').text('GLOBAL RESULTS');

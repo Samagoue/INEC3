@@ -16,6 +16,7 @@ namespace INEC3.Models
         public string SelectRoleList = "select Id, [Name] from  AspNetRoles";
         public string vw_resultlist = "select * from vw_resultlist";
         public string vw_resultlistOrderBy = "select * from vw_resultlist ORDER BY Province,Territoire,Commune,PolStation";
+        public string Select_tbl_Sqlnotification = "select top(1) isnull(VersionId,0)as VersionId  from tbl_Sqlnotification order by Id desc";
     }
     public static class UserManageRoles
     {
