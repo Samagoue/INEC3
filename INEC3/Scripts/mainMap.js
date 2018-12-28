@@ -327,7 +327,7 @@ function FillTopCandidate() {
             if (TopCandidate[i])
                 $("#imgcandidate" + i).attr("src", "/Content/image/Candimg_" + TopCandidate[i].Candidatimg + ".png");
             else
-                $("#imgcandidate" + i).attr("src", "/Content/image/logo.png");
+                $("#imgcandidate" + i).attr("src", "/Content/image/no_image.png");
         }
         //);
         FillToolTipChart();
