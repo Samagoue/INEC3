@@ -238,7 +238,6 @@
     <Compile Include="Controllers\ResultsController.cs" />
     <Compile Include="Controllers\TerritoireController.cs" />
     <Compile Include="DbConn\Sqldbconn.cs" />
-    <Compile Include="DbConn\SqlNotification.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

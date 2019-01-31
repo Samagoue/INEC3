@@ -83,6 +83,13 @@ namespace INEC3.Models.Service
             dt = _db.GetDatatable("proc_DashbardTiles", "");
             return dt;
         }
+
+        public dynamic GetDashBoard()
+        {
+            DataSet dt = new DataSet();
+            dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            return dt;
+        }
         public dynamic UserPolingStationGet()
         {
             //return db.BureauVotes.Where(w => w.ID_Commune == CommuneId).Select(s => new { s.ID_Bureauvote, s.Nom }).ToList();
@@ -262,16 +269,9 @@ namespace INEC3.Models.Service
                     }
                 }
             }
-            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate = s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes = s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes, s.ID_Bureauvote }).ToList();
-            //DataSet dt = new DataSet();
-            //dt = _db.GetDatatable("proc_GetProvinceResult", "");
+            var res = db.Results.Where(w => w.ID_Bureauvote == obj.ID_Bureauvote).Select(s => new { s.ID_Result, s.ID_Candidat, Candidate = s.Candidat.Nom, s.ID_Party, Party = s.Party.Sigle, s.Pourcentage, Votes = s.Voix, s.Exprimes, s.Nuls, s.Abstentions, s.Total_Votes, s.ID_Bureauvote ,s.ImagePath,s.Latitude,s.Longitude}).ToList();
             _Helper.SendNotification();
 
-            //var hubContext = GlobalHost.ConnectionManager.GetHubContext<SignalR.RealTimeMapHub>();
-            //hubContext.Clients.All.mapUpdate(JsonConvert.SerializeObject(dt));
-
-            SqlNotification objRepo = new SqlNotification();
-            objRepo.GetAllMessages();
 
             return res;
         }

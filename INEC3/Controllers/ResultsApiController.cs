@@ -11,10 +11,15 @@ using INEC3.Models.Service;
 using System.Web.Mvc;
 using INEC3.Repository;
 using Microsoft.AspNet.Identity;
+using System.Net.Http;
+using System.Web;
+using System.Net;
+using System.Web.Hosting;
+
 namespace INEC3.Controllers
 {
     [System.Web.Http.RoutePrefix("api/Results")]
-    [System.Web.Http.Authorize]
+    //[System.Web.Http.Authorize]
     public class ResultsApiController : ApiController
     {
         private inecDBContext db;
@@ -325,6 +330,24 @@ namespace INEC3.Controllers
             }
             return res;
         }
+
+        [System.Web.Http.Route("GetDashBoard")]
+        [System.Web.Http.HttpGet]
+        public JsonResult GetDashBoard()
+        {
+            JsonResult res = new JsonResult();
+            try
+            {
+                res.Data = (resultsService.GetDashBoard());
+            }
+            catch (Exception ex)
+            {
+
+                res.ContentType = "error";
+                res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+            }
+            return res;
+        }
         [System.Web.Http.Route("UserIndexList")]
         [System.Web.Http.HttpGet]
         public JsonResult UserIndexList()
@@ -355,6 +378,60 @@ namespace INEC3.Controllers
                 res.Data = (ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
             return res;
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Route("UploadImage")]
+        [System.Web.Http.AllowAnonymous]
+        public HttpResponseMessage UploadImage()
+        {
+            Dictionary<string, object> dict = new Dictionary<string, object>();
+            try
+            {
+                var httpRequest = HttpContext.Current.Request;
+                foreach (string file in httpRequest.Files)
+                {
+                    HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.Created);
+
+                    var postedFile = httpRequest.Files[file];
+                    if (postedFile != null && postedFile.ContentLength > 0)
+                    {
+                        int MaxContentLength = 1024 * 1024 * 2; //Size = 2 MB  
+                        IList<string> AllowedFileExtensions = new List<string> { ".jpg", ".gif", ".png" };
+                        var ext = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('.'));
+                        var extension = ext.ToLower();
+                        if (!AllowedFileExtensions.Contains(extension))
+                        {
+                            var message = string.Format("Please Upload image of type .jpg,.gif,.png.");
+                            dict.Add("error", message);
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                        }
+                        else if (postedFile.ContentLength > MaxContentLength)
+                        {
+                            var message = string.Format("Please Upload a file upto 2 mb.");
+
+                            dict.Add("error", message);
+                            return Request.CreateResponse(HttpStatusCode.BadRequest, dict);
+                        }
+                        else
+                        {
+                            var filePath = HostingEnvironment.MapPath("~/UserImage/" + postedFile.FileName + extension);
+                            postedFile.SaveAs(filePath);
+                        }
+                    }
+                    var message1 = string.Format("Image Updated Successfully.");
+                    return Request.CreateErrorResponse(HttpStatusCode.Created, message1); ;
+                }
+                var res = string.Format("Please Upload a image.");
+                dict.Add("error", res);
+                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+            }
+            catch (Exception ex)
+            {
+                var res = string.Format("some Message");
+                dict.Add("error", res);
+                return Request.CreateResponse(HttpStatusCode.NotFound, dict);
+            }
         }
 
         protected override void Dispose(bool disposing)

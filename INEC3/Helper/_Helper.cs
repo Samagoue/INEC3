@@ -53,35 +53,9 @@ namespace INEC3.Helper
             }
         }
 
-        public bool ActiveSqlNotification()
-        {
-            try
-            {
-                SqlNotification objRepo = new SqlNotification();
-                objRepo.GetAllMessages();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
+        
 
-        public void GetUserDetail()
-        {
-            ////var userId = User.Identity.GetUserId();
-            //var username = HttpContext.Current.User.Identity.GetUserName();
-            //var name = HttpContext.Current.User.Identity.Name;
-            //var userId = HttpContext.Current.User.Identity.GetUserId();
-            //var ab = HttpContext.Current.GetOwinContext().GetUserManager<AuthContext>();
-            //var ad = RequestContext.Principal.Identity.GetUserId();
-
-            //var claimsIdentity = User.Identity as ClaimsIdentity;
-            //if (claimsIdentity != null)
-            //{
-            //    string email = claimsIdentity?.FindFirst(c => c.Type == "sub")?.Value;
-            //}
-        }
+       
 
         public bool InitializeUser()
         {
