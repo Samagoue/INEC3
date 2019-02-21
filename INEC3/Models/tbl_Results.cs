@@ -34,6 +34,9 @@ namespace INEC3.Models
         public int Nuls { get; set; }
         public int Exprimes { get; set; }
         public string UserId { get; set; }
+        public string ImagePath { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
 
     }
 

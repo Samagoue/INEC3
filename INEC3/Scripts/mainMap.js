@@ -120,9 +120,7 @@ function clicked(d) {
     //    .attr("text-anchor", "middle")
     //    .attr('font-size', '3pt');
 
-    statePaths.transition(t)
-        .attr('d', path)
-        .attr('class', 'deactive')
+    statePaths.transition(t).attr('d', path).attr('class', 'deactive')
     //.style('fill', '#444')
 
     enterCountyPaths.transition(t).attr('d', path).style('opacity', 1)

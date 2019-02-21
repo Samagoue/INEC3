@@ -29,10 +29,7 @@ namespace INEC3
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions());
 
-            ////////          Sulaiman 22-2-17 For Role Based Auth
-            //app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
-            ////////           Sulaiman 22-2-17 For Role Based Auth
-
+            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Configure the application for OAuth based flow

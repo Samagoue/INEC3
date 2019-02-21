@@ -6,7 +6,7 @@ using System.Data;
 using Newtonsoft.Json;
 namespace INEC3.Controllers
 {
-    [System.Web.Http.Authorize]
+    //[System.Web.Http.Authorize]
     public class HomeController : Controller
     {
         private inecDBContext db = new inecDBContext();
@@ -16,8 +16,7 @@ namespace INEC3.Controllers
             DataSet dt = new DataSet();
             dt = _db.GetDatatable("proc_GetProvinceResult", "");
             ViewBag.Province = JsonConvert.SerializeObject(dt);
-            //SqlNotification objRepo = new SqlNotification();
-            //var res = objRepo.GetAllMessages();
+            
             return View();
         }
 
